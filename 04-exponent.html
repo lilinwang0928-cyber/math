@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>1-4 指數記法與科學記號．互動訂正單</title>
+<style>
+:root{
+  --paper:#EEF2F4;--card:#FFFFFF;--ink:#12303C;--ink-soft:#5A737F;
+  --neg:#2F5FA8;--pos:#C87814;--zero:#17795C;--ok:#1B7A5C;--no:#B23C33;
+  --rule:#C6D5DC;--rule-soft:#DFE8ED;
+  --shadow:0 1px 0 #D7E1E6, 0 8px 24px -18px #1c3d4a;
+  --serif:"Noto Serif TC","Songti TC","Source Han Serif TC","PMingLiU",serif;
+  --sans:"PingFang TC","Microsoft JhengHei","Noto Sans TC","Heiti TC",system-ui,sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,"Courier New",monospace;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  font-family:var(--sans);color:var(--ink);background-color:var(--paper);
+  background-image:
+    linear-gradient(to right, rgba(47,95,168,.055) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(47,95,168,.055) 1px, transparent 1px);
+  background-size:26px 26px;line-height:1.7;-webkit-text-size-adjust:100%;
+}
+.wrap{max-width:860px;margin:0 auto;padding:0 14px 90px}
+header.top{padding:34px 0 18px}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.18em;color:var(--ink-soft);margin:0 0 6px}
+h1{font-family:var(--serif);font-weight:700;font-size:clamp(28px,7vw,44px);line-height:1.25;margin:0 0 10px;letter-spacing:.02em}
+h1 .neg{color:var(--neg)}
+.sub{margin:0;color:var(--ink-soft);font-size:15px}
+
+nav.stations{position:sticky;top:0;z-index:40;margin:16px -14px 0;padding:8px 14px;
+  background:rgba(238,242,244,.94);backdrop-filter:blur(6px);border-bottom:1px solid var(--rule);
+  overflow-x:auto;white-space:nowrap;-webkit-overflow-scrolling:touch}
+nav.stations button{font-family:var(--sans);font-size:13px;color:var(--ink);background:var(--card);
+  border:1px solid var(--rule);border-radius:999px;padding:6px 13px;margin-right:6px;cursor:pointer}
+nav.stations button:hover{border-color:var(--neg);color:var(--neg)}
+nav.stations button:focus-visible{outline:2px solid var(--neg);outline-offset:2px}
+
+.progress{display:flex;align-items:center;gap:10px;margin:14px 0 0;font-family:var(--mono);font-size:12px;color:var(--ink-soft)}
+.bar{flex:1;height:6px;background:var(--rule-soft);border-radius:99px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--zero);transition:width .35s ease}
+
+section{margin:34px 0 0;scroll-margin-top:60px}
+.sechead{display:flex;align-items:baseline;gap:10px;border-bottom:2px solid var(--ink);padding-bottom:6px}
+.sechead .no{font-family:var(--mono);font-size:13px;color:var(--neg);letter-spacing:.1em}
+.sechead h2{font-family:var(--serif);font-size:clamp(20px,4.4vw,26px);margin:0;font-weight:700}
+.sechead .from{margin-left:auto;font-size:11px;color:var(--ink-soft);font-family:var(--mono)}
+
+.card{background:var(--card);border:1px solid var(--rule);border-radius:10px;padding:16px 14px;margin:16px 0 0;box-shadow:var(--shadow)}
+.card.alert{border-color:var(--no);border-left-width:4px}
+.card h3{font-family:var(--sans);font-size:15px;margin:0 0 10px;font-weight:700;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.tag{font-family:var(--mono);font-size:11px;letter-spacing:.06em;background:var(--rule-soft);color:var(--ink-soft);border-radius:4px;padding:2px 7px;font-weight:400}
+.tag.hot{background:#FBEFEE;color:var(--no)}
+.q{margin:0 0 10px;font-size:15px;font-family:var(--mono)}
+.q.zh{font-family:var(--sans)}
+.q .num{color:var(--neg);margin-right:6px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:0 14px}
+@media (max-width:520px){ .grid2{grid-template-columns:1fr} }
+.rule-box{background:#F5F9FA;border-left:3px solid var(--neg);padding:8px 12px;margin:14px 0 0;font-size:14px;color:var(--ink-soft)}
+.rule-box b{color:var(--ink)}
+sup{font-size:.72em}
+
+input.blank{font-family:var(--mono);font-size:16px;color:var(--ink);width:118px;padding:5px 8px;text-align:center;
+  border:none;border-bottom:2px solid var(--neg);background:#F7FAFB;border-radius:4px 4px 0 0}
+input.blank:focus{outline:2px solid var(--neg);outline-offset:1px}
+input.blank.ok{border-bottom-color:var(--ok);background:#EEF7F3;color:var(--ok)}
+input.blank.no{border-bottom-color:var(--no);background:#FBEFEE;color:var(--no)}
+input.blank.sm{width:76px}
+input.blank.lg{width:170px}
+
+.cmp{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:12px 0;padding-bottom:8px;border-bottom:1px dashed var(--rule-soft)}
+.cmp:last-of-type{border-bottom:none}
+.cmp .expr{font-family:var(--mono);font-size:16px}
+.cmp .slot{display:inline-block;min-width:26px;text-align:center;color:var(--neg)}
+.cmp .ops button{font-family:var(--mono);font-size:15px;min-width:44px;height:36px;border:1px solid var(--rule);
+  background:#F7FAFB;border-radius:8px;cursor:pointer;margin-right:4px;padding:0 10px}
+.cmp .ops button[aria-pressed="true"]{background:var(--neg);border-color:var(--neg);color:#fff}
+.cmp.ok .expr{color:var(--ok)}
+.cmp.no .expr{color:var(--no)}
+
+button.act{font-family:var(--sans);font-size:14px;font-weight:700;background:var(--ink);color:#fff;border:none;border-radius:8px;padding:8px 16px;cursor:pointer;margin:4px 6px 0 0}
+button.act.ghost{background:transparent;color:var(--ink-soft);border:1px solid var(--rule);font-weight:400}
+button.act:focus-visible{outline:2px solid var(--neg);outline-offset:2px}
+
+.fb{font-size:14px;margin:10px 0 0;min-height:22px;font-weight:700}
+.fb.ok{color:var(--ok)}
+.fb.no{color:var(--no)}
+
+details.sol{margin-top:10px;border-top:1px dashed var(--rule);padding-top:8px}
+details.sol summary{font-size:13px;color:var(--neg);cursor:pointer;list-style:none}
+details.sol summary::-webkit-details-marker{display:none}
+details.sol summary::before{content:"▸ ";font-family:var(--mono)}
+details.sol[open] summary::before{content:"▾ "}
+details.sol .body{font-size:14px;color:var(--ink-soft);margin-top:8px}
+details.sol .body b{color:var(--ink)}
+.mono{font-family:var(--mono)}
+.typehint{font-size:12px;color:var(--ink-soft);margin:0 0 10px}
+
+.hero{background:linear-gradient(180deg,#FFFFFF 0%, #F6F9FA 100%);border:1px solid var(--rule);border-radius:12px;padding:16px 12px 14px;margin-top:18px;box-shadow:var(--shadow)}
+.hero h2{font-family:var(--serif);font-size:20px;margin:0 0 2px}
+.hero p.hint{font-size:13px;color:var(--ink-soft);margin:0}
+.sci{font-family:var(--mono);font-size:clamp(20px,5.4vw,28px);text-align:center;margin:14px 0 6px;font-weight:700}
+.sci .a{color:var(--pos)} .sci .p{color:var(--neg)}
+.expand{font-family:var(--mono);font-size:clamp(15px,4vw,20px);text-align:center;word-break:break-all;background:var(--card);border:1px solid var(--rule-soft);border-radius:8px;padding:10px}
+.sliders{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.sliders label{font-size:12px;color:var(--ink-soft);display:block}
+.sliders b{font-family:var(--mono);font-size:17px}
+.sliders input[type=range]{width:100%}
+@media (max-width:430px){ .sliders{grid-template-columns:1fr} }
+.hero .why{margin-top:10px;background:var(--card);border:1px solid var(--rule-soft);border-radius:8px;padding:10px 12px;font-size:14px}
+
+.mouth{display:flex;gap:10px;align-items:center;justify-content:center;font-family:var(--mono);font-size:22px;margin:10px 0;flex-wrap:wrap}
+.mouth .big{color:var(--no);font-size:30px;font-weight:700}
+
+.trap{border-left:4px solid var(--no);padding-left:12px;margin:14px 0}
+.trap h4{margin:0 0 4px;font-size:15px}
+.trap p{margin:0;font-size:14px;color:var(--ink-soft)}
+footer{margin-top:44px;border-top:1px solid var(--rule);padding-top:14px;font-size:12px;color:var(--ink-soft)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+
+/* ===== Math 麥斯 回饋層 ===== */
+#maxxBar{
+  position:fixed;left:50%;transform:translateX(-50%) translateY(140%);
+  bottom:14px;width:min(720px,calc(100% - 20px));z-index:80;
+  display:flex;gap:10px;align-items:flex-start;
+  background:#132633;color:#EAF2F6;border:1px solid #2A4557;border-left:4px solid #3FE0B0;
+  border-radius:12px;padding:11px 12px;box-shadow:0 10px 30px -12px rgba(0,0,0,.55);
+  transition:transform .28s cubic-bezier(.2,.9,.3,1.2);
+}
+#maxxBar.on{transform:translateX(-50%) translateY(0)}
+#maxxBar .mx-av{width:40px;height:40px;flex:none;object-fit:contain;align-self:center}
+#maxxBar .mx-txt{font-size:13.5px;line-height:1.6;flex:1}
+#maxxBar .mx-hype{display:block;font-weight:700;color:#3FE0B0}
+#maxxBar .mx-hype.bad{color:#FF9B6A}
+#maxxBar .mx-sub{color:#9FB6C2;font-size:12.5px}
+#maxxBar .mx-combo{font-family:var(--mono);color:#FFC94A;font-size:12px;margin-left:6px}
+#maxxBar .mx-x{background:none;border:none;color:#9FB6C2;font-size:20px;line-height:1;cursor:pointer;padding:0 2px;flex:none}
+#maxxBar .mx-x:hover{color:#EAF2F6}
+@media (prefers-reduced-motion:reduce){#maxxBar{transition:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="top">
+  <p class="eyebrow">國中數學 1 上 · 計算熟練</p>
+  <h1>1-4 指數記法與<span class="neg">科學記號</span><br>互動訂正單</h1>
+  <p class="sub">指數看「幾個相乘」，科學記號看「小數點搬幾位」。比大小要先比指數。</p>
+</header>
+
+<nav class="stations" aria-label="關卡導覽">
+  <button class="jump" data-target="hero">科學記號展開器</button>
+  <button class="jump" data-target="s1">① 指數簡記</button>
+  <button class="jump" data-target="s2">② 奇偶次方</button>
+  <button class="jump" data-target="s3">③ 含乘方四則</button>
+  <button class="jump" data-target="s4">④ 10 的次方</button>
+  <button class="jump" data-target="s5">⑤ 科學記號格式</button>
+  <button class="jump" data-target="s6">⑥ 應用</button>
+  <button class="jump" data-target="s7">⑦ 判斷位數</button>
+  <button class="jump" data-target="s8">⑧ 比大小</button>
+  <button class="jump" data-target="s9">⑨ 三個陷阱</button>
+</nav>
+
+<div class="progress">
+  <span id="pcount">0 / 0</span>
+  <span class="bar"><i id="pbar"></i></span>
+  <button class="act ghost" id="reset" style="margin:0">清除紀錄</button>
+</div>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero">
+    <h2>科學記號展開器</h2>
+    <p class="hint">拉滑桿改變 a 和 n，看看 a×10<sup>n</sup> 展開後小數點跑到哪裡。指數是正的往右搬，負的往左搬。</p>
+    <p class="sci"><span class="a" id="showA">6.3</span> × 10<sup class="p" id="showN">6</sup></p>
+    <div class="expand" id="expand"></div>
+    <div class="sliders">
+      <div><label for="ra">a（必須 1 ≤ a &lt; 10）　<b id="la">6.3</b></label><input id="ra" type="range" min="10" max="99" step="1" value="63"></div>
+      <div><label for="rn">n　<b id="ln">6</b></label><input id="rn" type="range" min="-9" max="9" step="1" value="6"></div>
+    </div>
+    <p class="why" id="why"></p>
+  </div>
+</section>
+
+<!-- S1 -->
+<section id="s1">
+  <div class="sechead"><span class="no">01</span><h2>指數的簡記</h2><span class="from">熟練 1</span></div>
+  <div class="rule-box">指數＝<b>相同因數的個數</b>。寫之前先數一遍，數完在題目上打勾，避免多算或少算一個。</div>
+
+  <div class="card task" data-id="a1" data-type="fill">
+    <h3>先數個數<span class="tag hot">原卷這裡數錯</span></h3>
+    <p class="q zh">13×13×13×13×13 共有 <input class="blank sm" data-ans="5" aria-label="個數1"> 個 13 相乘。</p>
+    <p class="q zh">(−4)×(−4)×(−4)×(−4)×(−4)×(−4)×(−4)×(−4)×(−4) 共有
+      <input class="blank sm" data-ans="9" aria-label="個數2"> 個 (−4) 相乘。</p>
+    <button class="act check">檢查</button>
+    <p class="fb"></p>
+  </div>
+
+  <div class="card task" data-id="a2" data-type="text">
+    <h3>熟練 1<span class="tag">寫成指數形式</span></h3>
+    <p class="typehint">次方請用 ^ 輸入，例如 13<sup>5</sup> 打成 <span class="mono">13^5</span>。</p>
+    <p class="q"><span class="num">1.</span>13×13×13×13×13 = <input class="blank" data-ans="13^5" aria-label="簡記1"></p>
+    <p class="q"><span class="num">2.</span>(−4) 連乘九次 = <input class="blank" data-ans="(-4)^9" aria-label="簡記2"></p>
+    <button class="act check">檢查</button>
+    <p class="fb"></p>
+    <details class="sol"><summary>看解析</summary><div class="body">
+      <b>原卷寫成 (−4)<sup>8</sup>，少數了一個。</b>題目一共排了九個 (−4)。
+      數這種長串時，用筆<b>兩個一組畫圈</b>比較不會漏：四組加一個單獨的 = 9。<br>
+      另外底數是負數時，括號一定要保留：<span class="mono">(−4)^9</span> 和 <span class="mono">−4^9</span> 意思不同。
+    </div></details>
+  </div>
+</section>
+
+<!-- S2 -->
+<section id="s2">
+  <div class="sechead"><span class="no">02</span><h2>奇偶次方與括號位置</h2><span class="from">熟練 2・3</span></div>
+  <div class="rule-box">
+    <b>底數是負數時：</b>指數偶數 → 正，指數奇數 → 負。<br>
+    <b>括號決定誰在做次方：</b>(−3)<sup>6</sup> 是六個 −3 相乘；−3<sup>4</sup> 是 −(3<sup>4</sup>)，負號沒有被平方。
+  </div>
+
+  <div class="card task" data-id="b1" data-type="compare">
+    <h3>先判斷正負<span class="tag">看括號＋看奇偶</span></h3>
+    <div class="cmp" data-ans="正"><span class="expr">(−2)<sup>6</sup> → <b class="slot">□</b></span>
+      <span class="ops"><button type="button" data-op="正">正</button><button type="button" data-op="負">負</button></span></div>
+    <div class="cmp" data-ans="負"><span class="expr">−6<sup>2</sup> → <b class="slot">□</b></span>
+      <span class="ops"><button type="button" data-op="正">正</button><button type="button" data-op="負">負</button></span></div>
+    <div class="cmp" data-ans="負"><span class="expr">−3<sup>4</sup> → <b class="slot">□</b></span>
+      <span class="ops"><button type="button" data-op="正">正</button><button type="button" data-op="負">負</button></span></div>
+    <div class="cmp" data-ans="負"><span class="expr">(−6)<sup>3</sup> → <b class="slot">□</b></span>
+      <span class="ops"><button type="button" data-op="正">正</button><button type="button" data-op="負">負</button></span></div>
+    <button class="act check">檢查</button>
+    <p class="fb"></p>
+    <details class="sol"><summary>看解析</summary><div class="body">
+      −6<sup>2</sup> 和 −3<sup>4</sup> 的負號都在括號外，等於「先算次方，再冠負號」→ 一定是負的，跟指數是不是偶數無關。
+    </div></details>
+  </div>
+
+  <div class="card task" data-id="b2" data-type="fill">
+    <h3>熟練 2<span class="tag">指數為偶數</span></h3>
+    <div class="grid2">
+      <p class="q"><span class="num">1.</span>2<sup>4</sup> = <input class="blank sm" data-ans="16" aria-label="p1"></p>
+      <p class="q"><span class="num">2.</span>7<sup>2</sup> = <input class="blank sm" data-ans="49" aria-label="p2"></p>
+      <p class="q"><span class="num">3.</span>(−2)<sup>6</sup> = <input class="blank sm" data-ans="64" aria-label="p3"></p>
+      <p class="q"><span class="num">4.</span>−6<sup>2</sup> = <input class="blank sm" data-ans="-36" aria-label="p4"></p>
+      <p class="q"><span class="num">5.</span>−3<sup>4</sup> = <input class="blank sm" data-ans="-81" aria-label="p5"></p>
+      <p class="q"><span class="num">6.</span>(−3)<sup>6</sup> = <input class="blank sm" data-ans="729" aria-label="p6"></p>
+    </div>
+    <button class="act check">檢查</button>
+    <p class="fb"></p>
+    <details class="sol"><summary>看解析</summary><div class="body">原卷六題全對，括號在不在的差別分得很清楚。</div></details>
+  </div>
+
+  <div class="card task" data-id="b3" data-type="fill">
+    <h3>熟練 3<span class="tag">指數為奇數</span></h3>
+    <div class="grid2">
+      <p class="q"><span class="num">1.</span>5<sup>3</sup> = <input class="blank sm" data-ans="125" aria-label="q1"></p>
+      <p class="q"><span class="num">2.</span>4<sup>3</sup> = <input class="blank sm" data-ans="64" aria-label="q2"></p>
+      <p class="q"><span class="num">3.</span>10<sup>5</sup> = <input class="blank" data-ans="100000" aria-label="q3"></p>
+      <p class="q"><span class="num">4.</span>(−2)<sup>3</sup> = <input class="blank sm" data-ans="-8" aria-label="q4"></p>
+      <p class="q"><span class="num">5.</span>(−6)<sup>3</sup> = <input class="blank sm" data-ans="-216" aria-label="q5"></p>
+      <p class="q"><span class="num">6.</span>−3<sup>5</sup> = <input class="blank sm" data-ans="-243" aria-label="q6"></p>
+    </div>
+    <button class="act check">檢查</button>
+    <p class="fb"></p>
+    <details class="sol"><summary>看解析</summary><div class="body">
+      10<sup>5</sup> = 100000，<b>1 後面幾個 0 就是幾次方</b>，這個規律等一下科學記號會一直用到。原卷六題全對。
+    </div></details>
+  </div>
+</section>
+
+<!-- S3 -->
+<section id="s3">
+  <div class="sechead"><span class="no">03</span><h2>含乘方的四則運算</h2><span class="from">熟練 4</span></div>
+  <div class="rule-box">順序是 <b>括號 → 乘方 → 乘除 → 加減</b>。乘方要先算完，才輪到乘除。</div>
+
+  <div class="card task" data-id="c1" data-type="fill">
+    <h3>熟練 4-1 ～ 4-4</h3>
+    <p class="q"><span class="num">1.</span>2<sup>3</sup>+2<sup>4</sup> = <input class="blank sm" data-ans="24" aria-label="r1"></p>
+    <p class="q"><span class="num">2.</span>3×2<sup>5</sup>−4×2<sup>3</sup> = <input class="blank sm" data-ans="64" aria-label="r2"></p>
+    <p class="q"><span class="num">3.</span>6<sup>3</sup>÷9−(−4)<sup>3</sup>÷8 = <input class="blank sm" data-ans="32" aria-label="r3"></p>
+    <p class="q"><span class="num">4.</span>(−2)<sup>5</sup>×3−(−4)<sup>2</sup>×(−2)<sup>3</sup> = <input class="blank sm" data-ans="32" aria-label="r4"></p>
+    <button class="act check">檢查</button>
+    <p class="fb"></p>
+    <details class="sol"><summary>看解析</summary><div class="body">
+      第 1 題常見錯誤是把 2<sup>3</sup>+2<sup>4</sup> 當成 2<sup>7</sup>：<b>加法不能把指數相加</b>，要各自算成 8 和 16。原卷四題全對。
+    </div></details>
+  </div>
+
+  <div class="card task" data-id="c2" data-type="fill">
+    <h3>熟練 4-5・4-6<span class="tag">分步做</span></h3>
+    <p class="q"><span class="num">5.</span>(−6)+[−7<sup>2</sup>+(−7)<sup>3</sup>]÷(−2<sup>3</sup>)：−7<sup>2</sup> = <input class="blank sm" data-ans="-49" aria-label="s5a">，
+      (−7)<sup>3</sup> = <input class="blank sm" data-ans="-343" aria-label="s5b">，
+      −2<sup>3</sup> = <input class="blank sm" data-ans="-8" aria-label="s5c">，
+      答案 = <input class="blank sm" data-ans="43" aria-label="s5d"></p>
+    <p class="q"><span class="num">6.</span>10<sup>2</sup>−(−5)<sup>2</sup>×[(−2)+(−3)×(−4)]+50：中括號 = <input class="blank sm" data-ans="10" aria-label="s6a">，
+      (−5)<sup>2</sup>×10 = <input class="blank sm" data-ans="250" aria-label="s6b">，
+      答案 = <input class="blank sm" data-ans="-100" aria-label="s6c"></p>
+    <button class="act check">檢查</button>
+    <p class="fb"></p>
+    <details class="sol"><summary>看解析</summary><div class="body">
+      第 5 題：[−49+(−343)] = −392，−392÷(−8) = 49，−6+49 = <b>43</b>。注意 −7<sup>2</sup> 和 (−7)<sup>3</sup> 的括號位置不同。<br>
+      第 6 題：100−250+50 = <b>−100</b>。原卷這兩題都對，第 10 頁只有指數簡記那一題數錯。
+    </div></details>
+  </div>
+</section>
+
+<!-- S4 -->
+<section id="s4">
+  <div class="sechead"><span class="no">04</span><h2>10 的次方</h2><span class="from">熟練 5</span></div>
+  <div class="rule-box">
+    <b>10<sup>n</sup></b>（n 是正的）＝ 1 後面 n 個 0。<br>
+    <b>10<sup>−n</sup></b> ＝ 1/10<sup>n</sup>，展開後是「小數點後第 n 位是 1」。負號寫在<b>上面的指數</b>，分母的指數<b>不再加負號</b>。
+  </div>
+
+  <div class="card task" data-id="d1" data-type="text">
+    <h3>熟練 5<span class="tag hot">原卷 2、3 有誤</span></h3>
+    <p class="typehint">次方用 ^ 輸入，例如 10<sup>−9</sup> 打成 <span class="mono">10^-9</span>；分數用 / ，例如 <span class="mono">1/10^9</span>。</p>
+    <p class="q"><span class="num">1.</span>以 10 的次方表示 1000000 = <input class="blank" data-ans="10^6" aria-label="t1"></p>
+    <p class="q"><span class="num">2.</span>以 10 的次方表示 0.000000001 = <input class="blank" data-ans="10^-9|10^(-9)" aria-label="t2"></p>
+    <p class="q"><span class="num">3.</span>10<sup>−9</sup> 以分數表示 = <input class="blank lg" data-ans="1/10^9|1/1000000000" aria-label="t3">，
+      以小數表示 = <input class="blank lg" data-ans="0.000000001" aria-label="t4"></p>
+    <button class="act check">檢查</button>
+    <p class="fb"></p>
+    <details class="sol"><summary>看解析</summary><div class="body">
+      <b>第 2 題原卷寫 0.1<sup>10</sup>。</b>科學記號和 10 的次方一律以 <b>10</b> 當底數，不能用 0.1 當底數。
+      0.000000001 的 1 在小數點後第 9 位 → <span class="mono">10^-9</span>。<br>
+      <b>第 3 題原卷寫成 1/10<sup>−9</sup>。</b>負指數的意思<b>就是</b>「倒數」，搬到分母時負號要拿掉：
+      10<sup>−9</sup> = 1/10<sup>9</sup>。寫成 1/10<sup>−9</sup> 反而變回 10<sup>9</sup>（十億），差了 10<sup>18</sup> 倍。
+      小數 0.000000001 那格原卷是對的。
+    </div></details>
+  </div>
+</section>
+
+<!-- S5 -->
+<section id="s5">
+  <div class="sechead"><span class="no">05</span><h2>科學記號的格式</h2><span class="from">熟練 6</span></div>
+  <div class="rule-box">科學記號＝ <b>a × 10<sup>n</sup></b>，而且 <b>1 ≤ a &lt; 10</b>（小數點前面只留一位非零數字）。<br>
+    題目說「以科學記號表示」，就一定要出現 <b>×10 的次方</b>；照抄原數或只化成小數都不算完成。</div>
+
+  <div class="card task" data-id="e1" data-type="compare">
+    <h3>哪一個才是合格的科學記號？</h3>
+    <div class="cmp" data-ans="B"><span class="expr">6300000 → <b class="slot">□</b></span>
+      <span class="ops"><button type="button" data-op="A">63×10<sup>5</sup></button><button type="button" data-op="B">6.3×10<sup>6</sup></button><button type="button" data-op="C">6300000</button></span></div>
+    <div class="cmp" data-ans="B"><span class="expr">0.0000027 → <b class="slot">□</b></span>
+      <span class="ops"><button type="button" data-op="A">0.27×10<sup>−5</sup></button><button type="button" data-op="B">2.7×10<sup>−6</sup></button><button type="button" data-op="C">0.0000027</button></span></div>
+    <button class="act check">檢查</button>
+    <p class="fb"></p>
+    <details class="sol"><summary>看解析</summary><div class="body">
+      63×10<sup>5</sup> 和 0.27×10<sup>−5</sup> 的數值都沒錯，但 <b>a 必須在 1 到 10 之間</b>，所以格式不合格。
+    </div></details>
+  </div>
+
+  <div class="card task alert task" data-id="e2" data-type="text">
+    <h3>熟練 6<span class="tag hot">原卷四題全部沒轉成科學記號</span></h3>
+    <p class="typehint">輸入格式：<span class="mono">6.3*10^6</span> 或 <span class="mono">6.3x10^6</span> 都可以。</p>
+    <p class="q"><span class="num">1.</span>6300000 = <input class="blank lg" data-ans="6.3*10^6" aria-label="u1"></p>
+    <p class="q"><span class="num">2.</span>0.0000027 = <input class="blank lg" data-ans="2.7*10^-6|2.7*10^(-6)" aria-label="u2"></p>
+    <p class="q"><span class="num">3.</span>5/1000000 = <input class="blank lg" data-ans="5*10^-6|5*10^(-6)" aria-label="u3"></p>
+    <p class="q"><span class="num">4.</span>二十萬分之一 = <input class="blank lg" data-ans="5*10^-6|5*10^(-6)" aria-label="u4"></p>
+    <button class="act check">檢查</button>
+    <p class="fb"></p>
+    <details class="sol"><summary>看解析</summary><div class="body">
+      1. 小數點從最後面往左搬 6 位 → 6.3×10<sup>6</sup>。<br>
+      2. 小數點往右搬 6 位才會變成 2.7 → 2.7×10<sup>−6</sup>。<br>
+      3. 5/1000000 = 5÷10<sup>6</sup> = 5×10<sup>−6</sup>（原卷把分數照抄）。<br>
+      4. 二十萬分之一 = 1/200000 = 0.000005 = 5×10<sup>−6</sup>。原卷算到 0.000005 就停了，<b>那一步是對的，只差最後改寫成科學記號</b>。
+    </div></details>
+  </div>
+</section>
+
+<!-- S6 -->
+<section id="s6">
+  <div class="sechead"><span class="no">06</span><h2>應用問題</h2><span class="from">熟練 7</span></div>
+  <div class="card task" data-id="f1" data-type="text">
+    <h3>熟練 7<span class="tag">原卷全對</span></h3>
+    <p class="q zh"><span class="num">1.</span>1 奈米 = 0.000000001 公尺，原子直徑約 0.2 奈米，用科學記號表示為
+      <input class="blank lg" data-ans="2*10^-10|2*10^(-10)" aria-label="v1"> 公尺。</p>
+    <p class="q zh"><span class="num">2.</span>四百四十萬人用科學記號表示為
+      <input class="blank lg" data-ans="4.4*10^6" aria-label="v2"> 人。</p>
+    <button class="act check">檢查</button>
+    <p class="fb"></p>
+    <details class="sol"><summary>看解析</summary><div class="body">
+      0.2×10<sup>−9</sup> 的 a 是 0.2，不到 1，要再往右搬一位 → <b>2×10<sup>−10</sup></b>。
+      四百四十萬 = 4400000 → <b>4.4×10<sup>6</sup></b>。<b>這兩題原卷都寫對了，代表格式其實是懂的</b>，熟練 6 只是沒看清楚題目要求。
+    </div></details>
+  </div>
+</section>
+
+<!-- S7 -->
+<section id="s7">
+  <div class="sechead"><span class="no">07</span><h2>判斷位數</h2><span class="from">熟練 8</span></div>
+  <div class="rule-box">a×10<sup>n</sup>（n 為正）展開後是 <b>n+1 位數</b>；a×10<sup>−n</sup> 展開後，<b>小數點後第 n 位</b>開始出現不為 0 的數字。</div>
+
+  <div class="card task" data-id="g1" data-type="fill">
+    <h3>熟練 8<span class="tag">原卷全對</span></h3>
+    <p class="q zh"><span class="num">1.</span>2.1×10<sup>4</sup> 乘開，這個數是 <input class="blank sm" data-ans="5" aria-label="w1"> 位數。</p>
+    <p class="q zh"><span class="num">2.</span>7.2×10<sup>−5</sup> 乘開，小數點後第 <input class="blank sm" data-ans="5" aria-label="w2"> 位開始出現不為 0 的數字。</p>
+    <button class="act check">檢查</button>
+    <p class="fb"></p>
+    <details class="sol"><summary>看解析</summary><div class="body">
+      2.1×10<sup>4</sup> = 21000（5 位數）；7.2×10<sup>−5</sup> = 0.000072，第 5 位是 7。可以用上面的展開器對照看看。
+    </div></details>
+  </div>
+</section>
+
+<!-- S8 -->
+<section id="s8">
+  <div class="sechead"><span class="no">08</span><h2>比大小</h2><span class="from">熟練 9</span></div>
+  <div class="rule-box">
+    <b>方法：</b>先比 10 的<b>指數</b>，指數大的數就大；指數一樣，才比前面的 a。<br>
+    <b>方向：</b>不等號的<b>開口（大口）要對著比較大的數</b>，尖端指向比較小的數。
+  </div>
+
+  <div class="card task alert" data-id="h0" data-type="compare">
+    <h3>先校正方向<span class="tag hot">原卷四題方向全反</span></h3>
+    <p class="mouth"><span>8</span><span class="big">&gt;</span><span>3</span><span style="color:var(--ink-soft);font-family:var(--sans);font-size:14px">大口朝 8，尖端指 3</span></p>
+    <div class="cmp" data-ans="&lt;"><span class="expr">3 <b class="slot">□</b> 8</span>
+      <span class="ops"><button type="button" data-op="&gt;">&gt;</button><button type="button" data-op="&lt;">&lt;</button></span></div>
+    <div class="cmp" data-ans="&gt;"><span class="expr">12 <b class="slot">□</b> 7</span>
+      <span class="ops"><button type="button" data-op="&gt;">&gt;</button><button type="button" data-op="&lt;">&lt;</button></span></div>
+    <div class="cmp" data-ans="&gt;"><span class="expr">0.7 <b class="slot">□</b> 0.07</span>
+      <span class="ops"><button type="button" data-op="&gt;">&gt;</button><button type="button" data-op="&lt;">&lt;</button></span></div>
+    <button class="act check">檢查</button>
+    <p class="fb"></p>
+    <details class="sol"><summary>看解析</summary><div class="body">
+      唸法幫助記憶：「3 <b>小於</b> 8」寫成 3 &lt; 8，尖的那一端在小的數那邊。
+      寫完之後<b>從左往右唸一次</b>：「三 小於 八」，唸得通就對了。
+    </div></details>
+  </div>
+
+  <div class="card task" data-id="h1" data-type="compare">
+    <h3>先比指數<span class="tag">不用乘開</span></h3>
+    <div class="cmp" data-ans="前面的數"><span class="expr">4.7×10<sup>7</sup> 和 6.3×10<sup>7</sup>：先比 <b class="slot">□</b></span>
+      <span class="ops"><button type="button" data-op="指數">指數</button><button type="button" data-op="前面的數">前面的數</button></span></div>
+    <div class="cmp" data-ans="指數"><span class="expr">5.3×10<sup>4</sup> 和 4.3×10<sup>5</sup>：先比 <b class="slot">□</b></span>
+      <span class="ops"><button type="button" data-op="指數">指數</button><button type="button" data-op="前面的數">前面的數</button></span></div>
+    <div class="cmp" data-ans="指數"><span class="expr">2.34×10<sup>−5</sup> 和 5.14×10<sup>−6</sup>：先比 <b class="slot">□</b></span>
+      <span class="ops"><button type="button" data-op="指數">指數</button><button type="button" data-op="前面的數">前面的數</button></span></div>
+    <button class="act check">檢查</button>
+    <p class="fb"></p>
+    <details class="sol"><summary>看解析</summary><div class="body">
+      指數相同（第 1 組都是 10<sup>7</sup>）才輪到比前面的數；指數不同時，<b>指數大的直接勝出</b>，前面的數多大都沒用。
+      −5 比 −6 大，所以 2.34×10<sup>−5</sup> 比較大。
+    </div></details>
+  </div>
+
+  <div class="card task alert" data-id="h2" data-type="compare">
+    <h3>熟練 9<span class="tag hot">原卷四題全錯</span></h3>
+    <div class="cmp" data-ans="&lt;"><span class="expr">4.7×10<sup>7</sup> <b class="slot">□</b> 6.3×10<sup>7</sup></span>
+      <span class="ops"><button type="button" data-op="&gt;">&gt;</button><button type="button" data-op="&lt;">&lt;</button><button type="button" data-op="=">=</button></span></div>
+    <div class="cmp" data-ans="&lt;"><span class="expr">5.3×10<sup>4</sup> <b class="slot">□</b> 4.3×10<sup>5</sup></span>
+      <span class="ops"><button type="button" data-op="&gt;">&gt;</button><button type="button" data-op="&lt;">&lt;</button><button type="button" data-op="=">=</button></span></div>
+    <div class="cmp" data-ans="&gt;"><span class="expr">1.61×10<sup>−5</sup> <b class="slot">□</b> 1.32×10<sup>−5</sup></span>
+      <span class="ops"><button type="button" data-op="&gt;">&gt;</button><button type="button" data-op="&lt;">&lt;</button><button type="button" data-op="=">=</button></span></div>
+    <div class="cmp" data-ans="&gt;"><span class="expr">2.34×10<sup>−5</sup> <b class="slot">□</b> 5.14×10<sup>−6</sup></span>
+      <span class="ops"><button type="button" data-op="&gt;">&gt;</button><button type="button" data-op="&lt;">&lt;</button><button type="button" data-op="=">=</button></span></div>
+    <button class="act check">檢查</button>
+    <p class="fb"></p>
+    <details class="sol"><summary>看解析</summary><div class="body">
+      1. 指數都是 7，比 4.7 和 6.3 → 4.7 比較小 → <b>&lt;</b>（原卷寫 &gt;）。<br>
+      2. 10<sup>4</sup> = 21000 級距、10<sup>5</sup> 大一級 → 53000 &lt; 430000 → <b>&lt;</b>（原卷寫 &gt;）。<br>
+      3. 指數都是 −5，比 1.61 和 1.32 → <b>&gt;</b>（原卷寫 &lt;）。<br>
+      4. −5 &gt; −6，指數大的勝 → 0.0000234 &gt; 0.00000514 → <b>&gt;</b>（原卷寫 &lt;）。<br>
+      四題的<b>大小關係其實都判斷對了，只是不等號畫反</b>。寫完一定要從左往右唸一次。
+    </div></details>
+  </div>
+</section>
+
+<!-- S9 -->
+<section id="s9">
+  <div class="sechead"><span class="no">09</span><h2>這兩頁的三個陷阱</h2><span class="from">訂正重點</span></div>
+  <div class="card">
+    <div class="trap"><h4>陷阱一：不等號畫反（最重要）</h4>
+      <p>熟練 9 四題全部方向相反。<b>開口朝大數、尖端朝小數</b>；寫完從左往右唸一次「◯ 小於 ◯」，唸得通才交卷。這是唯一一個「觀念對、答案卻全錯」的地方，優先訂正。</p></div>
+    <div class="trap"><h4>陷阱二：題目要什麼格式沒看清楚</h4>
+      <p>熟練 6 四題都停在原數或小數，沒改寫成 a×10<sup>n</sup>。但熟練 7 的應用題卻寫對了——所以不是不會，是<b>沒讀到「以科學記號表示」</b>。作答前先圈出題目要的形式。</p></div>
+    <div class="trap"><h4>陷阱三：負指數的位置</h4>
+      <p>熟練 5-2 寫成 0.1<sup>10</sup>（底數必須是 10）；5-3 寫成 1/10<sup>−9</sup>（搬到分母後負號要拿掉）。另外熟練 1-2 少數了一個因數，寫成 (−4)<sup>8</sup>，正解 <b>(−4)<sup>9</sup></b>。</p></div>
+    <details class="sol" open><summary>老師備註</summary><div class="body">
+      第 10 頁除了熟練 1-2 數錯個數之外全對，含乘方的四則運算（包括最後兩題長算式）完全沒失誤，這部分很扎實。<br>
+      第 11 頁的熟練 7、8 全對，<b>證明科學記號的觀念是懂的</b>；熟練 6 是讀題問題，熟練 9 是符號方向問題，
+      兩者都不需要重教觀念，只要建立「作答後檢查一次」的習慣。
+    </div></details>
+  </div>
+</section>
+
+<footer>互動訂正單 · 1-4 指數記法與科學記號 · 作答紀錄只存在這台裝置的瀏覽器裡。</footer>
+</div>
+
+<script>
+/* ===== Math 麥斯：熱血回饋層（歡呼在氣泡，具體錯在哪一步仍留在紅字） ===== */
+window.MAXX = (function(){
+"use strict";
+var BOSS = {"a1": "指數點名怪", "a2": "指數點名怪", "b1": "括號位置怪", "b2": "括號位置怪", "b3": "括號位置怪", "c1": "運算順序守衛", "c2": "運算順序守衛", "d1": "格式沒讀到", "e1": "格式沒讀到", "e2": "格式沒讀到", "f1": "格式沒讀到", "g1": "格式沒讀到", "h0": "鏡子不等號", "h1": "鏡子不等號", "h2": "鏡子不等號"};
+var OK = [
+  "破防！這一刀切得漂亮！",
+  "火力全開 Max！觀眾席都站起來了！",
+  "乾淨俐落，這關連渣都沒剩！",
+  "看到沒？這就是練過的手感！",
+  "命中要害！大腦火力全開！",
+  "穩！這題被你直接秒了！"
+];
+var COMBO = [
+  "COMBO ×{n}！停不下來了啦！",
+  "{n} 連擊！這節奏太猛！",
+  "連續 {n} 關不失手，教練我想打職業！"
+];
+var BAD = [
+  "警報！「{boss}」就是在這一關出手的——",
+  "被偷襲了！「{boss}」剛剛從這裡溜過去：",
+  "血條沒掉沒關係，情報到手了！「{boss}」的招式是：",
+  "喔喔，「{boss}」這招很陰！我們看它動了哪裡："
+];
+var AV = '<img class="mx-av" src="data:image/webp;base64,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" alt="">';
+var combo = 0, box = null, txt = null;
+function ensure(){
+  if(box) return;
+  box = document.createElement("div");
+  box.id = "maxxBar";
+  box.setAttribute("role", "status");
+  box.innerHTML = AV + '<span class="mx-txt"></span><button class="mx-x" type="button" aria-label="關閉麥斯">×</button>';
+  document.body.appendChild(box);
+  txt = box.querySelector(".mx-txt");
+  box.querySelector(".mx-x").addEventListener("click", function(){ box.classList.remove("on"); });
+}
+function pick(a){ return a[Math.floor(Math.random() * a.length)]; }
+function show(kind, hype, sub){
+  ensure();
+  txt.innerHTML = '<span class="mx-hype' + (kind === "bad" ? " bad" : "") + '">' + hype +
+    (kind === "ok" && combo >= 2 ? '<span class="mx-combo">COMBO ×' + combo + "</span>" : "") + "</span>" +
+    (sub ? '<span class="mx-sub">' + sub + "</span>" : "");
+  box.classList.add("on");
+}
+return {
+  say: function(ok, task){
+    var id = (task && task.getAttribute) ? task.getAttribute("data-id") : "";
+    var boss = BOSS[id] || "粗心小怪";
+    if(ok){
+      combo++;
+      show("ok", combo >= 3 ? pick(COMBO).replace("{n}", combo) : pick(OK), "破關數 +1，下一關走起。");
+    } else {
+      combo = 0;
+      show("bad", pick(BAD).replace("{boss}", boss), "紅色那格就是它的位置，看一下解析再補一刀。");
+    }
+  },
+  sayScore: function(right, total, final){
+    combo = 0;
+    if(right === total) show("ok", final ? "全數擊倒！這一單元被你打穿了！" : "這一節清空！漂亮！", "");
+    else if(right >= total - 2) show("ok", "差一點就全清了！剩 " + (total - right) + " 題", "把打叉的那幾題再看一次，很快就收工。");
+    else show("bad", "情報收集完成：答對 " + right + " / " + total, "下面的診斷報告會告訴你先補哪一類，一次補一類就好。");
+  }
+};
+})();
+</script>
+<script>
+(function(){
+"use strict";
+
+var KEY = "math-1-4-exponent-v1";
+var state = {};
+try{ var raw = localStorage.getItem(KEY); if(raw) state = JSON.parse(raw) || {}; }catch(e){ state = {}; }
+function save(){ try{ localStorage.setItem(KEY, JSON.stringify(state)); }catch(e){} }
+
+function halfWidth(s){
+  return String(s == null ? "" : s)
+    .replace(/[\uFF10-\uFF19\uFF21-\uFF3A\uFF41-\uFF5A]/g, function(c){ return String.fromCharCode(c.charCodeAt(0) - 0xFEE0); })
+    .replace(/[\u2212\u2013\u2014\uFF0D\u30FC]/g, "-")
+    .replace(/[\uFF0F\u2044]/g, "/")
+    .replace(/[\uFF0B]/g, "+")
+    .replace(/[\uFF0E\u3002]/g, ".")
+    .replace(/[,\uFF0C]/g, "");
+}
+function parseNum(str){
+  var s = halfWidth(str).replace(/\s+/g, " ").trim();
+  if(!s) return null;
+  var m = s.match(/^([+-]?)(\d+)\s+(\d+)\/(\d+)$/);
+  if(m) return (m[1] === "-" ? -1 : 1) * (Number(m[2]) + Number(m[3]) / Number(m[4]));
+  m = s.match(/^([+-]?)(\d+)\/(\d+)$/);
+  if(m){ if(Number(m[3]) === 0) return null; return (m[1] === "-" ? -1 : 1) * (Number(m[2]) / Number(m[3])); }
+  m = s.match(/^[+-]?(\d+\.?\d*|\.\d+)$/);
+  if(m) return Number(s);
+  return null;
+}
+function near(a, b, tol){ if(a === null || b === null) return false; return Math.abs(a - b) <= (tol || 0.005); }
+
+/* 文字型答案的正規化：把 ×/x/* 統一、去掉空白、去掉指數外的多餘括號 */
+function normText(str){
+  var s = halfWidth(str).toLowerCase();
+  s = s.replace(/\s+/g, "");
+  s = s.replace(/[\u00D7\u2217xX*\u00B7]/g, "*");
+  s = s.replace(/\^\(([+-]?\d+)\)/g, "^$1");
+  s = s.replace(/\*\*/g, "^");
+  return s;
+}
+
+/* ---------- hero ---------- */
+(function hero(){
+  var ra = document.getElementById("ra"), rn = document.getElementById("rn");
+  if(!ra || !rn) return;
+  function expand(a, n){
+    var digits = String(Math.round(a * 10));      /* 例如 6.3 -> "63" */
+    var out;
+    if(n >= 0){
+      if(n === 0) out = digits.charAt(0) + "." + digits.charAt(1);
+      else {
+        var zeros = n - 1;
+        out = digits + new Array(zeros + 1).join("0");
+      }
+    } else {
+      var k = -n;
+      out = "0." + new Array(k).join("0") + digits;
+    }
+    return out;
+  }
+  function render(){
+    var a = Number(ra.value) / 10, n = Number(rn.value);
+    document.getElementById("la").textContent = a.toFixed(1);
+    document.getElementById("ln").textContent = (n < 0 ? "\u2212" + Math.abs(n) : String(n));
+    document.getElementById("showA").textContent = a.toFixed(1);
+    document.getElementById("showN").textContent = (n < 0 ? "\u2212" + Math.abs(n) : String(n));
+    var val = expand(a, n);
+    document.getElementById("expand").textContent = "= " + val;
+    var why;
+    if(n > 0) why = "小數點往右搬 " + n + " 位。展開後是 " + (n + 1) + " 位數。";
+    else if(n === 0) why = "10\u2070 = 1，數字不動。";
+    else why = "小數點往左搬 " + (-n) + " 位。展開後小數點後第 " + (-n) + " 位開始出現不為 0 的數字。";
+    document.getElementById("why").textContent = why;
+  }
+  ra.addEventListener("input", render);
+  rn.addEventListener("input", render);
+  render();
+})();
+
+/* ---------- checks ---------- */
+function checkFill(task){
+  var inputs = task.querySelectorAll("input.blank");
+  var bad = 0, blank = 0;
+  Array.prototype.forEach.call(inputs, function(inp){
+    var want = parseNum(inp.getAttribute("data-ans"));
+    var got = parseNum(inp.value);
+    inp.classList.remove("ok", "no");
+    if(inp.value.trim() === ""){ blank++; return; }
+    if(near(got, want, Number(inp.getAttribute("data-tol") || 0.005))) inp.classList.add("ok");
+    else { inp.classList.add("no"); bad++; }
+  });
+  if(blank && !bad) return { ok: false, msg: "還有 " + blank + " 格沒填。" };
+  if(bad) return { ok: false, msg: "紅色的再想一次——括號在哪裡？指數是奇數還是偶數？" };
+  return { ok: true, msg: "全對。" };
+}
+function checkText(task){
+  var inputs = task.querySelectorAll("input.blank");
+  var bad = 0, blank = 0;
+  Array.prototype.forEach.call(inputs, function(inp){
+    var variants = String(inp.getAttribute("data-ans")).split("|").map(normText);
+    var got = normText(inp.value);
+    inp.classList.remove("ok", "no");
+    if(inp.value.trim() === ""){ blank++; return; }
+    if(variants.indexOf(got) >= 0) inp.classList.add("ok");
+    else { inp.classList.add("no"); bad++; }
+  });
+  if(blank && !bad) return { ok: false, msg: "還有 " + blank + " 格沒填。" };
+  if(bad) return { ok: false, msg: "紅色的再檢查：底數是 10 嗎？a 有沒有落在 1 到 10 之間？" };
+  return { ok: true, msg: "全對。" };
+}
+function checkCompare(task){
+  var rows = task.querySelectorAll(".cmp");
+  var bad = 0, blank = 0;
+  Array.prototype.forEach.call(rows, function(row){
+    var want = row.getAttribute("data-ans");
+    var got = row.getAttribute("data-picked");
+    row.classList.remove("ok", "no");
+    if(!got){ blank++; return; }
+    if(got === want) row.classList.add("ok");
+    else { row.classList.add("no"); bad++; }
+  });
+  if(blank && !bad) return { ok: false, msg: "還有 " + blank + " 題沒選。" };
+  if(bad) return { ok: false, msg: "紅色那題再唸一次：開口要朝比較大的數。" };
+  return { ok: true, msg: "全對。" };
+}
+
+var tasks = Array.prototype.slice.call(document.querySelectorAll(".task"));
+tasks.forEach(function(task){
+  var type = task.getAttribute("data-type");
+  var id = task.getAttribute("data-id");
+  if(type === "compare"){
+    task.addEventListener("click", function(ev){
+      var b = ev.target.closest(".ops button");
+      if(!b || !task.contains(b)) return;
+      var row = b.closest(".cmp");
+      row.setAttribute("data-picked", b.getAttribute("data-op"));
+      row.classList.remove("ok", "no");
+      Array.prototype.forEach.call(row.querySelectorAll(".ops button"), function(x){
+        x.setAttribute("aria-pressed", x === b ? "true" : "false");
+      });
+      var slot = row.querySelector(".slot");
+      if(slot) slot.textContent = b.getAttribute("data-op");
+    });
+  }
+  var btn = task.querySelector(".check");
+  if(btn) btn.addEventListener("click", function(){
+    var res;
+    if(type === "compare") res = checkCompare(task);
+    else if(type === "text") res = checkText(task);
+    else res = checkFill(task);
+    var fb = task.querySelector(".fb");
+    fb.textContent = res.msg;
+    fb.className = "fb " + (res.ok ? "ok" : "no");
+    if(window.MAXX) MAXX.say(res.ok, task);
+    state[id] = { ok: res.ok };
+    save();
+    updateProgress();
+  });
+});
+
+function updateProgress(){
+  var total = tasks.length, done = 0;
+  tasks.forEach(function(t){ var id = t.getAttribute("data-id"); if(state[id] && state[id].ok) done++; });
+  document.getElementById("pcount").textContent = done + " / " + total;
+  document.getElementById("pbar").style.width = total ? (done / total * 100) + "%" : "0%";
+}
+updateProgress();
+
+document.getElementById("reset").addEventListener("click", function(){
+  state = {}; save();
+  try{ localStorage.removeItem(KEY); }catch(e){}
+  window.location.reload();
+});
+
+Array.prototype.forEach.call(document.querySelectorAll(".jump"), function(b){
+  b.addEventListener("click", function(){
+    var t = document.getElementById(b.getAttribute("data-target"));
+    if(t) t.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+});
+
+})();
+</script>
+</body>
+</html>

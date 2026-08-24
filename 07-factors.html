@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>2-1 因數與倍數．互動訂正單</title>
+<style>
+:root{
+  --paper:#EEF2F4;--card:#FFFFFF;--ink:#12303C;--ink-soft:#5A737F;
+  --neg:#2F5FA8;--pos:#C87814;--zero:#17795C;--ok:#1B7A5C;--no:#B23C33;
+  --rule:#C6D5DC;--rule-soft:#DFE8ED;
+  --shadow:0 1px 0 #D7E1E6, 0 8px 24px -18px #1c3d4a;
+  --serif:"Noto Serif TC","Songti TC","Source Han Serif TC","PMingLiU",serif;
+  --sans:"PingFang TC","Microsoft JhengHei","Noto Sans TC","Heiti TC",system-ui,sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,"Courier New",monospace;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  font-family:var(--sans);color:var(--ink);background-color:var(--paper);
+  background-image:
+    linear-gradient(to right, rgba(47,95,168,.055) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(47,95,168,.055) 1px, transparent 1px);
+  background-size:26px 26px;line-height:1.7;-webkit-text-size-adjust:100%;
+}
+.wrap{max-width:860px;margin:0 auto;padding:0 14px 90px}
+header.top{padding:34px 0 18px}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.18em;color:var(--ink-soft);margin:0 0 6px}
+h1{font-family:var(--serif);font-weight:700;font-size:clamp(28px,7vw,44px);line-height:1.25;margin:0 0 10px;letter-spacing:.02em}
+h1 .neg{color:var(--neg)}
+.sub{margin:0;color:var(--ink-soft);font-size:15px}
+
+nav.stations{position:sticky;top:0;z-index:40;margin:16px -14px 0;padding:8px 14px;
+  background:rgba(238,242,244,.94);backdrop-filter:blur(6px);border-bottom:1px solid var(--rule);
+  overflow-x:auto;white-space:nowrap;-webkit-overflow-scrolling:touch}
+nav.stations button{font-family:var(--sans);font-size:13px;color:var(--ink);background:var(--card);
+  border:1px solid var(--rule);border-radius:999px;padding:6px 13px;margin-right:6px;cursor:pointer}
+nav.stations button:hover{border-color:var(--neg);color:var(--neg)}
+nav.stations button:focus-visible{outline:2px solid var(--neg);outline-offset:2px}
+
+.progress{display:flex;align-items:center;gap:10px;margin:14px 0 0;font-family:var(--mono);font-size:12px;color:var(--ink-soft)}
+.bar{flex:1;height:6px;background:var(--rule-soft);border-radius:99px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--zero);transition:width .35s ease}
+
+section{margin:34px 0 0;scroll-margin-top:60px}
+.sechead{display:flex;align-items:baseline;gap:10px;border-bottom:2px solid var(--ink);padding-bottom:6px}
+.sechead .no{font-family:var(--mono);font-size:13px;color:var(--neg);letter-spacing:.1em}
+.sechead h2{font-family:var(--serif);font-size:clamp(20px,4.4vw,26px);margin:0;font-weight:700}
+.sechead .from{margin-left:auto;font-size:11px;color:var(--ink-soft);font-family:var(--mono)}
+
+.card{background:var(--card);border:1px solid var(--rule);border-radius:10px;padding:16px 14px;margin:16px 0 0;box-shadow:var(--shadow)}
+.card.alert{border-color:var(--no);border-left-width:4px}
+.card h3{font-family:var(--sans);font-size:15px;margin:0 0 10px;font-weight:700;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.tag{font-family:var(--mono);font-size:11px;letter-spacing:.06em;background:var(--rule-soft);color:var(--ink-soft);border-radius:4px;padding:2px 7px;font-weight:400}
+.tag.hot{background:#FBEFEE;color:var(--no)}
+.tag.good{background:#EEF7F3;color:var(--ok)}
+.q{margin:0 0 10px;font-size:15px}
+.q.mono{font-family:var(--mono)}
+.q .num{font-family:var(--mono);color:var(--neg);margin-right:6px}
+.hintline{font-size:12px;color:var(--ink-soft);margin:0 0 8px}
+.rule-box{background:#F5F9FA;border-left:3px solid var(--neg);padding:8px 12px;margin:14px 0 0;font-size:14px;color:var(--ink-soft)}
+.rule-box b{color:var(--ink)}
+sup{font-size:.72em}
+
+input.blank{font-family:var(--mono);font-size:16px;color:var(--ink);width:118px;padding:5px 8px;text-align:center;
+  border:none;border-bottom:2px solid var(--neg);background:#F7FAFB;border-radius:4px 4px 0 0}
+input.blank:focus{outline:2px solid var(--neg);outline-offset:1px}
+input.blank.ok{border-bottom-color:var(--ok);background:#EEF7F3;color:var(--ok)}
+input.blank.no{border-bottom-color:var(--no);background:#FBEFEE;color:var(--no)}
+input.blank.sm{width:70px}
+input.blank.lg{width:210px}
+
+.chip{font-family:var(--mono);font-size:15px;background:#F7FAFB;border:1px solid var(--rule);border-radius:8px;padding:7px 12px;margin:0 6px 8px 0;cursor:pointer;color:var(--ink)}
+.chip[aria-pressed="true"]{background:var(--neg);border-color:var(--neg);color:#fff}
+.chip.ok{background:#EEF7F3;border-color:var(--ok);color:var(--ok)}
+.chip.no{background:#FBEFEE;border-color:var(--no);color:var(--no)}
+.chiprow{display:flex;flex-wrap:wrap;margin-top:4px}
+
+.cmp{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:12px 0;padding-bottom:8px;border-bottom:1px dashed var(--rule-soft)}
+.cmp:last-of-type{border-bottom:none}
+.cmp .expr{font-size:15px}
+.cmp .slot{display:inline-block;min-width:26px;text-align:center;color:var(--neg);font-family:var(--mono)}
+.cmp .ops button{font-family:var(--sans);font-size:13.5px;min-width:44px;height:38px;border:1px solid var(--rule);
+  background:#F7FAFB;border-radius:8px;cursor:pointer;margin-right:4px;padding:0 12px}
+.cmp .ops button[aria-pressed="true"]{background:var(--neg);border-color:var(--neg);color:#fff}
+.cmp.ok .expr{color:var(--ok)}
+.cmp.no .expr{color:var(--no)}
+
+button.act{font-family:var(--sans);font-size:14px;font-weight:700;background:var(--ink);color:#fff;border:none;border-radius:8px;padding:8px 16px;cursor:pointer;margin:4px 6px 0 0}
+button.act.ghost{background:transparent;color:var(--ink-soft);border:1px solid var(--rule);font-weight:400}
+button.act:focus-visible{outline:2px solid var(--neg);outline-offset:2px}
+
+.fb{font-size:14px;margin:10px 0 0;min-height:22px;font-weight:700}
+.fb.ok{color:var(--ok)}
+.fb.no{color:var(--no)}
+
+details.sol{margin-top:10px;border-top:1px dashed var(--rule);padding-top:8px}
+details.sol summary{font-size:13px;color:var(--neg);cursor:pointer;list-style:none}
+details.sol summary::-webkit-details-marker{display:none}
+details.sol summary::before{content:"▸ ";font-family:var(--mono)}
+details.sol[open] summary::before{content:"▾ "}
+details.sol .body{font-size:14px;color:var(--ink-soft);margin-top:8px}
+details.sol .body b{color:var(--ink)}
+.mono{font-family:var(--mono)}
+
+/* 因數配對機 */
+.hero{background:linear-gradient(180deg,#FFFFFF 0%, #F6F9FA 100%);border:1px solid var(--rule);border-radius:12px;padding:16px 12px 14px;margin-top:18px;box-shadow:var(--shadow)}
+.hero h2{font-family:var(--serif);font-size:20px;margin:0 0 2px}
+.hero p.hint{font-size:13px;color:var(--ink-soft);margin:0}
+.numrow{display:flex;gap:8px;align-items:center;margin-top:12px;flex-wrap:wrap}
+.numrow input[type=number]{font-family:var(--mono);font-size:20px;width:110px;padding:6px 10px;text-align:center;
+  border:1px solid var(--rule);border-bottom:2px solid var(--neg);background:#F7FAFB;border-radius:8px}
+.numrow button{font-family:var(--mono);font-size:14px;border:1px solid var(--rule);background:#F7FAFB;border-radius:8px;padding:7px 11px;cursor:pointer}
+.numrow button:hover{border-color:var(--neg);color:var(--neg)}
+.pairs{margin-top:12px;display:flex;flex-direction:column;gap:6px}
+.pair{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:16px;
+  background:var(--card);border:1px solid var(--rule-soft);border-radius:8px;padding:7px 10px}
+.pair .a{color:var(--neg);font-weight:700;min-width:56px;text-align:right}
+.pair .b{color:var(--pos);font-weight:700;min-width:56px}
+.pair .mid{color:var(--ink-soft);font-size:13px}
+.pair.same{border-color:var(--pos);background:#FFF8EE}
+.divlist{margin-top:12px;background:var(--card);border:1px solid var(--rule-soft);border-radius:8px;padding:10px 12px}
+.divlist .lab{font-size:11px;color:var(--ink-soft);letter-spacing:.08em;display:block}
+.divlist .vals{font-family:var(--mono);font-size:16px;word-break:break-word}
+.verdict{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.verdict div{flex:1;min-width:130px;background:var(--card);border:1px solid var(--rule-soft);border-radius:8px;padding:8px 10px;text-align:center}
+.verdict span{display:block;font-size:11px;color:var(--ink-soft);letter-spacing:.08em}
+.verdict b{font-family:var(--mono);font-size:17px}
+
+.trap{border-left:4px solid var(--no);padding-left:12px;margin:14px 0}
+.trap h4{margin:0 0 4px;font-size:15px}
+.trap p{margin:0;font-size:14px;color:var(--ink-soft)}
+footer{margin-top:44px;border-top:1px solid var(--rule);padding-top:14px;font-size:12px;color:var(--ink-soft)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+
+/* ===== Math 麥斯 回饋層 ===== */
+#maxxBar{
+  position:fixed;left:50%;transform:translateX(-50%) translateY(140%);
+  bottom:14px;width:min(720px,calc(100% - 20px));z-index:80;
+  display:flex;gap:10px;align-items:flex-start;
+  background:#132633;color:#EAF2F6;border:1px solid #2A4557;border-left:4px solid #3FE0B0;
+  border-radius:12px;padding:11px 12px;box-shadow:0 10px 30px -12px rgba(0,0,0,.55);
+  transition:transform .28s cubic-bezier(.2,.9,.3,1.2);
+}
+#maxxBar.on{transform:translateX(-50%) translateY(0)}
+#maxxBar .mx-av{width:40px;height:40px;flex:none;object-fit:contain;align-self:center}
+#maxxBar .mx-txt{font-size:13.5px;line-height:1.6;flex:1}
+#maxxBar .mx-hype{display:block;font-weight:700;color:#3FE0B0}
+#maxxBar .mx-hype.bad{color:#FF9B6A}
+#maxxBar .mx-sub{color:#9FB6C2;font-size:12.5px}
+#maxxBar .mx-combo{font-family:var(--mono);color:#FFC94A;font-size:12px;margin-left:6px}
+#maxxBar .mx-x{background:none;border:none;color:#9FB6C2;font-size:20px;line-height:1;cursor:pointer;padding:0 2px;flex:none}
+#maxxBar .mx-x:hover{color:#EAF2F6}
+@media (prefers-reduced-motion:reduce){#maxxBar{transition:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="top">
+  <p class="eyebrow">國中數學 1 上 · 計算熟練</p>
+  <h1>2-1 <span class="neg">因數</span>與倍數<br>互動訂正單</h1>
+  <p class="sub">因數用頭尾配對找，倍數用判別法看。動筆前先讀清楚：題目要「列出來」還是「求出某個數」。</p>
+</header>
+
+<nav class="stations" aria-label="關卡導覽">
+  <button class="jump" data-target="hero">因數配對機</button>
+  <button class="jump" data-target="s1">① 列出所有因數</button>
+  <button class="jump" data-target="s2">② 頭尾配對</button>
+  <button class="jump" data-target="s3">③ 2、5 的倍數</button>
+  <button class="jump" data-target="s4">④ 4 的倍數</button>
+  <button class="jump" data-target="s5">⑤ 3、9 的倍數</button>
+  <button class="jump" data-target="s6">⑥ 11 的倍數</button>
+  <button class="jump" data-target="s7">⑦ 質數與合數</button>
+  <button class="jump" data-target="s8">⑧ 質因數分解</button>
+  <button class="jump" data-target="s9">⑨ 讀題訓練</button>
+</nav>
+
+<div class="progress">
+  <span id="pcount">0 / 0</span>
+  <span class="bar"><i id="pbar"></i></span>
+  <button class="act ghost" id="reset" style="margin:0">清除紀錄</button>
+</div>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero">
+    <h2>因數配對機</h2>
+    <p class="hint">輸入一個數，看它怎麼被拆成一組一組的配對。<b>因數永遠成對出現</b>——這就是解這一單元所有題目的主要工具。</p>
+    <div class="numrow">
+      <input id="numIn" type="number" min="1" max="9999" value="44" aria-label="輸入一個正整數">
+      <button type="button" class="preset" data-n="44">44</button>
+      <button type="button" class="preset" data-n="28">28</button>
+      <button type="button" class="preset" data-n="42">42</button>
+      <button type="button" class="preset" data-n="64">64</button>
+      <button type="button" class="preset" data-n="36">36</button>
+      <button type="button" class="preset" data-n="17">17</button>
+    </div>
+    <div class="pairs" id="pairs"></div>
+    <div class="divlist">
+      <span class="lab">由小到大的所有因數</span>
+      <span class="vals" id="divs"></span>
+    </div>
+    <div class="verdict">
+      <div><span>因數個數</span><b id="vCount">—</b></div>
+      <div><span>質數或合數</span><b id="vKind">—</b></div>
+      <div><span>可拼出幾種矩形</span><b id="vRect">—</b></div>
+    </div>
+  </div>
+</section>
+
+<!-- S1 -->
+<section id="s1">
+  <div class="sechead"><span class="no">01</span><h2>列出所有因數</h2><span class="from">熟練 1</span></div>
+  <div class="rule-box"><b>找因數的方法：</b>從 1 開始一個一個試，<b>找到一個就把配對的另一個一起寫下來</b>（1 和 44、2 和 22、4 和 11），試到兩個數碰頭就停。</div>
+
+  <div class="card alert task" data-id="k1" data-type="compare">
+    <h3>先讀題：這一大題要你交出什麼？<span class="tag hot">原卷答錯位置</span></h3>
+    <div class="cmp" data-ans="列出所有因數"><span class="expr">「將 44 寫成 a×b，並<b>由小到大寫出 44 的所有因數</b>」→ 要交的是</span>
+      <span class="ops"><button type="button" data-op="一組 a、b">一組 a、b</button><button type="button" data-op="列出所有因數">列出所有因數</button></span></div>
+    <div class="cmp" data-ans="求未知數"><span class="expr">「M 的因數由小到大排列為 1、2、3、6、a、14、b、M，則 a＝？b＝？」→ 要交的是</span>
+      <span class="ops"><button type="button" data-op="列出所有因數">列出所有因數</button><button type="button" data-op="求未知數">求未知數</button></span></div>
+    <button class="act check">檢查</button>
+    <p class="fb"></p>
+    <details class="sol"><summary>看解析</summary><div class="body">
+      原卷把熟練 2 的答案（a=7、b=21、c=8、d=32）寫進了熟練 1 的格子，所以熟練 1 其實<b>沒有作答</b>。
+      這兩大題的標題一樣都是「因數的應用」，但<b>要交的東西完全不同</b>：一個要你列清單，一個要你求未知數。
+      作答前先把題目最後那句話圈起來。
+    </div></details>
+  </div>
+
+  <div class="card task" data-id="k2" data-type="text">
+    <h3>熟練 1<span class="tag">配對＋列清單</span></h3>
+    <p class="hintline">因數之間用逗號隔開，例如 <span class="mono">1,2,4,11,22,44</span>（順序要由小到大）。</p>
+    <p class="q"><span class="num">1.</span>44 = 1×44 = 2×<input class="blank sm" data-ans="22" aria-label="44配對1"> = 4×<input class="blank sm" data-ans="11" aria-label="44配對2"><br>
+      44 的所有因數：<input class="blank lg" data-ans="1,2,4,11,22,44" aria-label="44所有因數"></p>
+    <p class="q"><span class="num">2.</span>28 = 1×28 = 2×<input class="blank sm" data-ans="14" aria-label="28配對1"> = 4×<input class="blank sm" data-ans="7" aria-label="28配對2"><br>
+      28 的所有因數：<input class="blank lg" data-ans="1,2,4,7,14,28" aria-label="28所有因數"></p>
+    <button class="act check">檢查</button>
+    <p class="fb"></p>
+    <details class="sol"><summary>看解析</summary><div class="body">
+      44：1×44、2×22、4×11，試到 5、6…都不行，7 之後就會跟 11 碰頭 → 共 <b>6 個因數</b>。<br>
+      28：1×28、2×14、4×7 → <b>1, 2, 4, 7, 14, 28</b>。用上面的配對機驗算一次最快。
+    </div></details>
+  </div>
+</section>
+
+<!-- S2 -->
+<section id="s2">
+  <div class="sechead"><span class="no">02</span><h2>頭尾配對找出那個數</h2><span class="from">熟練 2</span></div>
+  <div class="rule-box"><b>關鍵性質：</b>把因數由小到大排好之後，<b>第一個×最後一個 ＝ 第二個×倒數第二個 ＝ …＝ 那個數本身</b>。所以只要有一組完整的配對，就能算出那個數。</div>
+
+  <div class="card task" data-id="k3" data-type="fill">
+    <h3>熟練 2-1<span class="tag">M 的因數</span></h3>
+    <p class="q mono">1、2、3、6、a、14、b、M</p>
+    <p class="q">已知完整的一組配對是 3 和 14 → M = <input class="blank sm" data-ans="42" aria-label="M">，
+      再配對：6×a = M → a = <input class="blank sm" data-ans="7" aria-label="a">，
+      2×b = M → b = <input class="blank sm" data-ans="21" aria-label="b"></p>
+    <button class="act check">檢查</button>
+    <p class="fb"></p>
+    <details class="sol"><summary>看解析</summary><div class="body">
+      共 8 個因數，頭尾一一配對：1↔M、2↔b、3↔14、6↔a。所以 M = 3×14 = <b>42</b>，
+      a = 42÷6 = <b>7</b>，b = 42÷2 = <b>21</b>。驗算：42 的因數是 1,2,3,6,7,14,21,42，順序完全吻合。
+    </div></details>
+  </div>
+
+  <div class="card task" data-id="k4" data-type="fill">
+    <h3>熟練 2-2<span class="tag">N 的因數・有陷阱</span></h3>
+    <p class="q mono">1、2、4、c、16、d、N</p>
+    <p class="q">完整的一組配對是 4 和 16 → N = <input class="blank sm" data-ans="64" aria-label="N">，
+      c = <input class="blank sm" data-ans="8" aria-label="c">，
+      d = <input class="blank sm" data-ans="32" aria-label="d"></p>
+    <button class="act check">檢查</button>
+    <p class="fb"></p>
+    <details class="sol"><summary>看解析</summary><div class="body">
+      N = 4×16 = <b>64</b>，d = 64÷2 = <b>32</b>。<br>
+      c 比較特別：64 = 8×8，<b>配對的兩個數是同一個</b>，所以 8 在清單裡只出現一次，正好卡在 4 和 16 中間 → c = <b>8</b>。
+      這種「因數個數是奇數」的數叫<b>完全平方數</b>（4、9、16、25、36、64…），可以用配對機輸入 36 看看。
+    </div></details>
+  </div>
+</section>
+
+<!-- S3 -->
+<section id="s3">
+  <div class="sechead"><span class="no">03</span><h2>2、5 的倍數</h2><span class="from">熟練 3</span></div>
+  <div class="rule-box"><b>只看個位數：</b>個位是 0、2、4、6、8 → 2 的倍數；個位是 0 或 5 → 5 的倍數；<b>同時是 2 和 5 的倍數 → 個位一定是 0</b>。</div>
+
+  <div class="card task" data-id="k5" data-type="text">
+    <h3>熟練 3<span class="tag good">原卷全對</span></h3>
+    <p class="hintline">多個答案用逗號隔開，例如 <span class="mono">2,4,6,8</span>。</p>
+    <p class="q"><span class="num">1.</span>五位數 8351□ 是 5 的倍數也是 2 的倍數，□ =
+      <input class="blank" data-ans="0" aria-label="k5-1"></p>
+    <p class="q"><span class="num">2.</span>四位數 395□ 是 2 的倍數但不是 5 的倍數，□ =
+      <input class="blank lg" data-ans="2,4,6,8" aria-label="k5-2"></p>
+    <button class="act check">檢查</button>
+    <p class="fb"></p>
+    <details class="sol"><summary>看解析</summary><div class="body">
+      第 2 題要同時滿足兩個條件：是 2 的倍數（0,2,4,6,8）但<b>不是</b> 5 的倍數（排掉 0）→ <b>2, 4, 6, 8</b>。
+    </div></details>
+  </div>
+</section>
+
+<!-- S4 -->
+<section id="s4">
+  <div class="sechead"><span class="no">04</span><h2>4 的倍數</h2><span class="from">熟練 4</span></div>
+  <div class="rule-box"><b>只看末兩位：</b>末兩位形成的數是 4 的倍數，整個數就是 4 的倍數（因為 100 本身是 4 的倍數）。前面幾百幾萬完全不用管。</div>
+
+  <div class="card task" data-id="k6" data-type="multi">
+    <h3>熟練 4-1<span class="tag good">原卷全對</span></h3>
+    <p class="q">下列哪些是 4 的倍數？（可複選）</p>
+    <div class="chiprow">
+      <button class="chip" aria-pressed="false" data-correct="1">496</button>
+      <button class="chip" aria-pressed="false" data-correct="1">89228</button>
+      <button class="chip" aria-pressed="false" data-correct="1">240</button>
+      <button class="chip" aria-pressed="false">5022</button>
+      <button class="chip" aria-pressed="false">253355</button>
+      <button class="chip" aria-pressed="false">150</button>
+      <button class="chip" aria-pressed="false">525</button>
+      <button class="chip" aria-pressed="false" data-correct="1">44044</button>
+      <button class="chip" aria-pressed="false" data-correct="1">1136</button>
+      <button class="chip" aria-pressed="false">18950</button>
+      <button class="chip" aria-pressed="false">999998</button>
+      <button class="chip" aria-pressed="false" data-correct="1">55552</button>
+    </div>
+    <button class="act check">檢查</button>
+    <p class="fb"></p>
+    <details class="sol"><summary>看解析</summary><div class="body">
+      末兩位：96、28、40、44、36、52 都是 4 的倍數；22、55、50、25、50、98 不是。
+      特別注意 999998 的末兩位是 98，不是 4 的倍數（雖然它是 2 的倍數）。
+    </div></details>
+  </div>
+
+  <div class="card task" data-id="k7" data-type="text">
+    <h3>熟練 4-2</h3>
+    <p class="q">四位數 851□ 是 4 的倍數，□ = <input class="blank lg" data-ans="2,6" aria-label="k7"></p>
+    <button class="act check">檢查</button>
+    <p class="fb"></p>
+    <details class="sol"><summary>看解析</summary><div class="body">
+      末兩位是「1□」：10~19 之間只有 <b>12</b> 和 <b>16</b> 是 4 的倍數 → □ = 2 或 6。
+    </div></details>
+  </div>
+</section>
+
+<!-- S5 -->
+<section id="s5">
+  <div class="sechead"><span class="no">05</span><h2>3 與 9 的倍數</h2><span class="from">熟練 5・6</span></div>
+  <div class="rule-box"><b>看各位數字的和：</b>數字和是 3 的倍數 → 原數是 3 的倍數；數字和是 9 的倍數 → 原數是 9 的倍數。<br>
+    <b>順序很重要：</b>9 的倍數一定是 3 的倍數，但 3 的倍數不一定是 9 的倍數。</div>
+
+  <div class="card task" data-id="k8" data-type="multi">
+    <h3>熟練 5-1<span class="tag good">原卷全對</span></h3>
+    <p class="q">下列哪些是 <b>9</b> 的倍數？（可複選）</p>
+    <div class="chiprow">
+      <button class="chip" aria-pressed="false" data-correct="1">495</button>
+      <button class="chip" aria-pressed="false">920</button>
+      <button class="chip" aria-pressed="false">204</button>
+      <button class="chip" aria-pressed="false" data-correct="1">666</button>
+      <button class="chip" aria-pressed="false">919</button>
+      <button class="chip" aria-pressed="false">468732</button>
+      <button class="chip" aria-pressed="false">2838</button>
+      <button class="chip" aria-pressed="false">103056</button>
+      <button class="chip" aria-pressed="false">1276</button>
+      <button class="chip" aria-pressed="false">6630</button>
+      <button class="chip" aria-pressed="false">5793</button>
+      <button class="chip" aria-pressed="false" data-correct="1">7659</button>
+    </div>
+    <button class="act check">檢查</button>
+    <p class="fb"></p>
+    <details class="sol"><summary>看解析</summary><div class="body">
+      495→18、666→18、7659→27，都是 9 的倍數。<br>
+      容易誤判的：468732→30、2838→21、5793→24、6630→15，這些是 <b>3 的倍數但不是 9 的倍數</b>。
+    </div></details>
+  </div>
+
+  <div class="card task" data-id="k9" data-type="multi">
+    <h3>熟練 6-1<span class="tag good">原卷全對</span></h3>
+    <p class="q">同一組數中，哪些是 <b>3</b> 的倍數？（可複選）</p>
+    <div class="chiprow">
+      <button class="chip" aria-pressed="false" data-correct="1">495</button>
+      <button class="chip" aria-pressed="false">920</button>
+      <button class="chip" aria-pressed="false" data-correct="1">204</button>
+      <button class="chip" aria-pressed="false" data-correct="1">666</button>
+      <button class="chip" aria-pressed="false">919</button>
+      <button class="chip" aria-pressed="false" data-correct="1">468732</button>
+      <button class="chip" aria-pressed="false" data-correct="1">2838</button>
+      <button class="chip" aria-pressed="false" data-correct="1">103056</button>
+      <button class="chip" aria-pressed="false">1276</button>
+      <button class="chip" aria-pressed="false" data-correct="1">6630</button>
+      <button class="chip" aria-pressed="false" data-correct="1">5793</button>
+      <button class="chip" aria-pressed="false" data-correct="1">7659</button>
+    </div>
+    <button class="act check">檢查</button>
+    <p class="fb"></p>
+    <details class="sol"><summary>看解析</summary><div class="body">
+      不是 3 的倍數的只有三個：920（和 11）、919（和 19）、1276（和 16）。其餘九個都是。
+    </div></details>
+  </div>
+
+  <div class="card task" data-id="k10" data-type="text">
+    <h3>熟練 5-2・6-2</h3>
+    <p class="hintline">多個答案用逗號隔開。</p>
+    <p class="q">三位數 36□ 是 9 的倍數，□ = <input class="blank" data-ans="0,9" aria-label="k10-1"></p>
+    <p class="q">四位數 5□62 是 3 的倍數，□ = <input class="blank lg" data-ans="2,5,8" aria-label="k10-2"></p>
+    <button class="act check">檢查</button>
+    <p class="fb"></p>
+    <details class="sol"><summary>看解析</summary><div class="body">
+      36□：3+6+□ = 9+□，要是 9 的倍數 → □ = <b>0 或 9</b>（別漏掉 0）。<br>
+      5□62：5+□+6+2 = 13+□，要是 3 的倍數 → 13+□ = 15、18、21 → □ = <b>2、5、8</b>。
+    </div></details>
+  </div>
+</section>
+
+<!-- S6 -->
+<section id="s6">
+  <div class="sechead"><span class="no">06</span><h2>11 的倍數</h2><span class="from">熟練 7</span></div>
+  <div class="rule-box"><b>交錯和：</b>從<b>個位</b>開始，一加一減交替算（個位＋、十位−、百位＋…）。結果是 0 或 11 的倍數，原數就是 11 的倍數。</div>
+
+  <div class="card task" data-id="k11" data-type="multi">
+    <h3>熟練 7-1<span class="tag good">原卷全對</span></h3>
+    <p class="q">下列哪些是 11 的倍數？（可複選）</p>
+    <div class="chiprow">
+      <button class="chip" aria-pressed="false" data-correct="1">495</button>
+      <button class="chip" aria-pressed="false">920</button>
+      <button class="chip" aria-pressed="false">204</button>
+      <button class="chip" aria-pressed="false">666</button>
+      <button class="chip" aria-pressed="false">919</button>
+      <button class="chip" aria-pressed="false" data-correct="1">468732</button>
+      <button class="chip" aria-pressed="false" data-correct="1">2838</button>
+      <button class="chip" aria-pressed="false">103056</button>
+      <button class="chip" aria-pressed="false" data-correct="1">1276</button>
+      <button class="chip" aria-pressed="false">6630</button>
+      <button class="chip" aria-pressed="false">5793</button>
+      <button class="chip" aria-pressed="false">7659</button>
+    </div>
+    <button class="act check">檢查</button>
+    <p class="fb"></p>
+    <details class="sol"><summary>看解析</summary><div class="body">
+      495：5−9+4 = 0 ✓　　468732：2−3+7−8+6−4 = 0 ✓<br>
+      2838：8−3+8−2 = 11 ✓　　1276：6−7+2−1 = 0 ✓<br>
+      其餘的交錯和都不是 0 或 11 的倍數。這一題四個全中，交錯和算得很穩。
+    </div></details>
+  </div>
+
+  <div class="card task" data-id="k12" data-type="fill">
+    <h3>熟練 7-2・7-3<span class="tag">分步做</span></h3>
+    <p class="q"><span class="num">2.</span>五位數 □3852 是 11 的倍數：交錯和 = 2−5+8−3+□ = <input class="blank sm" data-ans="2" aria-label="k12-a"> +□，
+      所以 □ = <input class="blank sm" data-ans="9" aria-label="k12-b"></p>
+    <p class="q"><span class="num">3.</span>七位數 78□3526 是 11 的倍數：交錯和 = 6−2+5−3+□−8+7 = <input class="blank sm" data-ans="5" aria-label="k12-c"> +□，
+      所以 □ = <input class="blank sm" data-ans="6" aria-label="k12-d"></p>
+    <button class="act check">檢查</button>
+    <p class="fb"></p>
+    <details class="sol"><summary>看解析</summary><div class="body">
+      第 2 題：2+□ 要是 11 的倍數，□ 只能是 0~9 → 2+□ = 11 → □ = <b>9</b>（驗算 93852 ÷ 11 = 8532）。<br>
+      第 3 題：5+□ = 11 → □ = <b>6</b>（驗算 7863526 ÷ 11 = 714866）。<br>
+      注意交錯和要<b>從個位開始</b>算，位數是奇數或偶數都一樣做。
+    </div></details>
+  </div>
+</section>
+
+<!-- S7 -->
+<section id="s7">
+  <div class="sechead"><span class="no">07</span><h2>質數與合數</h2><span class="from">熟練 8・9</span></div>
+  <div class="rule-box"><b>質數：</b>恰好只有 2 個因數（1 和自己）。<b>合數：</b>3 個以上因數。<b>1 既不是質數也不是合數</b>（它只有 1 個因數）。</div>
+
+  <div class="card task" data-id="k13" data-type="text">
+    <h3>熟練 8<span class="tag good">原卷全對</span></h3>
+    <p class="q"><span class="num">1.</span>最小的質數 <input class="blank sm" data-ans="2" aria-label="k13-1">　
+      最小的合數 <input class="blank sm" data-ans="4" aria-label="k13-2">　
+      奇數中最小的質數 <input class="blank sm" data-ans="3" aria-label="k13-3"></p>
+    <p class="q"><span class="num">2.</span>91 是質數還是合數？<input class="blank" data-ans="合數" aria-label="k13-4">　
+      20 的因數中的質數：<input class="blank" data-ans="2,5" aria-label="k13-5"></p>
+    <button class="act check">檢查</button>
+    <p class="fb"></p>
+    <details class="sol"><summary>看解析</summary><div class="body">
+      91 看起來像質數，其實 <b>91 = 7×13</b>，是合數——考試最愛考這個數，還有 51 = 3×17、57 = 3×19。<br>
+      20 的因數是 1, 2, 4, 5, 10, 20，其中的質數只有 <b>2 和 5</b>。
+    </div></details>
+  </div>
+
+  <div class="card task" data-id="k14" data-type="fill">
+    <h3>熟練 9<span class="tag good">原卷全對</span></h3>
+    <p class="q">n 個邊長 1 的小正方形拼成矩形，可以拼出幾種不同形狀？</p>
+    <p class="q">n = 15 → <input class="blank sm" data-ans="2" aria-label="n15">　
+      n = 17 → <input class="blank sm" data-ans="1" aria-label="n17">　
+      n = 18 → <input class="blank sm" data-ans="3" aria-label="n18">　
+      n = 36 → <input class="blank sm" data-ans="5" aria-label="n36"></p>
+    <button class="act check">檢查</button>
+    <p class="fb"></p>
+    <details class="sol"><summary>看解析</summary><div class="body">
+      矩形的種數 = <b>因數配對的組數</b>。15 → 1×15、3×5 共 2 組；17 是質數只有 1 組；18 → 1×18、2×9、3×6 共 3 組。<br>
+      36 有 9 個因數（奇數個），因為 6×6 自己配自己 → (9+1)÷2 = <b>5</b> 組。用配對機輸入 36 就看得到。
+    </div></details>
+  </div>
+</section>
+
+<!-- S8 -->
+<section id="s8">
+  <div class="sechead"><span class="no">08</span><h2>質因數分解</h2><span class="from">熟練 10・11</span></div>
+  <div class="rule-box"><b>標準分解式：</b>把數拆成質數連乘，<b>由小到大排列</b>，重複的用指數寫。例如 60 = 2<sup>2</sup>×3×5。</div>
+
+  <div class="card task" data-id="k15" data-type="text">
+    <h3>熟練 10<span class="tag good">原卷八題全對</span></h3>
+    <p class="hintline">輸入方式：次方用 ^，乘號用 * 或 x，例如 <span class="mono">2^2*3*5</span>。</p>
+    <p class="q"><span class="num">1.</span>60 = <input class="blank lg" data-ans="2^2*3*5" aria-label="f1">　
+      <span class="num">2.</span>345 = <input class="blank lg" data-ans="3*5*23" aria-label="f2"></p>
+    <p class="q"><span class="num">3.</span>117 = <input class="blank lg" data-ans="3^2*13" aria-label="f3">　
+      <span class="num">4.</span>456 = <input class="blank lg" data-ans="2^3*3*19" aria-label="f4"></p>
+    <p class="q"><span class="num">5.</span>336 = <input class="blank lg" data-ans="2^4*3*7" aria-label="f5">　
+      <span class="num">6.</span>936 = <input class="blank lg" data-ans="2^3*3^2*13" aria-label="f6"></p>
+    <p class="q"><span class="num">7.</span>2475 = <input class="blank lg" data-ans="3^2*5^2*11" aria-label="f7">　
+      <span class="num">8.</span>3375 = <input class="blank lg" data-ans="3^3*5^3" aria-label="f8"></p>
+    <button class="act check">檢查</button>
+    <p class="fb"></p>
+    <details class="sol"><summary>看解析</summary><div class="body">
+      短除法從最小的質數開始除：336 ÷2=168 ÷2=84 ÷2=42 ÷2=21 = 3×7 → 2<sup>4</sup>×3×7。<br>
+      3375 = 27×125 = 3<sup>3</sup>×5<sup>3</sup>。這一大題八題全對，短除法很熟練。
+    </div></details>
+  </div>
+
+  <div class="card task" data-id="k16" data-type="fill">
+    <h3>熟練 11<span class="tag good">原卷全對</span></h3>
+    <p class="q"><span class="num">1.</span>1080 的標準分解式為 2<sup>a</sup>×b<sup>c</sup>×d：
+      1080 = <input class="blank lg" data-ans="1080" aria-label="chk1080" style="display:none">
+      a = <input class="blank sm" data-ans="3" aria-label="a1">，b = <input class="blank sm" data-ans="3" aria-label="b1">，
+      c = <input class="blank sm" data-ans="3" aria-label="c1">，d = <input class="blank sm" data-ans="5" aria-label="d1">
+      → 密碼 <input class="blank" data-ans="3335" aria-label="pw1"></p>
+    <p class="q"><span class="num">2.</span>2268 的標準分解式為 2<sup>a</sup>×b<sup>c</sup>×7<sup>d</sup>：
+      a = <input class="blank sm" data-ans="2" aria-label="a2">，b = <input class="blank sm" data-ans="3" aria-label="b2">，
+      c = <input class="blank sm" data-ans="4" aria-label="c2">，d = <input class="blank sm" data-ans="1" aria-label="d2">
+      → 密碼 <input class="blank" data-ans="2341" aria-label="pw2"></p>
+    <button class="act check">檢查</button>
+    <p class="fb"></p>
+    <details class="sol"><summary>看解析</summary><div class="body">
+      1080 = 2<sup>3</sup>×3<sup>3</sup>×5 → a=3、b=3、c=3、d=5 → <b>3335</b>。<br>
+      2268 = 2<sup>2</sup>×3<sup>4</sup>×7 → a=2、b=3、c=4，7 只出現一次所以 <b>d=1</b>（指數是 1 時通常不寫，但這題要填）→ <b>2341</b>。
+    </div></details>
+  </div>
+</section>
+
+<!-- S9 -->
+<section id="s9">
+  <div class="sechead"><span class="no">09</span><h2>讀題訓練</h2><span class="from">這一頁唯一的失分點</span></div>
+  <div class="card">
+    <div class="trap"><h4>這次的錯不是算錯，是交錯東西</h4>
+      <p>熟練 1 要「列出所有因數」，但格子裡填的是熟練 2 的 a、b、c、d。<b>算式全部正確，位置錯了</b>——第 13、14 頁一題沒錯，能力完全沒問題。</p></div>
+    <div class="trap"><h4>這隻怪上次也出現過</h4>
+      <p>1-4 熟練 6：題目要「以科學記號表示」，他寫成小數就停了；當時熟練 7、8 卻全對。<b>同一隻讀題怪，第二次出手了。</b></p></div>
+    <div class="trap"><h4>三秒防守法</h4>
+      <p>作答前把題目<b>最後一句</b>圈起來，問自己：要交的是「一個數」、「一串數」還是「是或不是」？寫完再回頭看一次那個圈。</p></div>
+    <details class="sol" open><summary>老師備註</summary><div class="body">
+      這一單元的觀念掌握度是四個單元裡最好的：倍數判別法（2、5、4、9、3、11）六種全對，
+      八題質因數分解全對，連 456 = 2<sup>3</sup>×3×19 這種含大質因數的都拆對，密碼素養題也對。<br>
+      建議訂正只做兩件事：<b>把熟練 1 補寫完整</b>，以及<b>把熟練 2 的格子擦掉重寫成 a=7、b=21、c=8、d=32</b>（原本寫的是配對算式，不是答案本身）。
+    </div></details>
+  </div>
+</section>
+
+<footer>互動訂正單 · 2-1 因數與倍數 · 作答紀錄只存在這台裝置的瀏覽器裡。</footer>
+</div>
+
+<script>
+/* ===== Math 麥斯：熱血回饋層（歡呼在氣泡，具體錯在哪一步仍留在紅字） ===== */
+window.MAXX = (function(){
+"use strict";
+var BOSS = {"k1": "讀題漏看怪", "k2": "配對漏抓怪", "k3": "頭尾配對怪", "k4": "頭尾配對怪", "k5": "個位數哨兵", "k6": "末兩位守衛", "k7": "末兩位守衛", "k8": "數字和魔王", "k9": "數字和魔王", "k10": "數字和魔王", "k11": "交錯和刺客", "k12": "交錯和刺客", "k13": "質數獵人", "k14": "配對漏抓怪", "k15": "分解漏指數怪", "k16": "分解漏指數怪"};
+var OK = [
+  "破防！這一刀切得漂亮！",
+  "火力全開 Max！觀眾席都站起來了！",
+  "乾淨俐落，這關連渣都沒剩！",
+  "看到沒？這就是練過的手感！",
+  "命中要害！大腦火力全開！",
+  "穩！這題被你直接秒了！"
+];
+var COMBO = [
+  "COMBO ×{n}！停不下來了啦！",
+  "{n} 連擊！這節奏太猛！",
+  "連續 {n} 關不失手，教練我想打職業！"
+];
+var BAD = [
+  "警報！「{boss}」就是在這一關出手的——",
+  "被偷襲了！「{boss}」剛剛從這裡溜過去：",
+  "血條沒掉沒關係，情報到手了！「{boss}」的招式是：",
+  "喔喔，「{boss}」這招很陰！我們看它動了哪裡："
+];
+var AV = '<img class="mx-av" src="data:image/webp;base64,UklGRqg3AABXRUJQVlA4WAoAAAAQAAAAxwAAxwAAQUxQSO8LAAABsIb/nyHL1e9f/zpYM4s4i9j25iK2jWvbtm3fG9u2k92Nnax3YxvnTFX9fy+mp/pgpvLyRsQE4P/+L35x6tU5J4XnPN4NOg8A6+3/9f/Nv+W+o6CFJioAtvzRA6xcMVtckYkHsMUP7yfJFELomwmHEldgzL5Xk7SQSCYeCY8CF4fuTy0iLSQ2R86FosAdsPttZIxsmbinlJhizHlkSGyd+JAIilu6sOUSpsTcYD+GLy4HfLzByHzj9nCl5TH+wMcZmG/22pqQwvLYcClprJl4P0rbYZ9n2TDWe1gKqwufIBPrJz6AQRT1Xiu9VykEj90YEgfQ7I0ZkIERdaipKgXgsOFTKXFAjTvADYgCmLjTJ3913bXXXXfddV/55JzJAFQ6neiIFUwc2GA/hx8QTDjqmmeZ/fyZc7oB1+EU5zJwgBMfhasn4n/5KkkLIVaGYCQfOK4bKp1M8WkGDnjiMfADcfkzJIMx06KRD8yBuM7lZLUQbRDspdWgdZpH7/XPN8iYQTJF8jSFdizFRYwcxMRFq6GrngCY+Zc3GC2HTInXrQ/tUIpdGTmokYtWg7o6EFVg5uWkZZGBz24A15FEepdaGhxGLjoaEJU8AM4DH+9jymODC7uddCKPTzNysBN54VYAnKpkAU6xa59ZHgPPgHYiwSOWBo0pMs0/YVU0e+9FWgDd2DVFy2PgodDOo/K+mDgUI8lXL/7Ae0eh0nsnFfD4PmONZM9PE+k8OJFhSNBSJMnn5p18/H7TugFAVQDA41qmPAb+HNppBGOfpg0NkhZjYvNri049dr0eAOoAJzPeSZaXbNkIyRH1zdLeHHagcUhbDDGSZGPB73fpBdRB8S/GPEYeCl/hvDp0RI+vWhhalZZCJMkFv18b8Coz3jLLC/ZnUQDOAcCU/Y895tijjp4CaWeKExmHQbOlYOSbf5wNeNzAmBd5CxycAmudcOL1b7JyV2g7EzzMNEyaUyDf+NM0dH20TuKCMeKBLU97hyRjeIf37wBBe7t3WJEWyMf3w45MeUbOdFj39ESGEI0NntUDQZu7b5iR1mD87MgnLNWIs3DIM7RoJBl4FqBod/cMOzIZf/cI63DMB8jAyshz4BzanSxKw48WWTfxlo8yJFYal48Th3bv8CfG4UemOuRrpLE6hS2haKvqBsDJrp+4gqkNDGrkL+DRVgUDqfjAKx+wtmStzF6eLNJWFIduBldLML1xxpts64G/hEc7VWzLX4uvBYcb+xttzez5bkC9tA1xox7m9XD1FHsztbXEJ3fdaQQA79qExyfZ6FvHaS0I5lpsZ5VPn3vkOEC0HYiMW279PAW+nmJPhjYXjeSy360PiBt+HocyMPZvj65aUJzO2N5Ii5Fs3LQX4IeduusYmfjIBHTVcjLxWaY2RzIFkuesD3HDy2F2I5FMvGt1OC81enBAowOQFhP7vi7ww8rjdwwkmfjKhwGod9VeBUDvnZY6AMlI3roxRIaPSM9ipiYm8uLDV0L26sdesNSMHdIC+78G6PDB1NdoFbRIvnj2p9afMWPGzBkbffbPdzTYWaPx5DHQ4aLYzSJbx0iS1szmGFMnoTX42OrQYfNl5pAWA6tDiMaOG7hkDejw8DidIavZmtmhI5esAR0m/x2Azh65ZA244XFiYTBy6VrODT2R3iW0smCDd0Jk6GHEc8XBwFNUZeiNfKk8GPh1+KEG569lLA4LjQ2gQ83jnwzFwcTFo5xk6ZA4vUQY+WdoFmTwFJ9kLBCG9D5oK3E7Yii8NxVJ5G3SqgtHc2PoYAkmvEIrEAbuCm2SLkx51n4FP1hQvcZiiUSb29vT5b0Csx4gr4UOmsfHGEqEgZ9F88hPvcHAZyaLGywn019OViJmz33p85///AVLyGQMUzBo8PgpQ4lkRqOlxg7QQROZ+oJZkVgIIcREkoEfgx80KE6xUCTZgR8YCk62ZrDi+eBQgOJHbLwrEMXNDO8G4HTMLQyF84GhAYcxy5jK5qNDBA4b3ZpSwcS4L3RoQDGXsVyMcRrc0PA4lJHlmvjERJGhoTjDQsFEXg3FwKvLEEx4malggv0EfhAAaaWyE5OVixk3gQ6YYOdV0CUVrhdfZmC5Jj45VmSgRFbnQ1MA9V4dsNpDlgom8AfwGGiHDY3LPzUazev9+hUay9VS2EAcAHVuQDZiIpf9/WtfPefySBoLNvAkKKpdPcGUZxgjq4OxYC011hUHQD97wcbQWhDMY2QKIcRoLNrAr0IB4EDyxY2g9eRBRpZw5Dzn0Hxuept3dkPqKE5nKCGzp1aFVPSRkVeNdFLD48OMJZR4NwSVJNngX6E1HDYwKyFaY124CiPJwJ1F8yDdD1kqIm6RF3kt6nj8nKGAzN6YIl3SxMrEXeHyHNbpMysfpr6vAFD1/hlaky2b5CQLin9ZLCCS8w4cCQAXM5Jk4Lfga8jmLKNELjv//PMuuqIq2aLxIllw7hrGEmJKJBmuqSI5Cy5PsVZKVkJkCn328a+3iPYRaB4U32QsIwZerfvHqsQVE5zkieIqhiJK1j8DU16lNRm5ClwenI59hrGAksUDoeOfrmKy39aCw3avMhVPYDwACpzKUGGJ7xOtAcW2rzKUTYp87gB0AdiqkayJIV2Crjrw2O41NgomJvLW1eAB4ECLrDR7Yw24OvDY4jbGVCzkrQcAiubt+pNVMPLXU1TqQDHqz6SVSbKzd3EQQeXEfrZg4HnQWlBgj0fMisTS3QcBiko38hGmFmavTILUgnRhu5SsRJqv3QKuwuPPjC0YeIT6enBuprFQUmLfR6FVX2PIORUDIZj6GlOZkIFvTRQBoLiRsVW0O7aD1IPHDxlKhZFHQgF4/MBCKxq5tWi9LpzGWCzBvgYPQLERzVqxn7+GryM9OISR5cJPSBOcv5YxI3FBt0iOqAO2eCGlkvkLKhS/YchgStvC5QAYf8SLTCxXS3wvFPA4hJG5gb8S38phxxuufpo0lmzkoh4nUOzJlJW4wIm0ktUTmYxlG/kBeIj0LmfKob21DlwLOOzyKkMqHbtdFPD4k4WsyD2hreCwzjVkiFYyZv3rwkExhykr8bYukVZQ4HMrSKYQghUKA4+Fh7iRi5hymLglNANOMO5jV7zJko38DRRQXM2YFfgZ+BxAAay+31e/+btnaKVybZPH1xmyIm+Fy4N4h+Z/WCgT4wuTADhZ8yWzHONL4yF5AJz6Xv8tFkvfVAAio5Yy5TDyEPG1ADjZ4BWzQnl7CgAo/mAhK/As6IAAFzIWzs60LLMXJsLVcxjzO0ssGpERy5hymPheaC2HsbczsWzg8QcLWYG/gq8jGHs7GyyWt6pU5tCyEhcqaoqbOJeB5dI/tQLSu5Qph8m2h+YpLmWDxZp4Z7erUPyBISvwN/B5DnemWC6RZ0KrZA5TVuKCHmSLjF/GVC7BPgZfAelZTsuhcRNojsMGLFiztCG0SnG+xazIz4nPW6u/YBKXjxRpIUewzk1wOVBcyFgswf4Ij2rB5JdpOcYXJkIyHDZ41axYEudAW8DhPMYcRh4KzfD4JQNLNXHpSCetvBxeI9g5WQ63WiyWyA/Bo7XDrH7LSlzag9Yik59iKpWYroMiV3A7Yw6NO4q2cFibtFIJ3LmGly8zZAX7HXzGjFQsxp9Cke0wu8+yEhf3SAGl8CM45ItgLmMOjXOgrWazUMxenuTqwMuXGbKCfQu+SmT0Y0xFkmxBr6Cuw+w+s5zIW8RVwWEuY5H08URoLRHcwphjTOvCVan8nqFAIvnK5uJqwcsvGHIY+AnxVR4fs/KIkeF/a0NQX7FzilmRZ0CrHDZkWcYUE3nzToDDAIp0LWbKSVw6UqQCMmIJU4ezvOabDwDUYUA9fs+Qw8gj4KsU32PscEzWKqVbFpy4AyAOA6zYKcWsYGe2clgzsrP3P0dLpKUYIvtHAxDFgIt0L0khZjbSghEiFVCcbf2xc4f01EqHG42VD39EnCoG0+M3rLsptMphY3b2zwIffoJ85+5TvrOdQDDIDrNvnjtvfuZt8w5oBYdfzb99fqeeO/80OI+x66+/FpoVw1rQ2QVQABD1KhiK4mpKDlxnBwBxzuH//i9AAFZQOCCSKwAAkIQAnQEqyADIAD5JHoxDoqGhGCu9iCgEhLY3bq+geF/JdY1S3r35KexjW37H+QP797tucPp7ymucf/H/gPZv/kP+t/lPcx+mP+N+f/0DfrV+x/rd+rP90/UH+y//n/zvvCf8j9svdJ/af997AX9B/0n/59rD/o+w9/lv+/7Bf7Tf//12v3F+DD+yf8b9zfgc/Y//+ewB/7PUA/83qAdhb/E/xZ/WnyV/vX5Aebv4t9A/jf7Z+3v999uXHf1cf33of/K/vB+t/vX7vf4T3e8B/yz92/6nqC/lX9D/0H9n/dj3B/ue7KtJ/z/UO91/qv+3/w/5Q+ll/pelH2M9gH+X/0f/WeTv4i/iv7PfAH/OP7B/tP79+UH0wf1//h/z/5r+4n88/x3/c/zP5V/YN/Kf6r/wP75/mf2b+bf2UfvN7Gn64ffg4VGYwwNofacFRIdf49mWnnxeG1pRBllBD6VhKVGYwwNniR+IyVMp/3qJAntcZqR5sn6taNp/iV9V6fjGHoDo7ghtTX6PUlUTxPbgT/7kr7coj5ax0fj4GRN2yykYNg+V6AmLSPtLfQudWHL8pNeV7ffjKGe56DsXbO1cImoOhWuA6IUFBt+IJYdRSBhrRXovn9HOBhU8I2rYEf/gnMJmBX4+YdBzgQBtcj+nJSbCw+WEvc1M0xmqGLljHAHzOA93It4WL9jc9rPGCRE3b4c5fmhUhG8NI625pqNafxvIhz+bccc3sCpXfCSpTA743VEfuWFOx3p7kufHRJDMPEEytjXEj6oNUnFNbyB54vNSJ60vS1QsUmL6V+55HhnreWwszjASIjw+KeJQhRVpNUAy1dyz+JrEjafoDPZ2YVOOfjUC0QmfH3KgBDzgB94zFi+9cwAo/6hhtoZ4gvSjiPZkog/WwX99bTpyn6SFmI6pjX05Km1zt7sUM+RU8NWUja9vEI0jSsdYaK4M8l5HIA/trTy2AwX/vq+lGP0prbcx9ZSCqUNZO2Ju1007kJe6VyylqFO4KITkx4NRtOw8QWwtxWNvzxAog3utHIciMRZy7ecBEaX6tUEQCiO3F/rcMRNn5Fw5+lXtsU26IHF1MhU8W3/8HELSolvGFBuvOu8DQVm3TrhM3OH3cZmVAL0vV8GjOHLFu3+oMVKvl59fhNvXj7FdzvZUsgAUDaxwWQSem9IlkLXlnUgX0SWJeA3r4ZVDofdUKpNJ7M5HyFkGTvCUc7OpGwGL8roeQ1bS462QV733X4+m2OFX0JkRps+rYVM8WwOYZy29xlwEEgzKuOgH3yHnLZ9BulZVPm7a8pwJjrKTT3gWeECH6zm9iawUV8n9kAac03o4oUgPkLYaVQCuoQhREb71a1RoeL8eSOA9xnFjVU7yoGx10dnZPgIzKqTQmH5L54QtRF6t+y7v6B6V8JwNofacFRIagAD+/2AYAACa9ZYdTfBGIdAqzIpwmi65P9U4d7/W1nLaBF5gDCeWy4w651Jw/u/x7pssw+z8gT+PnYABOXrwzdEIqpGzK0/8GD8n1j1psSu/BG+5Lckk0epDUtATAnAGUufpodb6P7mSPfsqGdvnjumO3bTT9mLfasdqPyalhjeXDxSiDhh5mndlar7T4n9HgqVirY6/ySdloSS2MWfD1NzlqoKxLBOXTr7bDEZb5f6BpX4v5oyybDI/NUPQFgqQNlK4jPHq/LUBa9LAavW0cAEP8xA5Ot2s44JNQbBxl2hOhYBZXM8x58xyYFv6RPY5719AMfmAennxWiA6a/vBPI0vDYM/Raszv5eNgUJe4EqW8c42bmEMkr2tWh5XweMKPMJ/kGkXlcJSwRgweMzkMwQEosDtsxIsrNSFfmwdlWQgW9+qlHNF8JZw4+5/nM44VDiKvwihIeljJBdNihpYsQ4eiRqHiF7o2MFddgSp9jntpXj6BRyy6PlzvXyrPe6u/62wTmA4Ms9x9xuPJubTwGTnzU+uZDk1w1Y0aTSgR7THZziUubNEShEOGy8Jh5niTLShCWoUmb3sCWH5zRzkAsvEraArxKbEjGOURYQTcGmxyX7iTkH2iMywEZwzwVyYEaGVPOx7yUfyK4e8qHzLr2U/e6X29UCM8FDm8XxGpkDXHRxl046Kn280hFI4g7gilDVTmTcUXJBYTHGMpFtMM4Xa/d/hWL3kygYgHb9e3RoBwTF7FwG20MVqWCnaJ076VL8yrvFyTVS2nUmd3682o/fA6vVOjIafjLIxhIwanNjAXRc+KySqLKTYHvUKnuqQYukoJRl+8STwEencdEl9JO2pAveQ2WvLmhua6hoOhGuPdMPUMQpufl6iueiGKvsh1JlfRIG8YPR8uyCnumZ7cf4yfeyhZaM3c2a16CIO4ianQNbsxO/r1Oj5zLeN+bJJ2VDUvsZEBvbcMI4ad+aXmgInREwdHtF71golSpxVv4ibI8KWDWoAoDc/ekXuiX6jUmcHo6o+TTpbppefJQVrt/kUE1R7bbYVNRsO74W4Ib5Bj+KuD1tL33401OQgWJPZRnlDVapvlixBXR+DHrXXutT0Mua2di6vBo6a/NyS0gjf55G40LHbTwTn6CpD/U3GgVl0Ka5Q3urvmjWuGijCuSoCWQhqlSxj/z2OaNftYkKnk279JMzaCRnn9gxt4NqLRfBXJ6QklqcFvJYaiUbrmcTFVrShU+5Zn7M0u2R5snVkWro/if+74Zp21kqqJqyrJao8PIFlP89/BDM8M9yGCJrt8/QTh6pFEqZrXGqSe5wbI1YlxMVMO93FZ2FwdOmwjV143i+XEmYdsXo2xuZ1RRXSa/1FRBEXSBOuHP4DYeBcaqwVqEdIzdephV65yCXiai0Gb/LI6BhTWhgFbvK56LY80f2jz00AnNFuBinFOabhkBN3QHYC4wAI7+Ax6n9N9GCkrkYjtaLxTuJ61ODFkoPypr8yKQF0ECrDTRu2f8P3X6GRT6F1KHyyClqjpNsRkBIzmblUgztvxIbAGoJaMJ8dOJf5lI1Vb2ih6myR31wnyj18ipECkEBLmdkm3nf2cYP054u6XLaLOXJWbkXnPVlpEGWIwSHlLJanY8QVH8YJeE1gxKelosWT+yPBjSwUA/FpiuEaJm83VThrSlXBIAWSF3uouPBUwyym+aa6EQOghZ/DEvU8YCsCpc/VcLNBFUl7awFERzTYID/gqHhZqPWtZcmi1Xi2sKKLjddzdVP7DqxsF9ZeS4MO0LbNd6k4bld/XoariSwL73QdU3PoSuGxwIXWYUh/Et1ouPqYoaICcj01kT8TV0E4mlX//J7tZgtwYm2UTVwuEEj4R9RpSrlIO2I7LJl6vSpipAxo5qr75SNiDC2Tuxt/hZZcNHYpk9Ls0kHf8V0MIckR85XbfApHtl/4PoyMc15hSgJQKv2KH3VuMn/Eo8J4lGiTsggxcVg3UM9D1u4+dCa9EKSMc4xPIF1a7B/cNiqMjXcL1VKjShs1sPQsFm9T/DDOvofNRrrvzq90IkZNTz/iAfCTcvXOMaJyygY1Gms6gS27L0pqxZtAkcqLOQtjdNY67OJoq7RGDoTyeCAKeP7Z9A9QCYQu0/audMaC/HwOLqdMo3IU8fuffuJqgDN13unzHzn+JIaGFo0DVHOS+tgLJHtP691KW07dSf0waQ44C6KsMkUdVuttvJQnmxs+cvXKv9IecFwBt/i1u2Ej9+XfBdcZx/vtJ3KVutUjonM+xiNHemakyuq3sTQXfP9NhAH1lTxtZKOXZsIfKRJAueyPHpvsoeU4YkMTRKxsy0AkCktCDYxYbl8JsSjxCHCGyw5rZOjmVpIbR05gNH2Owd+EXKTx7iJ3WQHCJe2foCEL93qhlPL+eenQcTlu1rx/Jb6B2Lq/30l3n0xIvNOxPF+x91Br7biRyNGLkc0HiQUb5qy6FWK13ZR+78V1NCdCSZOLHz2eVu+/ka/HpaLVmV+uSybnddCT8EJ+iwKFt0SrjprcEziKec8nAbHq5A4tvEXOu3oYeSA8Q9H+JEp/9/frrO61PTqMmvoqKVINrWiYYDXpBEDiuabrGC+cyQzyfu3SpQkmPqYtIXyzgwrjog6uYRxfkrgCE4AYeMSiULfPt70oDrTl2F3wl9YLJ0Gz5ZuumKTC2zWjozRqv/fdXCUXFBkZQRdR+aTnt70cyQo16y5YFY6Ob0HZMvwHl1cL9xa9Puvnrjofu3tbRrzxMJcD9lO9x7OC8294lKPOShSzbGy1hIS7SH9M1YChjWLwZRhP7Q8mPg1WLcMWdADQwKtJ3IrAAmZTAukz7t2+h+lxNk/qYsEqyBxvO8Wy2rbdvuo/GxsXLm+iPGsr7sG/EXnXGybDLMnqVEC1Z5mbd+fu7yorBsUYG4cJIK1Bcv2hF7sMHtuNW+hPqXeqFhhRfP6qLdukg7X77sIoKPnjlNarPGTuOPnf3sp8NFus9gY3b1LPLCbVzK6cd56oRWslVw3x3rckllKxQ6ctY8TY+V1v+CAg3gDs6yUmlx6VqRSUwDrknwMCJwIe2BmeDzqWwB35lyi+9oeFg1bvbVD8YmIhGvMra+SiOqSv+atlPBRBOSNAArH/BkTGZUjlSX9znohxpKmKwFAof4mWAgrYRuMfB187w4rkCeTUAeu2aIi1uo1KVfTjLL8+2sXiUvGIbZUzzdDlhTkDfb1pOwDLiE2BQ0LJkIk+1ekQFSs5YhURU9OC01NOIzxKn1tb2AWLZW6nphWCGOZlVoJbDOCS/E9VULcoOwAFfy73BgAWIFe5byF0BDeH5QscpafhEvCrutqGL61M2Qr1Y+o6JlascRAogaCUfFiYIQDsxvXEF+slM9zKDkD6x07zdL2TSWGokdDoXYOD0P6aCNGXSHiUaXGgXewP/j4lsUGYhHJWL24h404r9ll9GLPgWjGiWTK8cV7L2yXUNdq8Oz/465lVBdkD/9b+KV/GB6X/r78o8r7vlhltva+q3nygZ15YXylr5py9q+GALBqbM2zcQV9v2hmg6VIbVEM2TImtHVEZUv7tbeKdUQegvpL5bWDAmzvodZyzGQpto19Ax5zj2AQvJgPCJETjn8zBBxV3PqcCIg48d9oHtNDy/5PUp6cWlVwWahxZsJNTs7SKdoGlo0TbCRNsGUEU6ZKCQI17nwcBVSy1x+38fBD0XswqnE5hn8GL50HtBT3JEoFk7LWs18KCtb63nin3jp+s6OePk9mdONeNAi2iaDYyVas76xuCnH/yKOKtIMvmk8EHtZVYNC8FpVeQUQS40T6AZqPcVx+3+LmCKCE+JTOre7RrmKywW554iYAsVZ1ct5Qvj8v/FZ2QqFrskiXev92jgbXZWikvznXOMMOj0O08gyunYletkS10Ms6fGcjk8A8pDTn75H028zCxxyFaTcqR+38Foy9KzNLcDzrXDRKYB+WrwFnL7MpkupZpwKyckAUoF67J2uP/N2s6dyZ1bnpDrdLVpNUlAJB/dI2HEOnpvmZSxehtrwOEgn3xiDsi8XZoDfVzM4TDPFEubhyjRp4izF2JzTEuZoEDSqR4KKHFXHEOsWEgQkYvDf5lepSeB9mLatIuLZbPw8AFSKrshhhu4rEg9ugVvLAfOGBPFXxuNcvo/6AiXKZ/mZonk2nFZqxoDWVhkCX4QT+9IbQm107+ZRtZ3CC4hAIPUji5A8rMQZd2PSdb9KEZvfeJpjrOg8oJRyCXWBUsNuZvHXJUfuxoRZvZldpGoT0xol6qGa3zOVd7VMsB07MIyHKFYqatbA415K2xqFuZ8WRy1IrIA3Pwh6U3YOfxEsss6wdsfCCKpVfgko4nubzvSe+ws1xCY4F+w6hLq0vHCK0FazeehV0ZGwR2XSga+97pW6zpoTmVMyQ/tzXfdDvhEH5yBKZxOMQmcvb5epdup6k1cDZ1T85qpDGCOAfe+kPgOY2FUVi0WPs02+ckxt+bhU4PpgvWj1N8yhODdzlazeF3JmdgGLpaaDp5H+ibo3xgtLTc+J5RyC2yJMHAXWLI2TZ7rpOVnqTjxEGbYVkmABNJvWMxoyzR+qgxJRTBESv6k7we52GGWdghPBqR7my6J0fBmOSfsmxEYLMIkGAs1cOW+ipdk/PdedCFQpNOTl/1PZoXAdP3mmZJk80vpUGNgDGZlByww5FR4A6bLL+GfPYrKx/w0irFLTN7vZyRL8qylnpfI7xhsllhqBveA/TnJwJhlumYSv71V4mit304iIBLoqde1c9zqp3zUdsKrgnCqUXViTGlb7Kzf1My/gPNCDTriPACo4Z0Od6yllgvTOhKgHOiV1P+XnXV1j8qaL+cVpPZt55TZtg75/6zzkfYSgLVkMtM4KICHXdwJEWj/Hs/p/cqOUqN1SANy1ux3o2XBc0bXZ05MkXEhgyg1t8GQD1x8s8EBNLGPCCgQ1SDm9/yA5qggptPtiwBNWewO14hc7PJm9Ti9H9tT+xe3erMVkxy95fPDXK5a7JuOG0IWjsdnBciZ/DN2ew9Y4a4ODdnX0GKQ+rzQovduwJNPTcUYHtLoxLujjY+yjYZSwaBH8P8w/es3Y6W6JUgvj09a/UEVxBrq5Gz7ALspTI7uI07P7H5cICAis+EfueAxCQPRuOv/DWWEQI8peBJpnj95z5nBBsxWbZqeMx93azs0RceWVw4vJqnHdMtx4ZSG1hBZMrMzKn0sdqqAT+1qw9y9ozYb23kHC9qGYhki9uumDLa6RgDa+vfNuG0q2pwf0FBjvkxjTNObLeNF2RO21QPO+Hs5eudjQz84SojOm3g2CDtQDC/YnVbfd2fNyPrpeLtbbs4+3LLFXxyH+9vZx2qu4o8tAxTdd7U9NsbDKLGttyv/911rJiGQ4jE1gep6E8bT7H0pOjTbPJg5fFkxmzYw8bdtrQCrEywywMLAr1HbLxo12L2Bdems4Ij2K506P6VzUwTwq5TaUfTcskbLveq97x5ULOjKT3xDvcdJLbmZ6bNu9Jr0iGm/N/YLEinFK17r6DKr5vqqFsWRC82mVdorR2vqMuXV6A3okhtTSqilZwXxei3GL6MlYCufBd5grmfLxKhsCILtte1GhN8xVxpJ3Mcu0yvlN4Qd6CW9cUKvtTFN92Wsn0mhPZiedcdv4hY6aITB5KcMIIGnQ+y7BacqV9lNwVeHAL+wzhJ0tdna6Y/AhEaOU03fQuCY/mvUcYzzFxaUfK2+qydnoTvDPTTxYph8Rwo75fX++ONk7nWnkEGlPqitLLyEu8zYWRJgyPQ8lzBai0Czn4qN2zP95b9h5YfKe4MxWJnUQDXhYWllVahHCZbF7Z5rtQL4pojYg2c5z7oW+oRwkXdUtBMCV6FPS4ouNY5kA2yBslXWFHGBHcOvFKmperhqj4LC9YCTlasrCnAno+t65ntl5NQ0Tl8Vks+8QcbiZJBOTY4lGn/yJc10xiaSHl9Ol4pBVFmD+vJpTGrga7JaQMWz+cFR85UoOY/SaUG7Ia82an70iKzDmhuXpDwJl3YqkfJiCCmTL/x4J/Q+rxZ3TWlu+h1wb7Fav8SSi8nHYY1amIVeFYqanpP6RO0meW/ggztYoWCumeJNfz6y/yGjsFcOXbKxpfY/rCqAazaHVL33DZhW2bnyL6Y1gEkLiW/CO/22dNfQFo8faNVprav6+hJg8OICylHS94E/FNSkaCpfBEP6AlqVf17QoMcK65unkR7x/c3VXirWCL2jruzo8Bk22gfEnCl9nFfpGiS8y58FsKByI/sxfeueMSzUxiZ7Z1AsfZGMZUL1EUP3bL/l+/nFy+yJ29TbEbnsFUuJ5hlTmtwErIUmRdwsd5b+fMkBbqFUZm4TkeldCKxuIGv/C2O3usYg8BCairFI/ihFmX+nDffu+hE8cRSThE8H/Dz+DDHxqo3df6Y2cEn88mIcloOrm7eS/jS9aDdiM5Zc46miOnHs8bNKiu0YuIKQnDrWSqig3HwGMQIi/YKvchiSz9JljL/os0b2FQdXjTNCywCYX/lzTYGwBIgNiY+sd9hynEWF26+qlb/OS1aHD8ocy9wbodGKD7SCTtbyWARhrqoKU09UEHyBSr8IImd77tbmNeIk5+A0SfDVI7lkMgnNrxCYDU+V8AAcyj1uxMDKpyHH25b8WtGTeOaQCzFzLnhOM+UmqktThJhVveNRvq7YnJ9rod1h+veAUK5Sy0PvV6NoDpRxIVdzHoVbUTVtr1VGY3Sn2nmhv3CV68APDmQv/Pm3p6OqfmH1pjoTnMhRJiYMlXPVaCx3V1B7DHmRV77jl1pOxYKSKDP2LqXPqkt8aWaRoafGckDVaWq9ZJETKiLwfor381pRB7iQnjs0/ESmSpa8zr75/LP+xiJ4+6fUYw1htvPBy9OsYCvWbnUIih86pzVQAhBsZ8Qtt4HwQ4wgA1UUO1WzfnH1yoHJuwXrKm1tU2wSf2fFe4VVi+KkwN2tS32it9hvB3pL8e+im6y75uS4zlkZ6Cy4TCq6Y6GBhVkHDCf1Mgw7G2ee4/GM8INKkugVEMpBAL4VqFn/Xb+gQd72bzUbAzOlSfXulNp4mVI4JSDm8LvkiJ5NC0WTwcCdUt0aKoBCn202kMkJyC9QtTGhyREKtd5LOPWkCKCyriA/uN1vU6fsTvbKOkAM77Xz4xjvpOi4AmJct6gWwXZHwXgRzO7mXw6MBtr9dAZnO5Ds/bUPONYb1HzBf+Rdkiok2NlDEZeR8uH1rfWktnhcuGyGsHXWoU4WwPpkVzgrZVt0l63IiD9zyoB+u1m7haEW1eendckg7G/ozsvVf3Gbv8JQFU0nBqsjYtGfX4p4BqpNbdQbqjXRYQ1q2n9Zh7smLHDhSY07tyHM2A1M3g4KoLSWBo8FS4Nx46OfBk0v67gqh55bufIVbaJuYdtbAsZCcWlETeWr4fQb3V9cdZfR50p5uQ5+weX8NV9p9kRhtZadJh6gB40vq3rhmKJ0S+zkJGsROQ82maFWA0vLCSOdswrbVHbKgsY2tESyJ1WPZHxKoSIs49KlHO8lCJDqNK9kL2CEGdlTTC3L+neoMcA1uDy4WmaG8QfsoA6kxPkkgWR5poOyFAl/AyyCilhIigLK/n+6NDfUkKdXZhsV70j1eQWuThEROhdmfzwq+gnTCLzUv9jlimglqIXyXz69c2QxFYpZ5xKdosylp0Q17pzqb/0lmTAKX+CxGCWLd224A6swPd+O8/35YnMprDAXIk/1okTHBmjwJaid/bW7jmLBPOS9kHuvegA7y7ieXzPa5t1lQIQZ9MNx2qzA/vsjS0+jZtH+4odFRdozVyjVO7sZlInqweEcu+J3zMitb2Esc90BoL01gzo0JuAq57c/FSXLOGPGB2XZO02BTq0UbDJaw5+I4IMT/YhgkWIjyoXY+H+uh6KKUGwX628EcE7voor1vWnzTpRmeHNYx/wmuY8SdltmY2/z0h5Tt7LyO75X/vDEvACedRB9VJhkGlxv+04hOnLFMHcO+6kDg5t4Kd56b/98XcxWlllIRW7S9WfAhyqFUWIS0xlAiJiNJUws3hLF3ON45ZEjBnTA3rphzTEMtaZFpPfpmA+tdxxG4IEGROKvXsb7J3t1UF3aexj8a7URpPjBJIzRRZXFYCY8DFGNEGwcAqcrdjexwfag+hHVrUmeyqZR6/DtFODbJm9zYvfJ4LFhMmQ/J2NbSPjX25qltWTMbNjpZqhnZ/OxZqiGIdFJOH6qeNTCS1eOo4QUnbYSi6a847sR2WPpRHcZTZRF2nL1+QIux4Jk049S3BURCmWT+Vn9rFoSUWSizokfGcCSV0mQq+R7j8DRC7U53337HlZNc/VrSY9iP+9lzZR7y6yJijFsMcUTMeiarQ9EXuOFTWSAYbDKbOZCP7UBYVuxSndHDEnUZh9u/OkNyDdgPcUsrY8DuXTIpd0Xohgsr3852rFqdyjnYeK7uyt8/ofphSgL6KfYdqSSUDd1+2MpMRwqTgPiEn7jc34TrirG3eCaIl2kC/dAxPhv9o4dRqNw+JjwkuaKWbkjMCJ7MDP8eLybt7xT5gW6cCGxkoWl9O8t+2DHV4wxbOZeVHsUvi9ic03/ZF0izrf9HHpstpJDNNXCKSQlZp4ioVsV0Bj2PJvFqMTYhJCgIA/XBnnfQB8Gr/OZtZZgYUw0066vhklyfD4qrI3QZEB9b0IwbHGZcMrvHPE6yHT79VHNtMunp5wGN9NMjQVapCWoWuQ1m/f5Dh5F5mv9LPQO9UxY2E6d/UMnSrdPUXEbSvGJWSegfbWZCTCIE3icldLUE1kf4O2eQhkXzMFkBr6nf6FeG5sW9Zl1Z0fKGiJupE4bR+lsHRkKRgHo/w0nG7kbCocHL1XKC7bJhetTmQQZCtsCOfnqvDvHRmG7IgaAEaFanymf7FyLN0ICkobdQbBLaHGAk6tH6c2r1kGD/g63R9W62uQHpb42AjQ5HOA8zIZYrRo17e9VxnpUncNbOY5/0+ennZONnHuJNTbI2Q7y6fom/BbvGsIjXgquGuaY8dxKBP8VDpp/0bHyP0TKpFDAU/RjAX+8tHfQxKKzMDRX5PvfWdEdcLdXt3Ko9Br9cZqcMlPrh/bYw2vSQw4uL4pb1ca0H+VmKVNpzrD32q6pcEL/B+nMmjWRFhaGW1lhL0UfaYWyRXN/WJl2qWfit0hxb9xv5NozgfKMog6TwgCfs1DIspLDJFbYZ4DP1y7Pes88RTEEsHOIMCccQVonKq3j4YcP9N++Pw8W7IQF+UTlnYm1EhYlBF6+/ji3EgFfMxlLmqBw99BlW6HFW7/DMoCVOwQLfp8eiL0kAtJ/h+V7I28ahWzzedl360X5U7wBjn5FVk3jWQL6Y4luGRCVr9i95kASlg2M/HOdR3Uakwvf/eNL9j/KFBfmPuoLeUHEqliHrI88AeijiujZbljULaB/LyBR9tmvnZMG25mpwqbr00pjOFS8qRPCJZN+MU5+GNBvmAWZ4HqjguBlvvRX03ECsg8mEsHKIf2uBwWhV7+LQxKukbbukJ2UbindrDUCQ7wcCIE9tw9Pne2G+LfJKY2N74thorS+wXi7LlzvUAsZg+ei//j9XlBZmrFwS9IPPjOWLG4DAGNaYVYwohnK1738Qv+x78juUaxkQZkt10vGIDqSQRjc7P0ADXFiW2MeWg3XEdaFHVCYoSqjkuwrWcUKolv+VQcdD+PwN2we9JI7EoAtRojga8odHcERefVi1QYm7XWSYgqD/TnuD8W5fL47qjokY/+adXNPT9rtax4Syq8JKGHLSHuBpQ4uwGCEXaj2mEJ7scT9jwApVge12diNASADZdlILtF2d1FT/cNBWsjVVmB9g2LL9ieK8ZfSvmGhzRko6jO6JHdzBwOaQQz3zQPov/TWk8l/x3//PXOP65zKTH7uP7w3LQCry4YOAIaHWPRXDlAa8if+wSFzgJ5I+24zhtwOn1yy7Zmd3cE8e+aKNEjVxHg+P5nT7mikv4PgmPPsbchEhijDg2k3VkhjA936VkHcNjlcd1h2Y2bqVtEAGDOocao8Bbam/PLHt6n5IaNyAeflptUE5VMxD+wnkslcciaB0rABfPLng2u1uNIOZzo+Bn4bSA9FqhXC7OdIkf3LClbMUT80e3wO846SOpdY77sHB4ALhCAaqK9UOZBGqhNs6hOQa9mgjXXzoMsAMSsyRNmKxw+vPNMIyh6UwOHwPf6+gY94O3Qw6HitcWoRTvYwIKY/i4QAwAiuQYtQdmeZPVOgHze80b0U6OCu5FoyWLmeQ0fzX0FpT0kqWXzBkgleU1MifaPydYYs76Vg9DNFCCMJEJj0Eor4ty/ihpt0qxGnDHoiUhJSVoJ/MTtv3/3oxa+9Vydv8eQ+ost0pnPqzzpLZn2HfTho7ZkXujDesHQHB1qgH12TizMl5KCxEIMrUE5Ke3j4FwX9FirYIf6l5Gv3G3/BMthroe0dkKm1DKSF64dq0GuNuxnwAZ2WM9JUF+/3JlwNrB0Zakmh90ZLOr7VJIlzAFENc731BWIlanKqwXGRHLfyPzw+rvE0fg4osW2Gipt6SyMJHGgivPprfpMGlBDIz4X0woXaMN8rvolZBRg6tChP6ufVGt8w+2AxNwfcy1UKsqZMo8xkEHVb9kMo0UBptEwUpAyQDgrXuK6Rt31xsabjmIo3ItE5nfeGG0UAeGoxSSBrGX65X66oiVNFuGtO2FoSNmCuUxBj8s+N2xR6EZb+obG4J9BCHuNcww8oHGISS2MQJHNMRyWDORC0SMKBYvk0+swyQ9+J/5aLjnL+MjIOh64C6yR32anpytf/710HMFI8a/S7L7BS1eTXFX2Zu2LA8yWbq5Z29hvO0Vk/QbyMVZl81CP0/X9bt3CAGV+72VZ0yEnNDejkQnIXb00ha1vYvMA2dvW4+d6XlcVCTtTM3wN22FK7u6rmqB2pN54pGKZtv/RejrdJK6MxSA7KwUBvwvbkRK0qid/hgDzo1lsjqJ8YVxpzzGalQRrSilhgCnJEgHgV4iWTdy2AxYKSUYXpBxKi7/ggdf7cliCdbrtntpFDY3ALPAGBvXOduPuS51bI+I2pdZw/ZPywlXm+xsTtTAdlm33xdfFsXPIeAtEMXl48GrrlEQqXevRR9mGE63FY70PL13KXQEZSOkRU2QOiScWn9aSnbR0tCF/pPeKdNLtc7CE52dVxENC2rxchpTjqlRzO8R6chozPZPT1dFkfRy03iK1+cqh5j6vHsupKMjvPyInYmY2gj83LYrtchJR7zKOjB7KGe5ODp7vcteMqZNZc8ciGmUu4uID/ZTVD2HyIl9oDuAP6noUr/gvgk1nHspWowt8t7DjRz5nq9iSDfedjl5H2LmATt0Gi+XWJgyaVZiqX5Og5YyNKlBySf9H41grimIC8R8FtQWtPlzIvTzmKbLEFjBZlyat0S9na5n8INdD77Uaos2xFxSDP0V2IfRWIZgyjv9+8jptTEoq3ApbpDrX8/dBpFPAW+OdmSQSYiegcxeMSeZwgExwYchziRXch9YP6/E+FCTN30Lm7C+iN5R0opJjJFLWn/F+5GVqUaxy2FbBiBpRS2efJ17R9CscKRyRKGokN9HH3195d9qPGKTA0N8priBj/bBG2h7wgwJTZXjKxMcTUTyGtBFBLsefmE4NI+PTHZlhtwgtJ4hp+t9uKOjlLtiuYzHdfWIAu7Yeqehw67EvgMwPfb4Jc/TDA2Hm2Iiork8auwPPYOTrLyk8V8EzfW+80trE8juxpPtT94dhXlAqr+Ff6n64RJaJRIPhuirgIUZ8IjU6YNN5Sd+K33HruhmuZSEOBFyZq68D38u0DZXqdH3IuBZJTEEnl29l85IcsWhu4q/IWWOTPWWbN1eSeReo7WxD0Tg0bqHjIXdkotnz5+rYYhuXiEp4XB5gTSaOqmhXqo6dRP/DoMDLhWPxVG4R3MOTg4ZeqdrSX5AeYOTCYtZD3VplbZAL72GHfvLOc1UTaKFb7YzCCBErsEACdSLOQeqx6qWNOvo476dz+ZsR/SmqH71JGI5wBcGJEPur01DIjlFp4pXsUxVASw4p2F1waySG/ITd4f2q6m0W84WSkkkfkCxW482kFBiv2PEnbv6w4j2gjCCE/Iv64P4o8sXcIzSmp6/38OKVKpRizk1fynG+xn98Be1empWzRcZYPBEZk/NfFXr2phAL+JMTK1ZfRaiXn9KC+gD4My4cJApIqRlte3ugNoNEyhuussld+9tcRLyVUYdFxYJL1ZhkBKK5VkgKQDxCH445scrPjwlQlSBLseysLUYJN5m9f6uOgNlIaaGgRjt8/lMOwU5BlAPyAutWQ9cFGn/zgi7XvTqRVHo/H5ZgOsdyA7dBCKx0ntokBB9IszCp2VANPanFmz7Zfr0B+fLFaIbb39y0N1BpQ3fwJaIn8yLbdYV85ZM4LnjVY4SXFPIXNVRSJXqI3Dz9OBXJhH75mH/ebKmOyqU9oslDJa/uyYFmoIAdKFfbUuopLdrF5GG2BkxOSq+PuuOs1mhzrta1g/WzDIglEv18qwXtXn7bdtkURhPwPsvTrCM5iADhs2h6UysFCx95Ahc+T0bVeLhnVkBGnDv0XeE3x58SfK5xVE5pbxI1KLksTYx0FdLRn+KlmJY579wOX2flFEyCvC76ihf4rTamA97YIh28Dut76LLRiBf3+LmCZo8eURNL/YOnHZ/Vd8u3x2e8qv6on//uq//9z2///dF0sf4VX10v7Kh/KOcJZcykwAGtOVgFGMevYdDcmGv2s2tsZPF1RjFfDlYY9+6mLkrkYW0N3qFvQPutHh58uMHP88g4fdu4Mfprtf9iPkhOaXqUj/+pKED3Fx1m32qX1I/TMbFz20ikGfR0cvhabbxOs6MnKxRUPzk21EYO2YLf7wNhM4PQdXcBZ6wuKTdubq5WyZF97WU1//nlZ6zHRYcbYbLz+aNQuR+s3yym+cx8qfgT4X5iKd8JKa7I/pJTyGWesPJ4AEdY0Sd18k5NNH0nZRTLvOJ20SzH+HtaL0ynBX4PDssD/In1hcwe2yym+n3khWWVcCYq0PkxSQDAKtpXehrHN+ry+CKGd446sPdTFQjhu935l/jGPvcuB99PP9tN5aTcF37DGEd/jjcIiUDa+GU+MpMcJCwb7XIxLVoKeRci8dVeFVlW4KCcKW71cb9uFT6ZtvD96RvTmuuNm8bd9b4eSolgy4dhwf2pls3lsUusRfrAYk7T3UHihsuH6Z3lj4Lq9WqkiO/0utwn+ci7qOX+EaMntXu2OfeO4DmSYgImYXQoHzPBg9zb+N+ExKJICUn/QYWBbnBp5YPnkEhxEo5nVbBXIMmnBCau0ly2EQgInQ50Ywjzk6ddB0F8Doh1+DTxcWPQ6QvrBLlNoBKNE78MOPuWXT6/D8OlaH+0EgEq0pIR4vhbYRqES0AAAAAAAAAAAAAA" alt="">';
+var combo = 0, box = null, txt = null;
+function ensure(){
+  if(box) return;
+  box = document.createElement("div");
+  box.id = "maxxBar";
+  box.setAttribute("role", "status");
+  box.innerHTML = AV + '<span class="mx-txt"></span><button class="mx-x" type="button" aria-label="關閉麥斯">×</button>';
+  document.body.appendChild(box);
+  txt = box.querySelector(".mx-txt");
+  box.querySelector(".mx-x").addEventListener("click", function(){ box.classList.remove("on"); });
+}
+function pick(a){ return a[Math.floor(Math.random() * a.length)]; }
+function show(kind, hype, sub){
+  ensure();
+  txt.innerHTML = '<span class="mx-hype' + (kind === "bad" ? " bad" : "") + '">' + hype +
+    (kind === "ok" && combo >= 2 ? '<span class="mx-combo">COMBO ×' + combo + "</span>" : "") + "</span>" +
+    (sub ? '<span class="mx-sub">' + sub + "</span>" : "");
+  box.classList.add("on");
+}
+return {
+  say: function(ok, task){
+    var id = (task && task.getAttribute) ? task.getAttribute("data-id") : "";
+    var boss = BOSS[id] || "粗心小怪";
+    if(ok){
+      combo++;
+      show("ok", combo >= 3 ? pick(COMBO).replace("{n}", combo) : pick(OK), "破關數 +1，下一關走起。");
+    } else {
+      combo = 0;
+      show("bad", pick(BAD).replace("{boss}", boss), "紅色那格就是它的位置，看一下解析再補一刀。");
+    }
+  },
+  sayScore: function(right, total, final){
+    combo = 0;
+    if(right === total) show("ok", final ? "全數擊倒！這一單元被你打穿了！" : "這一節清空！漂亮！", "");
+    else if(right >= total - 2) show("ok", "差一點就全清了！剩 " + (total - right) + " 題", "把打叉的那幾題再看一次，很快就收工。");
+    else show("bad", "情報收集完成：答對 " + right + " / " + total, "下面的診斷報告會告訴你先補哪一類，一次補一類就好。");
+  }
+};
+})();
+</script>
+<script>
+(function(){
+"use strict";
+
+var KEY = "math-2-1-factors-v1";
+var state = {};
+try{ var raw = localStorage.getItem(KEY); if(raw) state = JSON.parse(raw) || {}; }catch(e){ state = {}; }
+function save(){ try{ localStorage.setItem(KEY, JSON.stringify(state)); }catch(e){} }
+
+function halfWidth(s){
+  return String(s == null ? "" : s)
+    .replace(/[\uFF10-\uFF19\uFF21-\uFF3A\uFF41-\uFF5A]/g, function(c){ return String.fromCharCode(c.charCodeAt(0) - 0xFEE0); })
+    .replace(/[\u2212\u2013\u2014\uFF0D\u30FC]/g, "-")
+    .replace(/[\uFF0F\u2044]/g, "/").replace(/[\uFF0B]/g, "+")
+    .replace(/[\uFF0E\u3002]/g, ".")
+    .replace(/[\uFF0C\u3001]/g, ",");
+}
+function parseNum(str){
+  var s = halfWidth(str).replace(/,/g, "").replace(/\s+/g, "").trim();
+  if(!s) return null;
+  var m = s.match(/^[+-]?(\d+\.?\d*|\.\d+)$/);
+  return m ? Number(s) : null;
+}
+/* 文字型答案：清單、分解式、中文都走這裡 */
+function normText(str){
+  var s = halfWidth(str).toLowerCase().replace(/\s+/g, "");
+  s = s.replace(/[\u00D7\u2217xX*\u00B7]/g, "*");
+  s = s.replace(/\^\((\d+)\)/g, "^$1").replace(/\*\*/g, "^");
+  s = s.replace(/[\u3001;\uFF1B]/g, ",");
+  s = s.replace(/,+$/, "");
+  /* 逗號清單：排序後比對，順序寫反也算對，但會在解析裡提醒 */
+  if(/^[-\d.,]+$/.test(s) && s.indexOf(",") >= 0){
+    var arr = s.split(",").filter(function(x){ return x !== ""; }).map(Number);
+    if(arr.every(function(x){ return !isNaN(x); })){
+      return arr.sort(function(a, b){ return a - b; }).join(",");
+    }
+  }
+  return s;
+}
+
+/* ---------- 因數配對機 ---------- */
+(function machine(){
+  var input = document.getElementById("numIn");
+  if(!input) return;
+  function divisorsOf(n){
+    var out = [];
+    for(var i = 1; i * i <= n; i++){ if(n % i === 0){ out.push(i); if(i !== n / i) out.push(n / i); } }
+    return out.sort(function(a, b){ return a - b; });
+  }
+  function render(){
+    var n = Math.floor(Number(input.value));
+    var box = document.getElementById("pairs");
+    if(!(n >= 1 && n <= 9999)){
+      box.innerHTML = '<div class="pair"><span class="mid">請輸入 1 到 9999 之間的整數</span></div>';
+      document.getElementById("divs").textContent = "—";
+      document.getElementById("vCount").textContent = "—";
+      document.getElementById("vKind").textContent = "—";
+      document.getElementById("vRect").textContent = "—";
+      return;
+    }
+    var pairs = [];
+    for(var i = 1; i * i <= n; i++){ if(n % i === 0) pairs.push([i, n / i]); }
+    box.innerHTML = pairs.map(function(p){
+      var same = p[0] === p[1];
+      return '<div class="pair' + (same ? " same" : "") + '">' +
+        '<span class="a">' + p[0] + '</span><span class="mid">\u00D7</span><span class="b">' + p[1] + "</span>" +
+        '<span class="mid">= ' + n + (same ? "　（自己配自己，只算一次）" : "") + "</span></div>";
+    }).join("");
+    var ds = divisorsOf(n);
+    document.getElementById("divs").textContent = ds.join("、");
+    document.getElementById("vCount").textContent = ds.length + " 個";
+    var kind = n === 1 ? "都不是（1 很特別）" : (ds.length === 2 ? "質數" : "合數");
+    document.getElementById("vKind").textContent = kind;
+    document.getElementById("vRect").textContent = pairs.length + " 種";
+  }
+  input.addEventListener("input", render);
+  Array.prototype.forEach.call(document.querySelectorAll(".preset"), function(b){
+    b.addEventListener("click", function(){ input.value = b.getAttribute("data-n"); render(); });
+  });
+  render();
+})();
+
+/* ---------- 判定 ---------- */
+function checkFill(task){
+  var inputs = task.querySelectorAll("input.blank");
+  var bad = 0, blank = 0;
+  Array.prototype.forEach.call(inputs, function(inp){
+    if(inp.style.display === "none") return;
+    var want = parseNum(inp.getAttribute("data-ans"));
+    var got = parseNum(inp.value);
+    inp.classList.remove("ok", "no");
+    if(inp.value.trim() === ""){ blank++; return; }
+    if(want !== null && got !== null && Math.abs(got - want) < 1e-9) inp.classList.add("ok");
+    else { inp.classList.add("no"); bad++; }
+  });
+  if(blank && !bad) return { ok: false, msg: "還有 " + blank + " 格沒填。" };
+  if(bad) return { ok: false, msg: "紅色的再想一次——配對的另一半是誰？" };
+  return { ok: true, msg: "全對。" };
+}
+function checkText(task){
+  var inputs = task.querySelectorAll("input.blank");
+  var bad = 0, blank = 0;
+  Array.prototype.forEach.call(inputs, function(inp){
+    if(inp.style.display === "none") return;
+    var want = String(inp.getAttribute("data-ans")).split("|").map(normText);
+    var got = normText(inp.value);
+    inp.classList.remove("ok", "no");
+    if(inp.value.trim() === ""){ blank++; return; }
+    if(want.indexOf(got) >= 0) inp.classList.add("ok");
+    else { inp.classList.add("no"); bad++; }
+  });
+  if(blank && !bad) return { ok: false, msg: "還有 " + blank + " 格沒填。" };
+  if(bad) return { ok: false, msg: "紅色的再檢查：有沒有漏掉一個？格式對嗎？" };
+  return { ok: true, msg: "全對。" };
+}
+function checkMulti(task){
+  var chips = task.querySelectorAll(".chip");
+  var miss = 0, extra = 0, picked = 0;
+  Array.prototype.forEach.call(chips, function(c){
+    var want = c.getAttribute("data-correct") === "1";
+    var got = c.getAttribute("aria-pressed") === "true";
+    c.classList.remove("ok", "no");
+    if(got) picked++;
+    if(want && got) c.classList.add("ok");
+    if(want && !got) miss++;
+    if(!want && got){ c.classList.add("no"); extra++; }
+  });
+  if(!picked) return { ok: false, msg: "先選幾個看看。" };
+  if(extra && miss) return { ok: false, msg: "多選了 " + extra + " 個，也漏了 " + miss + " 個。" };
+  if(extra) return { ok: false, msg: "紅色那幾個不符合判別法。" };
+  if(miss) return { ok: false, msg: "還漏了 " + miss + " 個。" };
+  return { ok: true, msg: "全對。" };
+}
+function checkCompare(task){
+  var rows = task.querySelectorAll(".cmp");
+  var bad = 0, blank = 0;
+  Array.prototype.forEach.call(rows, function(row){
+    var want = row.getAttribute("data-ans");
+    var got = row.getAttribute("data-picked");
+    row.classList.remove("ok", "no");
+    if(!got){ blank++; return; }
+    if(got === want) row.classList.add("ok");
+    else { row.classList.add("no"); bad++; }
+  });
+  if(blank && !bad) return { ok: false, msg: "還有 " + blank + " 題沒選。" };
+  if(bad) return { ok: false, msg: "再讀一次題目最後那句話。" };
+  return { ok: true, msg: "全對。" };
+}
+
+var tasks = Array.prototype.slice.call(document.querySelectorAll(".task"));
+tasks.forEach(function(task){
+  var type = task.getAttribute("data-type");
+  var id = task.getAttribute("data-id");
+  if(type === "multi"){
+    task.addEventListener("click", function(ev){
+      var c = ev.target.closest(".chip");
+      if(!c || !task.contains(c)) return;
+      c.setAttribute("aria-pressed", c.getAttribute("aria-pressed") === "true" ? "false" : "true");
+      c.classList.remove("ok", "no");
+    });
+  }
+  if(type === "compare"){
+    task.addEventListener("click", function(ev){
+      var b = ev.target.closest(".ops button");
+      if(!b || !task.contains(b)) return;
+      var row = b.closest(".cmp");
+      row.setAttribute("data-picked", b.getAttribute("data-op"));
+      row.classList.remove("ok", "no");
+      Array.prototype.forEach.call(row.querySelectorAll(".ops button"), function(x){
+        x.setAttribute("aria-pressed", x === b ? "true" : "false");
+      });
+    });
+  }
+  var btn = task.querySelector(".check");
+  if(btn) btn.addEventListener("click", function(){
+    var res;
+    if(type === "multi") res = checkMulti(task);
+    else if(type === "compare") res = checkCompare(task);
+    else if(type === "text") res = checkText(task);
+    else res = checkFill(task);
+    var fb = task.querySelector(".fb");
+    fb.textContent = res.msg;
+    fb.className = "fb " + (res.ok ? "ok" : "no");
+    if(window.MAXX) MAXX.say(res.ok, task);
+    state[id] = { ok: res.ok };
+    save();
+    updateProgress();
+  });
+});
+
+function updateProgress(){
+  var total = tasks.length, done = 0;
+  tasks.forEach(function(t){ var id = t.getAttribute("data-id"); if(state[id] && state[id].ok) done++; });
+  document.getElementById("pcount").textContent = done + " / " + total;
+  document.getElementById("pbar").style.width = total ? (done / total * 100) + "%" : "0%";
+}
+updateProgress();
+
+document.getElementById("reset").addEventListener("click", function(){
+  state = {}; save();
+  try{ localStorage.removeItem(KEY); }catch(e){}
+  window.location.reload();
+});
+
+Array.prototype.forEach.call(document.querySelectorAll(".jump"), function(b){
+  b.addEventListener("click", function(){
+    var t = document.getElementById(b.getAttribute("data-target"));
+    if(t) t.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+});
+
+})();
+</script>
+</body>
+</html>
