@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>3-3 應用問題．互動學習單</title>
+<style>
+:root{
+  --paper:#EEF2F4;--card:#FFFFFF;--ink:#12303C;--ink-soft:#5A737F;
+  --neg:#2F5FA8;--pos:#C87814;--zero:#17795C;--ok:#1B7A5C;--no:#B23C33;
+  --rule:#C6D5DC;--rule-soft:#DFE8ED;
+  --shadow:0 1px 0 #D7E1E6, 0 8px 24px -18px #1c3d4a;
+  --serif:"Noto Serif TC","Songti TC","Source Han Serif TC","PMingLiU",serif;
+  --sans:"PingFang TC","Microsoft JhengHei","Noto Sans TC","Heiti TC",system-ui,sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,"Courier New",monospace;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{font-family:var(--sans);color:var(--ink);background-color:var(--paper);
+  background-image:linear-gradient(to right, rgba(47,95,168,.055) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(47,95,168,.055) 1px, transparent 1px);
+  background-size:26px 26px;line-height:1.7;-webkit-text-size-adjust:100%}
+.wrap{max-width:860px;margin:0 auto;padding:0 14px 90px}
+header.top{padding:34px 0 18px}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.18em;color:var(--ink-soft);margin:0 0 6px}
+h1{font-family:var(--serif);font-weight:700;font-size:clamp(28px,7vw,44px);line-height:1.25;margin:0 0 10px}
+h1 .neg{color:var(--neg)}
+.sub{margin:0;color:var(--ink-soft);font-size:15px}
+nav.stations{position:sticky;top:0;z-index:40;margin:16px -14px 0;padding:8px 14px;
+  background:rgba(238,242,244,.94);backdrop-filter:blur(6px);border-bottom:1px solid var(--rule);
+  overflow-x:auto;white-space:nowrap;-webkit-overflow-scrolling:touch}
+nav.stations button{font-family:var(--sans);font-size:13px;color:var(--ink);background:var(--card);
+  border:1px solid var(--rule);border-radius:999px;padding:6px 13px;margin-right:6px;cursor:pointer}
+nav.stations button:hover{border-color:var(--neg);color:var(--neg)}
+.progress{display:flex;align-items:center;gap:10px;margin:14px 0 0;font-family:var(--mono);font-size:12px;color:var(--ink-soft)}
+.bar{flex:1;height:6px;background:var(--rule-soft);border-radius:99px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--zero);transition:width .35s ease}
+section{margin:34px 0 0;scroll-margin-top:60px}
+.sechead{display:flex;align-items:baseline;gap:10px;border-bottom:2px solid var(--ink);padding-bottom:6px}
+.sechead .no{font-family:var(--mono);font-size:13px;color:var(--neg);letter-spacing:.1em}
+.sechead h2{font-family:var(--serif);font-size:clamp(20px,4.4vw,26px);margin:0;font-weight:700}
+.sechead .from{margin-left:auto;font-size:11px;color:var(--ink-soft);font-family:var(--mono)}
+.card{background:var(--card);border:1px solid var(--rule);border-radius:10px;padding:16px 14px;margin:16px 0 0;box-shadow:var(--shadow)}
+.card h3{font-family:var(--sans);font-size:15px;margin:0 0 10px;font-weight:700;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.tag{font-family:var(--mono);font-size:11px;background:var(--rule-soft);color:var(--ink-soft);border-radius:4px;padding:2px 7px;font-weight:400}
+.tag.new{background:#EEF3FB;color:var(--neg)}
+.tag.hot{background:#FBEFEE;color:var(--no)}
+.q{margin:0 0 10px;font-size:15px}
+.q .num{font-family:var(--mono);color:var(--neg);margin-right:6px}
+.q.small{font-size:14px;color:var(--ink-soft)}
+.hintline{font-size:12px;color:var(--ink-soft);margin:0 0 8px}
+.rule-box{background:#F5F9FA;border-left:3px solid var(--neg);padding:8px 12px;margin:14px 0 0;font-size:14px;color:var(--ink-soft)}
+.rule-box b{color:var(--ink)}
+input.blank{font-family:var(--mono);font-size:16px;color:var(--ink);width:104px;padding:5px 8px;text-align:center;
+  border:none;border-bottom:2px solid var(--neg);background:#F7FAFB;border-radius:4px 4px 0 0}
+input.blank:focus{outline:2px solid var(--neg);outline-offset:1px}
+input.blank.ok{border-bottom-color:var(--ok);background:#EEF7F3;color:var(--ok)}
+input.blank.no{border-bottom-color:var(--no);background:#FBEFEE;color:var(--no)}
+input.blank.sm{width:72px}
+input.blank.xl{width:100%;max-width:380px;text-align:left}
+.cmp{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:12px 0;padding-bottom:8px;border-bottom:1px dashed var(--rule-soft)}
+.cmp:last-of-type{border-bottom:none}
+.cmp .expr{font-size:15px}
+.cmp .ops button{font-family:var(--sans);font-size:13.5px;min-width:56px;height:38px;border:1px solid var(--rule);
+  background:#F7FAFB;border-radius:8px;cursor:pointer;margin-right:4px;padding:0 12px}
+.cmp .ops button[aria-pressed="true"]{background:var(--neg);border-color:var(--neg);color:#fff}
+.cmp.ok .expr{color:var(--ok)} .cmp.no .expr{color:var(--no)}
+button.act{font-family:var(--sans);font-size:14px;font-weight:700;background:var(--ink);color:#fff;border:none;border-radius:8px;padding:8px 16px;cursor:pointer;margin:4px 6px 0 0}
+button.act.ghost{background:transparent;color:var(--ink-soft);border:1px solid var(--rule);font-weight:400}
+.fb{font-size:14px;margin:10px 0 0;min-height:22px;font-weight:700}
+.fb.ok{color:var(--ok)} .fb.no{color:var(--no)}
+details.sol{margin-top:10px;border-top:1px dashed var(--rule);padding-top:8px}
+details.sol summary{font-size:13px;color:var(--neg);cursor:pointer;list-style:none}
+details.sol summary::-webkit-details-marker{display:none}
+details.sol summary::before{content:"▸ ";font-family:var(--mono)}
+details.sol[open] summary::before{content:"▾ "}
+details.sol .body{font-size:14px;color:var(--ink-soft);margin-top:8px}
+details.sol .body b{color:var(--ink)}
+.mono{font-family:var(--mono)}
+
+/* 分配問題實驗室 */
+.hero{background:linear-gradient(180deg,#FFFFFF 0%, #F6F9FA 100%);border:1px solid var(--rule);border-radius:12px;padding:16px 12px 14px;margin-top:18px;box-shadow:var(--shadow)}
+.hero h2{font-family:var(--serif);font-size:20px;margin:0 0 2px}
+.hero p.hint{font-size:13px;color:var(--ink-soft);margin:0}
+.sliders{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+@media (max-width:520px){ .sliders{grid-template-columns:1fr} }
+.sliders label{font-size:12px;color:var(--ink-soft);display:block}
+.sliders b{font-family:var(--mono);font-size:17px;color:var(--ink)}
+.sliders input[type=range]{width:100%}
+.story{margin-top:12px;background:var(--card);border:1px solid var(--rule-soft);border-radius:8px;padding:11px 12px;font-size:14.5px}
+.story b{color:var(--neg)}
+.steps{margin-top:10px;font-family:var(--mono);font-size:14.5px;background:var(--card);border:1px solid var(--rule-soft);border-radius:8px;padding:11px 12px}
+.steps div{margin-bottom:4px}
+.steps .res{font-size:17px;font-weight:700;color:var(--zero)}
+.steps .bad{color:var(--no);font-weight:700}
+.radar{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+@media (max-width:600px){ .radar{grid-template-columns:1fr} }
+.rad{background:var(--card);border:1px solid var(--rule);border-radius:10px;padding:11px 12px;box-shadow:var(--shadow)}
+.rad h4{margin:0 0 5px;font-size:14px}
+.rad h4 span{font-family:var(--mono);color:var(--neg);font-size:12px;margin-right:6px}
+.rad p{margin:0;font-size:13px;color:var(--ink-soft)}
+.rad p b{color:var(--ink)}
+.rad .tpl{font-family:var(--mono);font-size:13px;color:var(--neg);margin-top:5px;display:block}
+.trap{border-left:4px solid var(--no);padding-left:12px;margin:14px 0}
+.trap h4{margin:0 0 4px;font-size:15px}
+.trap p{margin:0;font-size:14px;color:var(--ink-soft)}
+footer{margin-top:44px;border-top:1px solid var(--rule);padding-top:14px;font-size:12px;color:var(--ink-soft)}
+
+/* ===== Math 麥斯 回饋層 ===== */
+#maxxBar{
+  position:fixed;left:50%;transform:translateX(-50%) translateY(140%);
+  bottom:14px;width:min(720px,calc(100% - 20px));z-index:80;
+  display:flex;gap:10px;align-items:flex-start;
+  background:#132633;color:#EAF2F6;border:1px solid #2A4557;border-left:4px solid #3FE0B0;
+  border-radius:12px;padding:11px 12px;box-shadow:0 10px 30px -12px rgba(0,0,0,.55);
+  transition:transform .28s cubic-bezier(.2,.9,.3,1.2);
+}
+#maxxBar.on{transform:translateX(-50%) translateY(0)}
+#maxxBar .mx-av{width:40px;height:40px;flex:none;object-fit:contain;align-self:center}
+#maxxBar .mx-txt{font-size:13.5px;line-height:1.6;flex:1}
+#maxxBar .mx-hype{display:block;font-weight:700;color:#3FE0B0}
+#maxxBar .mx-hype.bad{color:#FF9B6A}
+#maxxBar .mx-sub{color:#9FB6C2;font-size:12.5px}
+#maxxBar .mx-combo{font-family:var(--mono);color:#FFC94A;font-size:12px;margin-left:6px}
+#maxxBar .mx-x{background:none;border:none;color:#9FB6C2;font-size:20px;line-height:1;cursor:pointer;padding:0 2px;flex:none}
+#maxxBar .mx-x:hover{color:#EAF2F6}
+@media (prefers-reduced-motion:reduce){#maxxBar{transition:none}}
+
+/* ===== 回總覽按鈕 ===== */
+nav.stations a.home,nav.toc a.home{
+  display:inline-block;font-family:var(--sans);font-size:13px;font-weight:700;
+  color:#fff;background:var(--ink);border:1px solid var(--ink);border-radius:999px;
+  padding:6px 14px;margin-right:8px;text-decoration:none;white-space:nowrap;
+}
+nav.stations a.home:hover{background:var(--neg);border-color:var(--neg)}
+nav.stations a.home:focus-visible{outline:2px solid var(--neg);outline-offset:2px}
+
+/* ===== 淺藍主題 ===== */
+:root{
+  --paper:#E6F0F8;          /* 底圖：淺藍 */
+  --card:#FFFFFF;
+  --ink:#0F2A3D;            /* 深藍墨 */
+  --ink-soft:#55707F;
+  --neg:#2563A8;            /* 主藍 */
+  --pos:#C2761A;            /* 琥珀 */
+  --zero:#15795B;
+  --ok:#177A5A;
+  --no:#B23C33;
+  --rule:#C2D6E5;
+  --rule-soft:#DAE7F1;
+  --shadow:0 1px 0 #CBDDEB, 0 10px 26px -18px rgba(15,42,61,.45);
+}
+body{
+  background-color:var(--paper);
+  background-image:
+    linear-gradient(to right, rgba(37,99,168,.07) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(37,99,168,.07) 1px, transparent 1px);
+  background-size:26px 26px;
+}
+nav.stations,nav.toc{background:rgba(230,240,248,.94);border-bottom-color:var(--rule)}
+.card{border-color:var(--rule)}
+.rule-box{background:#F1F7FC;border-left-color:var(--neg)}
+input.blank{background:#F3F8FC}
+.chip,.cmp .ops button,.opts button,.modes button,.presets button,.numrow button,
+.picker button,.nudge button,.varrow button,.factors button{background:#F3F8FC}
+th{background:#EEF5FA}
+.sechead{border-bottom-color:var(--ink)}
+footer{border-top-color:var(--rule)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="top">
+  <p class="eyebrow">國中數學 1 上 · 計算熟練</p>
+  <h1>3-3 <span class="neg">應用問題</span><br>互動學習單</h1>
+  <p class="sub">應用題不是算得難，是<b>翻譯得難</b>。找到那個「算兩次的量」，等號就出來了。</p>
+</header>
+
+<nav class="stations" aria-label="關卡導覽">
+  <a class="home" href="index.html">← 總覽</a>
+  <button class="jump" data-target="hero">分配問題實驗室</button>
+  <button class="jump" data-target="s0">題型雷達</button>
+  <button class="jump" data-target="s1">① 數字問題</button>
+  <button class="jump" data-target="s2">② 費用問題</button>
+  <button class="jump" data-target="s3">③ 分配問題</button>
+  <button class="jump" data-target="s4">④ 折扣問題</button>
+  <button class="jump" data-target="s5">⑤ 年齡問題</button>
+  <button class="jump" data-target="s6">⑥ 速率問題</button>
+  <button class="jump" data-target="s7">⑦ 合理性</button>
+  <button class="jump" data-target="s8">⑧ 三個陷阱</button>
+</nav>
+
+<div class="progress">
+  <span id="pcount">0 / 0</span>
+  <span class="bar"><i id="pbar"></i></span>
+  <button class="act ghost" id="reset" style="margin:0">清除紀錄</button>
+</div>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero">
+    <h2>分配問題實驗室</h2>
+    <p class="hint">分配問題是最愛考的一型。拉滑桿改題目的數字，看看方程式和答案怎麼跟著變——
+      也順便看看什麼時候答案會變成<b>不合理的小數</b>。</p>
+    <div class="sliders">
+      <div><label for="ra">每組 <b id="la">4</b> 人</label><input id="ra" type="range" min="2" max="20" value="4"></div>
+      <div><label for="rb">多出 <b id="lb">5</b> 人</label><input id="rb" type="range" min="0" max="20" value="5"></div>
+      <div><label for="rc">改成每組 <b id="lc">5</b> 人</label><input id="rc" type="range" min="2" max="24" value="5"></div>
+      <div><label for="rd">不足 <b id="ld">2</b> 人</label><input id="rd" type="range" min="0" max="20" value="2"></div>
+    </div>
+    <p class="story" id="story"></p>
+    <div class="steps" id="steps"></div>
+  </div>
+</section>
+
+<!-- 題型雷達 -->
+<section id="s0">
+  <div class="sechead"><span class="no">00</span><h2>題型雷達</h2><span class="from">看到關鍵字就知道要抓什麼</span></div>
+  <div class="radar">
+    <div class="rad"><h4><span>數字</span>某數的幾倍加減</h4>
+      <p>直接把「某數」設成 x，中文照順序翻成算式。<b>「等於」就是等號的位置。</b>
+      <span class="tpl">2x + 5 = x + 12</span></p></div>
+    <div class="rad"><h4><span>費用</span>A 比 B 貴 k 元</h4>
+      <p>設<b>便宜的</b>那個為 x，貴的就是 x+k。兩個加起來等於總價。
+      <span class="tpl">x + (x+k) = 總價</span></p></div>
+    <div class="rad"><h4><span>分配</span>多出 / 不足</h4>
+      <p>抓住<b>總人數不變</b>：兩種分法算出來的總數要相等。多出就 <b>+</b>、不足就 <b>−</b>。
+      <span class="tpl">ax + 多 = cx − 少</span></p></div>
+    <div class="rad"><h4><span>折扣</span>加成、打折、獲利</h4>
+      <p>加五成 = ×1.5、打八折 = ×0.8；<b>獲利 = 售價 − 成本</b>。
+      <span class="tpl">1.5x × 0.8 − x = 獲利</span></p></div>
+    <div class="rad"><h4><span>年齡</span>幾年後</h4>
+      <p>抓住<b>兩人同時加同樣的歲數</b>，年齡差永遠不變。先寫「現在」，再各自 +n。
+      <span class="tpl">(爸現在+n) = k(子現在+n) ± m</span></p></div>
+    <div class="rad"><h4><span>速率</span>來回、往返</h4>
+      <p><b>時間 = 距離 ÷ 速率</b>；來回題把去程時間 + 回程時間 = 總時間。
+      <span class="tpl">x/去速 + x/回速 = 總時間</span></p></div>
+  </div>
+</section>
+
+<!-- S1 -->
+<section id="s1">
+  <div class="sechead"><span class="no">01</span><h2>數字問題</h2><span class="from">熟練 1</span></div>
+  <div class="card task" data-id="w1" data-type="fill">
+    <h3>熟練 1<span class="tag new">原卷未作答</span></h3>
+    <p class="q"><span class="num">1.</span>某數的 2 倍加 5 等於該數加 12：設某數為 x，
+      列式 2x+5 = x+<input class="blank sm" data-ans="12" aria-label="w1a"> → 某數 = <input class="blank sm" data-ans="7" aria-label="w1b"></p>
+    <p class="q"><span class="num">2.</span>某數減 16 等於該數的 6 倍多 4：
+      列式 x−16 = <input class="blank sm" data-ans="6" aria-label="w1c">x+4 → 某數 = <input class="blank sm" data-ans="-4" aria-label="w1d"></p>
+    <button class="act check">檢查</button>
+    <p class="fb"></p>
+    <details class="sol"><summary>看解析</summary><div class="body">
+      1. 2x+5 = x+12 → x = <b>7</b>。驗算：2×7+5 = 19、7+12 = 19 ✓<br>
+      2. x−16 = 6x+4 → −20 = 5x → x = <b>−4</b>。
+      <b>答案是負數很正常</b>，「某數」沒有規定要是正的。驗算：−4−16 = −20、6×(−4)+4 = −20 ✓
+    </div></details>
+  </div>
+</section>
+
+<!-- S2 -->
+<section id="s2">
+  <div class="sechead"><span class="no">02</span><h2>費用問題</h2><span class="from">熟練 2</span></div>
+  <div class="rule-box"><b>設便宜的那個當 x</b>，貴的寫成 x+k，這樣式子裡不會出現減號，比較不容易錯。</div>
+  <div class="card task" data-id="w2" data-type="fill">
+    <h3>熟練 2<span class="tag new">原卷未作答</span></h3>
+    <p class="q"><span class="num">1.</span>羽絨衣比毛衣貴 80 元，兩件共 380 元：設毛衣 x 元 →
+      x+(x+80) = 380 → 毛衣 <input class="blank sm" data-ans="150" aria-label="w2a"> 元、羽絨衣 <input class="blank sm" data-ans="230" aria-label="w2b"> 元</p>
+    <p class="q"><span class="num">2.</span>咖啡比鬆餅貴 15 元，共 175 元：鬆餅 <input class="blank sm" data-ans="80" aria-label="w2c"> 元、
+      咖啡 <input class="blank sm" data-ans="95" aria-label="w2d"> 元</p>
+    <button class="act check">檢查</button>
+    <p class="fb"></p>
+    <details class="sol"><summary>看解析</summary><div class="body">
+      1. 2x+80 = 380 → x = <b>150</b>，另一件 150+80 = <b>230</b>。<br>
+      2. 2x+15 = 175 → x = <b>80</b>，咖啡 <b>95</b>。<br>
+      <b>算完一定要回頭加一次</b>：150+230 = 380 ✓、80+95 = 175 ✓。這一步能抓住 90% 的粗心。
+    </div></details>
+  </div>
+</section>
+
+<!-- S3 -->
+<section id="s3">
+  <div class="sechead"><span class="no">03</span><h2>分配問題</h2><span class="from">熟練 3</span></div>
+  <div class="rule-box"><b>不變的是「總人數」。</b>每組 26 人還多 20 人 → 總人數 = 26x+20；每組 30 人還差 12 人 → 總人數 = 30x−12。兩個都是總人數，所以相等。</div>
+  <div class="card task" data-id="w3" data-type="fill">
+    <h3>熟練 3<span class="tag new">原卷未作答</span></h3>
+    <p class="q"><span class="num">1.</span>每班 26 人多 20 人、每班 30 人少 12 人，設班級數 x：
+      列式 26x+20 = 30x<input class="blank sm" data-ans="-12" aria-label="w3a">（含正負號）→ 班級數 = <input class="blank sm" data-ans="8" aria-label="w3b"> 班，
+      學生共 <input class="blank sm" data-ans="228" aria-label="w3c"> 人</p>
+    <p class="q"><span class="num">2.</span>每組 30 人多 5 人、每組 32 人少 7 人 → 組數 = <input class="blank sm" data-ans="6" aria-label="w3d"> 組，
+      學員共 <input class="blank sm" data-ans="185" aria-label="w3e"> 人</p>
+    <button class="act check">檢查</button>
+    <p class="fb"></p>
+    <details class="sol"><summary>看解析</summary><div class="body">
+      1. 26x+20 = 30x−12 → 32 = 4x → x = <b>8</b> 班；總人數 26×8+20 = <b>228</b>（用另一式驗算：30×8−12 = 228 ✓）。<br>
+      2. 30x+5 = 32x−7 → 12 = 2x → x = <b>6</b> 組；總人數 30×6+5 = <b>185</b>（32×6−7 = 185 ✓）。<br>
+      <b>兩種算法都算一次總人數，對得上才算完成</b>——這是分配問題自帶的驗算機制。
+    </div></details>
+  </div>
+</section>
+
+<!-- S4 -->
+<section id="s4">
+  <div class="sechead"><span class="no">04</span><h2>折扣問題</h2><span class="from">熟練 4</span></div>
+  <div class="rule-box"><b>加 n 成 = ×(1+0.n)；打 n 折 = ×0.n；獲利 = 售價 − 成本。</b>「獲利 25%」指的是賺了<b>成本</b>的 25%。</div>
+  <div class="card task" data-id="w4" data-type="fill">
+    <h3>熟練 4<span class="tag new">原卷未作答</span></h3>
+    <p class="q"><span class="num">1.</span>成本提高 80% 為標價、打九折出售、獲利 310 元：
+      標價 = <input class="blank sm" data-ans="1.8" aria-label="w4a">x，售價 = <input class="blank sm" data-ans="1.62" aria-label="w4b">x，
+      成本 = <input class="blank sm" data-ans="500" aria-label="w4c"> 元</p>
+    <p class="q"><span class="num">2.</span>標價 6000 元打八折，獲利 25%：售價 = <input class="blank sm" data-ans="4800" aria-label="w4d"> 元，
+      列式 x+0.25x = 售價 → 成本 = <input class="blank" data-ans="3840" aria-label="w4e"> 元</p>
+    <button class="act check">檢查</button>
+    <p class="fb"></p>
+    <details class="sol"><summary>看解析</summary><div class="body">
+      1. 1.8x×0.9 = 1.62x，1.62x − x = 310 → 0.62x = 310 → x = <b>500</b>。<br>
+      2. 售價 6000×0.8 = <b>4800</b>；成本 + 獲利 = 售價 → 1.25x = 4800 → x = <b>3840</b>。<br>
+      <b>兩題的差別：</b>第 1 題獲利是「一個固定金額」，第 2 題獲利是「成本的百分比」，
+      列式方式完全不同，讀題時要看清楚獲利後面接的是「元」還是「%」。
+    </div></details>
+  </div>
+</section>
+
+<!-- S5 -->
+<section id="s5">
+  <div class="sechead"><span class="no">05</span><h2>年齡問題</h2><span class="from">熟練 5</span></div>
+  <div class="rule-box"><b>n 年後兩個人都要 +n</b>，一個加另一個沒加是最常見的錯。年齡差則永遠不變。</div>
+  <div class="card task" data-id="w5" data-type="fill">
+    <h3>熟練 5<span class="tag new">原卷未作答</span></h3>
+    <p class="q"><span class="num">1.</span>爸爸現在＝小恬的 4 倍少 1 歲；3 年後爸爸＝小恬的 3 倍多 2 歲。設小恬現在 x 歲：<br>
+      3 年後小恬 (x+3) 歲、爸爸 (4x<input class="blank sm" data-ans="2" aria-label="w5a">) 歲（填 −1+3 的結果）→
+      小恬 <input class="blank sm" data-ans="9" aria-label="w5b"> 歲、爸爸 <input class="blank sm" data-ans="35" aria-label="w5c"> 歲、相差 <input class="blank sm" data-ans="26" aria-label="w5d"> 歲</p>
+    <p class="q"><span class="num">2.</span>外婆現在＝熙熙的 5 倍多 3 歲；6 年後外婆＝熙熙的 4 倍少 3 歲 →
+      熙熙 <input class="blank sm" data-ans="12" aria-label="w5e"> 歲、外婆 <input class="blank sm" data-ans="63" aria-label="w5f"> 歲、相差 <input class="blank sm" data-ans="51" aria-label="w5g"> 歲</p>
+    <button class="act check">檢查</button>
+    <p class="fb"></p>
+    <details class="sol"><summary>看解析</summary><div class="body">
+      1. 3 年後：爸 4x−1+3 = 4x+2、小恬 x+3 → 4x+2 = 3(x+3)+2 → x = <b>9</b>；爸 4×9−1 = <b>35</b>；差 <b>26</b>。<br>
+      2. 6 年後：外婆 5x+3+6 = 5x+9、熙熙 x+6 → 5x+9 = 4(x+6)−3 → x = <b>12</b>；外婆 <b>63</b>；差 <b>51</b>。<br>
+      <b>檢查法：</b>年齡差現在是 26，3 年後 38−12 = 26，<b>永遠一樣</b>。差變了就是算錯了。
+    </div></details>
+  </div>
+</section>
+
+<!-- S6 -->
+<section id="s6">
+  <div class="sechead"><span class="no">06</span><h2>速率問題</h2><span class="from">熟練 6</span></div>
+  <div class="rule-box"><b>時間 = 距離 ÷ 速率。</b>來回題設<b>單程</b>為 x，去程時間 + 回程時間 = 總時間。單位要先統一（分鐘就全部用分鐘）。</div>
+  <div class="card task" data-id="w6" data-type="fill">
+    <h3>熟練 6<span class="tag new">原卷未作答</span></h3>
+    <p class="q"><span class="num">1.</span>逆風每分 150 公尺、順風每分 250 公尺，來回共 2 小時 40 分：
+      總時間 = <input class="blank sm" data-ans="160" aria-label="w6a"> 分，列式 x/150 + x/250 = 160 →
+      單程 <input class="blank" data-ans="15000" aria-label="w6b"> 公尺 = <input class="blank sm" data-ans="15" aria-label="w6c"> 公里，
+      比賽路程（來回）= <input class="blank sm" data-ans="30" aria-label="w6d"> 公里</p>
+    <p class="q"><span class="num">2.</span>逆風每天 100 公里、順風每天 130 公里，往返共 23 天 →
+      距離 <input class="blank" data-ans="1300" aria-label="w6e"> 公里</p>
+    <p class="q"><span class="num">3.</span>上坡時速 2、下坡時速 4，往返共 3 小時 → 距離 <input class="blank sm" data-ans="4" aria-label="w6f"> 公里</p>
+    <button class="act check">檢查</button>
+    <p class="fb"></p>
+    <details class="sol"><summary>看解析</summary><div class="body">
+      1. 同乘 750：5x+3x = 120000 → x = <b>15000</b> 公尺 = 15 公里（單程）。
+      題目問「比賽的路程」，選手實際跑的是來回 → <b>30 公里</b>。
+      <b>若老師的解答本認定「路程」＝賽道單程長，則為 15 公里，可對照一下。</b><br>
+      2. 同乘 1300：13x+10x = 29900 → 23x = 29900 → x = <b>1300</b> 公里。<br>
+      3. x/2 + x/4 = 3 → 同乘 4：2x+x = 12 → x = <b>4</b> 公里。
+    </div></details>
+  </div>
+</section>
+
+<!-- S7 -->
+<section id="s7">
+  <div class="sechead"><span class="no">07</span><h2>解與情境的合理性</h2><span class="from">熟練 7</span></div>
+  <div class="rule-box">算出來的 x <b>還要放回真實情境檢查</b>：東西的個數、人數必須是<b>正整數</b>，年齡不能是負的。算對了不代表答案合理。</div>
+  <div class="card task" data-id="w7" data-type="fill">
+    <h3>熟練 7 · 先算出 x<span class="tag new">原卷未作答</span></h3>
+    <p class="q"><span class="num">1.</span>佛珠 80 元／串、佛經 60 元／本，買了 x 串佛珠和 1 本佛經共 560 元：
+      80x+60 = 560 → x = <input class="blank" data-ans="6.25" aria-label="w7a"></p>
+    <p class="q"><span class="num">2.</span>筆記本 70 元 x 本、資料夾 35 元 3 個，共 420 元：
+      70x+<input class="blank sm" data-ans="105" aria-label="w7b"> = 420 → x = <input class="blank" data-ans="4.5" aria-label="w7c"></p>
+    <button class="act check">檢查</button>
+    <p class="fb"></p>
+  </div>
+  <div class="card task" data-id="w8" data-type="compare">
+    <h3>熟練 7 · 再判斷合不合理</h3>
+    <div class="cmp" data-ans="不合理"><span class="expr">佛珠算出 6.25 串 → 廟公收 560 元</span>
+      <span class="ops"><button type="button" data-op="合理">合理</button><button type="button" data-op="不合理">不合理</button></span></div>
+    <div class="cmp" data-ans="不合理"><span class="expr">筆記本算出 4.5 本 → 付 420 元</span>
+      <span class="ops"><button type="button" data-op="合理">合理</button><button type="button" data-op="不合理">不合理</button></span></div>
+    <div class="cmp" data-ans="合理"><span class="expr">（對照）若共收 620 元，算出佛珠 7 串</span>
+      <span class="ops"><button type="button" data-op="合理">合理</button><button type="button" data-op="不合理">不合理</button></span></div>
+    <button class="act check">檢查</button>
+    <p class="fb"></p>
+    <details class="sol"><summary>看解析</summary><div class="body">
+      6.25 串、4.5 本都<b>不是整數</b>，實際上買不到 → 收費不合理。<br>
+      對照組：80×7+60 = 620，x = 7 是整數 → 合理。<br>
+      <b>回答時要寫「不合理，因為串數（本數）必須是整數」</b>，只寫「不合理」拿不到完整分數。
+    </div></details>
+  </div>
+</section>
+
+<!-- S8 -->
+<section id="s8">
+  <div class="sechead"><span class="no">08</span><h2>三個陷阱</h2><span class="from">應用題最常掉分的地方</span></div>
+  <div class="card">
+    <div class="trap"><h4>陷阱一：算出 x 就交卷</h4>
+      <p>分配問題問的常常是<b>「總人數」</b>而不是組數；費用問題問的是<b>兩個價錢</b>而不是只有 x。
+      算完 x 一定要回頭看題目最後一句在問什麼——這隻讀題怪已經出現第五次了。</p></div>
+    <div class="trap"><h4>陷阱二：幾年後只加一個人</h4>
+      <p>3 年後爸爸和小孩<b>都要 +3</b>。檢查法：年齡差算兩次（現在、n 年後），必須一樣。</p></div>
+    <div class="trap"><h4>陷阱三：忘了檢查合理性</h4>
+      <p>人數、個數必須是正整數。算出 6.25 串不是計算錯，而是<b>情境本身不成立</b>，要寫出理由。</p></div>
+    <details class="sol" open><summary>老師備註</summary><div class="body">
+      這兩頁原卷完全空白。應用題的標準四步驟是<b>設、列、解、答</b>，這一單元的工具刻意在每題都保留「列式」那一格，
+      因為<b>失分幾乎都發生在列式，不在計算</b>。<br>
+      建議搭配 3-2 的天平驗算器：列完式、解完 x 之後，把 x 代回自己列的方程式確認一次，再回頭回答題目問的東西。<br>
+      另外，熟練 6-1 的「路程」有兩種讀法（單程 15 公里／來回 30 公里），本工具兩格都要求填，
+      作答時依老師的解答本為準。
+    </div></details>
+  </div>
+</section>
+
+<footer>互動學習單 · 3-3 應用問題 · 作答紀錄只存在這台裝置的瀏覽器裡。</footer>
+</div>
+
+<script>
+/* ===== Math 麥斯：熱血回饋層（歡呼在氣泡，具體錯在哪一步仍留在紅字） ===== */
+window.MAXX = (function(){
+"use strict";
+var BOSS = {"w1": "列式翻譯怪", "w2": "列式翻譯怪", "w3": "總量不變守衛", "w4": "加成打折怪", "w5": "年齡同加怪", "w6": "單位換算怪", "w7": "合理性檢查官", "w8": "合理性檢查官"};
+var OK = [
+  "破防！這一刀切得漂亮！",
+  "火力全開 Max！觀眾席都站起來了！",
+  "乾淨俐落，這關連渣都沒剩！",
+  "看到沒？這就是練過的手感！",
+  "命中要害！大腦火力全開！",
+  "穩！這題被你直接秒了！"
+];
+var COMBO = [
+  "COMBO ×{n}！停不下來了啦！",
+  "{n} 連擊！這節奏太猛！",
+  "連續 {n} 關不失手，教練我想打職業！"
+];
+var BAD = [
+  "警報！「{boss}」就是在這一關出手的——",
+  "被偷襲了！「{boss}」剛剛從這裡溜過去：",
+  "血條沒掉沒關係，情報到手了！「{boss}」的招式是：",
+  "喔喔，「{boss}」這招很陰！我們看它動了哪裡："
+];
+var AV = '<img class="mx-av" src="data:image/webp;base64,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" alt="">';
+var combo = 0, box = null, txt = null;
+function ensure(){
+  if(box) return;
+  box = document.createElement("div");
+  box.id = "maxxBar";
+  box.setAttribute("role", "status");
+  box.innerHTML = AV + '<span class="mx-txt"></span><button class="mx-x" type="button" aria-label="關閉麥斯">×</button>';
+  document.body.appendChild(box);
+  txt = box.querySelector(".mx-txt");
+  box.querySelector(".mx-x").addEventListener("click", function(){ box.classList.remove("on"); });
+}
+function pick(a){ return a[Math.floor(Math.random() * a.length)]; }
+function show(kind, hype, sub){
+  ensure();
+  txt.innerHTML = '<span class="mx-hype' + (kind === "bad" ? " bad" : "") + '">' + hype +
+    (kind === "ok" && combo >= 2 ? '<span class="mx-combo">COMBO ×' + combo + "</span>" : "") + "</span>" +
+    (sub ? '<span class="mx-sub">' + sub + "</span>" : "");
+  box.classList.add("on");
+}
+return {
+  say: function(ok, task){
+    var id = (task && task.getAttribute) ? task.getAttribute("data-id") : "";
+    var boss = BOSS[id] || "粗心小怪";
+    if(ok){
+      combo++;
+      show("ok", combo >= 3 ? pick(COMBO).replace("{n}", combo) : pick(OK), "破關數 +1，下一關走起。");
+    } else {
+      combo = 0;
+      show("bad", pick(BAD).replace("{boss}", boss), "紅色那格就是它的位置，看一下解析再補一刀。");
+    }
+  },
+  sayScore: function(right, total, final){
+    combo = 0;
+    if(right === total) show("ok", final ? "全數擊倒！這一單元被你打穿了！" : "這一節清空！漂亮！", "");
+    else if(right >= total - 2) show("ok", "差一點就全清了！剩 " + (total - right) + " 題", "把打叉的那幾題再看一次，很快就收工。");
+    else show("bad", "情報收集完成：答對 " + right + " / " + total, "下面的診斷報告會告訴你先補哪一類，一次補一類就好。");
+  }
+};
+})();
+</script>
+<script>
+(function(){
+"use strict";
+var KEY = "math-3-3-word-problems-v1";
+var state = {};
+try{ var raw = localStorage.getItem(KEY); if(raw) state = JSON.parse(raw) || {}; }catch(e){ state = {}; }
+function save(){ try{ localStorage.setItem(KEY, JSON.stringify(state)); }catch(e){} }
+
+function halfWidth(s){
+  return String(s == null ? "" : s)
+    .replace(/[\uFF10-\uFF19]/g, function(c){ return String.fromCharCode(c.charCodeAt(0) - 0xFEE0); })
+    .replace(/[\u2212\u2013\u2014\uFF0D]/g, "-").replace(/[\uFF0F]/g, "/").replace(/[\uFF0E]/g, ".").replace(/[,\uFF0C]/g, "");
+}
+function parseNum(str){
+  var s = halfWidth(str).replace(/\s+/g, " ").trim();
+  if(!s) return null;
+  var m = s.match(/^([+-]?)(\d+)\s+(\d+)\/(\d+)$/);
+  if(m) return (m[1] === "-" ? -1 : 1) * (Number(m[2]) + Number(m[3]) / Number(m[4]));
+  m = s.match(/^([+-]?)(\d+)\/(\d+)$/);
+  if(m){ if(Number(m[3]) === 0) return null; return (m[1] === "-" ? -1 : 1) * (Number(m[2]) / Number(m[3])); }
+  m = s.match(/^[+-]?(\d+\.?\d*|\.\d+)$/);
+  return m ? Number(s) : null;
+}
+
+/* ---------- 分配問題實驗室 ---------- */
+(function lab(){
+  var ra = document.getElementById("ra");
+  if(!ra) return;
+  var rb = document.getElementById("rb"), rc = document.getElementById("rc"), rd = document.getElementById("rd");
+  function render(){
+    var a = Number(ra.value), b = Number(rb.value), c = Number(rc.value), d = Number(rd.value);
+    document.getElementById("la").textContent = a;
+    document.getElementById("lb").textContent = b;
+    document.getElementById("lc").textContent = c;
+    document.getElementById("ld").textContent = d;
+    document.getElementById("story").innerHTML =
+      "若每組 <b>" + a + "</b> 人，會多出 <b>" + b + "</b> 人；若每組 <b>" + c + "</b> 人，會不足 <b>" + d + "</b> 人。組數是多少？";
+    var out = [];
+    out.push("<div>設組數為 x</div>");
+    out.push("<div>" + a + "x + " + b + " = " + c + "x \u2212 " + d + "　（兩邊都是總人數）</div>");
+    if(c === a){
+      out.push('<div class="bad">兩種分法每組人數一樣 → 方程式無解，題目本身不成立。</div>');
+    } else {
+      var x = (b + d) / (c - a);
+      out.push("<div>" + (b + d) + " = " + (c - a) + "x → x = " + (b + d) + " \u00F7 " + (c - a) + "</div>");
+      var nice = Math.round(x * 10000) / 10000;
+      if(x > 0 && Math.abs(x - Math.round(x)) < 1e-9){
+        out.push('<div class="res">組數 = ' + Math.round(x) + " 組，總人數 = " + (a * x + b) + " 人</div>");
+        out.push("<div>驗算：" + c + "\u00D7" + Math.round(x) + " \u2212 " + d + " = " + (c * x - d) + " \u2713</div>");
+      } else if(x <= 0){
+        out.push('<div class="bad">算出 x = ' + nice + "，組數不能是 0 或負數 → 這組數字不合理。</div>");
+      } else {
+        out.push('<div class="bad">算出 x = ' + nice + "，組數必須是整數 → 這組數字不合理（熟練 7 就是在考這個）。</div>");
+      }
+    }
+    document.getElementById("steps").innerHTML = out.join("");
+  }
+  [ra, rb, rc, rd].forEach(function(x){ x.addEventListener("input", render); });
+  render();
+})();
+
+/* ---------- 判定 ---------- */
+function checkFill(task){
+  var inputs = task.querySelectorAll("input.blank");
+  var bad = 0, blank = 0;
+  Array.prototype.forEach.call(inputs, function(inp){
+    var want = parseNum(inp.getAttribute("data-ans"));
+    var got = parseNum(inp.value);
+    inp.classList.remove("ok", "no");
+    if(inp.value.trim() === ""){ blank++; return; }
+    if(got !== null && want !== null && Math.abs(got - want) <= 1e-9 * Math.max(1, Math.abs(want))) inp.classList.add("ok");
+    else { inp.classList.add("no"); bad++; }
+  });
+  if(blank && !bad) return { ok: false, msg: "還有 " + blank + " 格沒填。" };
+  if(bad) return { ok: false, msg: "紅色的再想一次——題目問的是哪一個量？" };
+  return { ok: true, msg: "全對。" };
+}
+function checkCompare(task){
+  var rows = task.querySelectorAll(".cmp");
+  var bad = 0, blank = 0;
+  Array.prototype.forEach.call(rows, function(row){
+    var want = row.getAttribute("data-ans");
+    var got = row.getAttribute("data-picked");
+    row.classList.remove("ok", "no");
+    if(!got){ blank++; return; }
+    if(got === want) row.classList.add("ok");
+    else { row.classList.add("no"); bad++; }
+  });
+  if(blank && !bad) return { ok: false, msg: "還有 " + blank + " 題沒選。" };
+  if(bad) return { ok: false, msg: "紅色那題想想看：這個數字在現實中存在嗎？" };
+  return { ok: true, msg: "全對。" };
+}
+
+var tasks = Array.prototype.slice.call(document.querySelectorAll(".task"));
+tasks.forEach(function(task){
+  var type = task.getAttribute("data-type");
+  var id = task.getAttribute("data-id");
+  if(type === "compare"){
+    task.addEventListener("click", function(ev){
+      var b = ev.target.closest(".ops button");
+      if(!b || !task.contains(b)) return;
+      var row = b.closest(".cmp");
+      row.setAttribute("data-picked", b.getAttribute("data-op"));
+      row.classList.remove("ok", "no");
+      Array.prototype.forEach.call(row.querySelectorAll(".ops button"), function(x){
+        x.setAttribute("aria-pressed", x === b ? "true" : "false");
+      });
+    });
+  }
+  var btn = task.querySelector(".check");
+  if(btn) btn.addEventListener("click", function(){
+    var res = (type === "compare") ? checkCompare(task) : checkFill(task);
+    var fb = task.querySelector(".fb");
+    fb.textContent = res.msg;
+    fb.className = "fb " + (res.ok ? "ok" : "no");
+    if(window.MAXX) MAXX.say(res.ok, task);
+    state[id] = { ok: res.ok };
+    save();
+    updateProgress();
+  });
+});
+function updateProgress(){
+  var total = tasks.length, done = 0;
+  tasks.forEach(function(t){ var id = t.getAttribute("data-id"); if(state[id] && state[id].ok) done++; });
+  document.getElementById("pcount").textContent = done + " / " + total;
+  document.getElementById("pbar").style.width = total ? (done / total * 100) + "%" : "0%";
+}
+updateProgress();
+document.getElementById("reset").addEventListener("click", function(){
+  state = {}; save();
+  try{ localStorage.removeItem(KEY); }catch(e){}
+  window.location.reload();
+});
+Array.prototype.forEach.call(document.querySelectorAll(".jump"), function(b){
+  b.addEventListener("click", function(){
+    var t = document.getElementById(b.getAttribute("data-target"));
+    if(t) t.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+});
+})();
+</script>
+</body>
+</html>

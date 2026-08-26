@@ -214,6 +214,47 @@ footer{margin-top:44px;border-top:1px solid var(--rule);padding-top:14px;font-si
 #maxxBar .mx-x{background:none;border:none;color:#9FB6C2;font-size:20px;line-height:1;cursor:pointer;padding:0 2px;flex:none}
 #maxxBar .mx-x:hover{color:#EAF2F6}
 @media (prefers-reduced-motion:reduce){#maxxBar{transition:none}}
+
+/* ===== 回總覽按鈕 ===== */
+nav.stations a.home,nav.toc a.home{
+  display:inline-block;font-family:var(--sans);font-size:13px;font-weight:700;
+  color:#fff;background:var(--ink);border:1px solid var(--ink);border-radius:999px;
+  padding:6px 14px;margin-right:8px;text-decoration:none;white-space:nowrap;
+}
+nav.stations a.home:hover{background:var(--neg);border-color:var(--neg)}
+nav.stations a.home:focus-visible{outline:2px solid var(--neg);outline-offset:2px}
+
+/* ===== 淺藍主題 ===== */
+:root{
+  --paper:#E6F0F8;          /* 底圖：淺藍 */
+  --card:#FFFFFF;
+  --ink:#0F2A3D;            /* 深藍墨 */
+  --ink-soft:#55707F;
+  --neg:#2563A8;            /* 主藍 */
+  --pos:#C2761A;            /* 琥珀 */
+  --zero:#15795B;
+  --ok:#177A5A;
+  --no:#B23C33;
+  --rule:#C2D6E5;
+  --rule-soft:#DAE7F1;
+  --shadow:0 1px 0 #CBDDEB, 0 10px 26px -18px rgba(15,42,61,.45);
+}
+body{
+  background-color:var(--paper);
+  background-image:
+    linear-gradient(to right, rgba(37,99,168,.07) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(37,99,168,.07) 1px, transparent 1px);
+  background-size:26px 26px;
+}
+nav.stations,nav.toc{background:rgba(230,240,248,.94);border-bottom-color:var(--rule)}
+.card{border-color:var(--rule)}
+.rule-box{background:#F1F7FC;border-left-color:var(--neg)}
+input.blank{background:#F3F8FC}
+.chip,.cmp .ops button,.opts button,.modes button,.presets button,.numrow button,
+.picker button,.nudge button,.varrow button,.factors button{background:#F3F8FC}
+th{background:#EEF5FA}
+.sechead{border-bottom-color:var(--ink)}
+footer{border-top-color:var(--rule)}
 </style>
 </head>
 <body>
@@ -226,6 +267,7 @@ footer{margin-top:44px;border-top:1px solid var(--rule);padding-top:14px;font-si
 </header>
 
 <nav class="stations" aria-label="關卡導覽">
+  <a class="home" href="index.html">← 總覽</a>
   <button class="jump" data-target="hero">數線實驗室</button>
   <button class="jump" data-target="s1">① 正負符號</button>
   <button class="jump" data-target="s2">② 標點位置</button>
