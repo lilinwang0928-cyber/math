@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>麥斯語錄．108 句中英雙語</title>
+<style>
+:root{
+  --paper:#EEF2F4;--card:#FFFFFF;--ink:#12303C;--ink-soft:#5A737F;
+  --neg:#2F5FA8;--pos:#C87814;--zero:#17795C;--ok:#1B7A5C;--no:#B23C33;
+  --rule:#C6D5DC;--rule-soft:#DFE8ED;
+  --shadow:0 1px 0 #D7E1E6, 0 8px 24px -18px #1c3d4a;
+  --serif:"Noto Serif TC","Songti TC","Source Han Serif TC","PMingLiU",serif;
+  --sans:"PingFang TC","Microsoft JhengHei","Noto Sans TC","Heiti TC",system-ui,sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,"Courier New",monospace;
+  --mint:#3FE0B0;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{font-family:var(--sans);color:var(--ink);background-color:var(--paper);
+  background-image:linear-gradient(to right, rgba(47,95,168,.055) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(47,95,168,.055) 1px, transparent 1px);
+  background-size:26px 26px;line-height:1.7;-webkit-text-size-adjust:100%}
+.wrap{max-width:900px;margin:0 auto;padding:0 14px 80px}
+header.top{padding:34px 0 14px}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.18em;color:var(--ink-soft);margin:0 0 6px}
+h1{font-family:var(--serif);font-weight:700;font-size:clamp(28px,7vw,44px);line-height:1.22;margin:0 0 10px}
+h1 .neg{color:var(--neg)}
+.sub{margin:0;color:var(--ink-soft);font-size:15px}
+nav.stations{position:sticky;top:0;z-index:40;margin:16px -14px 0;padding:8px 14px;
+  background:rgba(238,242,244,.94);backdrop-filter:blur(6px);border-bottom:1px solid var(--rule);
+  overflow-x:auto;white-space:nowrap;-webkit-overflow-scrolling:touch}
+nav.stations button{font-family:var(--sans);font-size:13px;color:var(--ink);background:var(--card);
+  border:1px solid var(--rule);border-radius:999px;padding:6px 13px;margin-right:6px;cursor:pointer}
+nav.stations button:hover{border-color:var(--neg);color:var(--neg)}
+
+/* 抽卡 */
+.draw{background:linear-gradient(180deg,#132633 0%,#17303F 100%);border:1px solid #2A4557;
+  border-left:5px solid var(--mint);border-radius:14px;padding:20px 16px 16px;margin-top:18px;
+  box-shadow:0 18px 44px -24px rgba(15,42,61,.6);color:#EAF2F6;position:relative;overflow:hidden}
+.draw .tagline{font-family:var(--mono);font-size:11px;letter-spacing:.18em;color:var(--mint);margin:0 0 8px}
+.draw .zh{font-family:var(--serif);font-size:clamp(19px,4.8vw,26px);font-weight:700;line-height:1.55;margin:0 0 10px;color:#fff}
+.draw .en{font-size:14.5px;color:#9FB6C2;margin:0;line-height:1.6}
+.draw .meta{display:flex;align-items:center;gap:8px;margin-top:14px;flex-wrap:wrap;font-family:var(--mono);font-size:12px;color:#7E97A6}
+.draw .meta .badge{background:#1E3646;color:var(--mint);border-radius:999px;padding:3px 10px}
+.draw .acts{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+.draw .acts button{font-family:var(--sans);font-size:14px;font-weight:700;border:none;border-radius:9px;padding:10px 16px;cursor:pointer}
+.draw .acts .go{background:var(--mint);color:#06212C}
+.draw .acts .go:hover{background:#7CEBC8}
+.draw .acts .ghost{background:transparent;color:var(--mint);border:1px solid #2A4557!important}
+.draw .acts .ghost:hover{border-color:var(--mint)!important}
+
+/* 篩選 */
+.filters{display:flex;gap:6px;flex-wrap:wrap;margin-top:16px}
+.filters button{font-family:var(--sans);font-size:13px;border:1px solid var(--rule);background:var(--card);
+  border-radius:999px;padding:6px 13px;cursor:pointer;color:var(--ink)}
+.filters button[aria-pressed="true"]{background:var(--neg);border-color:var(--neg);color:#fff}
+.filters button.star[aria-pressed="true"]{background:var(--pos);border-color:var(--pos)}
+.counter{font-family:var(--mono);font-size:12.5px;color:var(--ink-soft);margin:10px 0 0}
+
+section{margin:30px 0 0;scroll-margin-top:60px}
+.sechead{display:flex;align-items:baseline;gap:10px;border-bottom:2px solid var(--ink);padding-bottom:6px;flex-wrap:wrap}
+.sechead .no{font-family:var(--mono);font-size:13px;color:var(--neg);letter-spacing:.1em}
+.sechead h2{font-family:var(--serif);font-size:clamp(19px,4.4vw,25px);margin:0;font-weight:700}
+.sechead .en{margin-left:auto;font-family:var(--mono);font-size:11.5px;color:var(--ink-soft)}
+.sechead p.desc{flex-basis:100%;margin:6px 0 0;font-size:13px;color:var(--ink-soft)}
+
+ul.lines{list-style:none;margin:12px 0 0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:11px}
+@media (max-width:680px){ ul.lines{grid-template-columns:1fr} }
+li.line{background:var(--card);border:1px solid var(--rule);border-radius:11px;padding:12px 12px 10px;box-shadow:var(--shadow);position:relative}
+li.line.fav{border-color:var(--pos);background:#FFFCF6}
+li.line .n{font-family:var(--mono);font-size:11.5px;color:var(--neg);letter-spacing:.06em}
+li.line .zh{font-size:15px;font-weight:700;margin:3px 0 6px;line-height:1.6}
+li.line .en{font-size:13px;color:var(--ink-soft);line-height:1.55;margin:0}
+li.line .tools{display:flex;gap:6px;margin-top:9px}
+li.line .tools button{font-family:var(--sans);font-size:12px;border:1px solid var(--rule);background:#F7FAFB;
+  border-radius:7px;padding:4px 10px;cursor:pointer;color:var(--ink-soft)}
+li.line .tools button:hover{border-color:var(--neg);color:var(--neg)}
+li.line .tools .fv[aria-pressed="true"]{background:#FFF3DF;border-color:var(--pos);color:var(--pos)}
+li.line .tools .copied{border-color:var(--ok);color:var(--ok)}
+.empty{background:var(--card);border:1px dashed var(--rule);border-radius:11px;padding:20px;text-align:center;color:var(--ink-soft);font-size:14px;margin-top:12px}
+/* ===== 語音導覽 ===== */
+.draw .acts .speak{background:#1E3646;color:var(--mint);border:1px solid #2A4557!important}
+.draw .acts .speak:hover{border-color:var(--mint)!important}
+.draw .acts .speak.on{background:var(--mint);color:#06212C;border-color:var(--mint)!important}
+.voicebar{background:var(--card);border:1px solid var(--rule);border-radius:12px;padding:13px 14px;margin-top:14px;box-shadow:var(--shadow)}
+.voicebar h4{margin:0 0 9px;font-size:14px;display:flex;align-items:center;gap:8px}
+.voicebar h4 .ico{font-size:16px}
+.voicebar h4 small{margin-left:auto;font-family:var(--mono);font-size:11.5px;color:var(--ink-soft);font-weight:400}
+.voicebar .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.voicebar .row + .row{margin-top:10px}
+.voicebar .lab{font-family:var(--mono);font-size:12px;color:var(--ink-soft);letter-spacing:.06em}
+.voicebar button{font-family:var(--sans);font-size:13px;border:1px solid var(--rule);background:#F3F8FC;
+  border-radius:999px;padding:6px 13px;cursor:pointer;color:var(--ink)}
+.voicebar button[aria-pressed="true"]{background:var(--neg);border-color:var(--neg);color:#fff}
+.voicebar button.play{background:var(--zero);border-color:var(--zero);color:#fff;font-weight:700}
+.voicebar button.play:hover{background:#12674E}
+.voicebar button.stop{background:#FBEFEE;border-color:var(--no);color:var(--no);font-weight:700}
+.voicebar input[type=range]{flex:1;min-width:130px;max-width:220px}
+.voicebar .rate{font-family:var(--mono);font-size:13px;min-width:38px;text-align:right}
+.voicebar p.note{margin:9px 0 0;font-size:12.5px;color:var(--ink-soft)}
+.voicebar p.warn{margin:9px 0 0;font-size:12.5px;color:var(--no)}
+li.line .tools .sp[aria-pressed="true"]{background:#EEF7F3;border-color:var(--ok);color:var(--ok)}
+li.line.speaking{border-color:var(--zero);background:#F4FBF8;box-shadow:0 0 0 2px rgba(23,121,92,.14)}
+li.line.speaking .zh{color:var(--zero)}
+footer{margin-top:44px;border-top:1px solid var(--rule);padding-top:14px;font-size:12px;color:var(--ink-soft)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+
+/* ===== 回總覽按鈕 ===== */
+nav.stations a.home,nav.toc a.home{
+  display:inline-block;font-family:var(--sans);font-size:13px;font-weight:700;
+  color:#fff;background:var(--ink);border:1px solid var(--ink);border-radius:999px;
+  padding:6px 14px;margin-right:8px;text-decoration:none;white-space:nowrap;
+}
+nav.stations a.home:hover{background:var(--neg);border-color:var(--neg)}
+nav.stations a.home:focus-visible{outline:2px solid var(--neg);outline-offset:2px}
+
+/* ===== 淺藍主題 ===== */
+:root{
+  --paper:#E6F0F8;          /* 底圖：淺藍 */
+  --card:#FFFFFF;
+  --ink:#0F2A3D;            /* 深藍墨 */
+  --ink-soft:#55707F;
+  --neg:#2563A8;            /* 主藍 */
+  --pos:#C2761A;            /* 琥珀 */
+  --zero:#15795B;
+  --ok:#177A5A;
+  --no:#B23C33;
+  --rule:#C2D6E5;
+  --rule-soft:#DAE7F1;
+  --shadow:0 1px 0 #CBDDEB, 0 10px 26px -18px rgba(15,42,61,.45);
+}
+body{
+  background-color:var(--paper);
+  background-image:
+    linear-gradient(to right, rgba(37,99,168,.07) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(37,99,168,.07) 1px, transparent 1px);
+  background-size:26px 26px;
+}
+nav.stations,nav.toc{background:rgba(230,240,248,.94);border-bottom-color:var(--rule)}
+.card{border-color:var(--rule)}
+.rule-box{background:#F1F7FC;border-left-color:var(--neg)}
+input.blank{background:#F3F8FC}
+.chip,.cmp .ops button,.opts button,.modes button,.presets button,.numrow button,
+.picker button,.nudge button,.varrow button,.factors button{background:#F3F8FC}
+th{background:#EEF5FA}
+.sechead{border-bottom-color:var(--ink)}
+footer{border-top-color:var(--rule)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="top">
+  <p class="eyebrow">MATH MAXX · 108 LINES</p>
+  <h1>麥斯<span class="neg">語錄</span><br>108 句中英雙語</h1>
+  <p class="sub">六個破關情境，各 18 句。可以隨機抽一句貼在黑板上，挑幾句收藏當班級標語，也可以讓麥斯用中英文<b>唸給全班聽</b>。</p>
+</header>
+
+<nav class="stations" aria-label="關卡導覽">
+  <a class="home" href="index.html">← 總覽</a>
+  <button class="jump" data-target="draw">抽一句</button>
+  <button class="jump" data-target="g1">① 啟動</button>
+  <button class="jump" data-target="g2">② 試錯</button>
+  <button class="jump" data-target="g3">③ 策略</button>
+  <button class="jump" data-target="g4">④ 恢復</button>
+  <button class="jump" data-target="g5">⑤ 聯想</button>
+  <button class="jump" data-target="g6">⑥ 考前</button>
+</nav>
+
+<div class="draw" id="draw">
+  <p class="tagline" id="dTag">MATH MAXX</p>
+  <p class="zh" id="dZh">—</p>
+  <p class="en" id="dEn"></p>
+  <div class="meta"><span class="badge" id="dCat">—</span><span id="dNo"></span></div>
+  <div class="acts">
+    <button class="go" id="dNext">再抽一句</button>
+    <button class="ghost" id="dCopy">複製這句</button>
+    <button class="speak" id="dSpeak">▶ 朗讀</button>
+    <button class="ghost" id="dFav">收藏</button>
+  </div>
+</div>
+
+<div class="voicebar" id="voicebar">
+  <h4><span class="ico">🔊</span>語音導覽<small id="vEngine">偵測中…</small></h4>
+  <div class="row">
+    <span class="lab">朗讀內容</span>
+    <button class="mode" data-mode="both" aria-pressed="true">中英連讀</button>
+    <button class="mode" data-mode="zh" aria-pressed="false">只讀中文</button>
+    <button class="mode" data-mode="en" aria-pressed="false">只讀英文</button>
+  </div>
+  <div class="row">
+    <span class="lab">語速</span>
+    <input id="vRate" type="range" min="0.6" max="1.3" step="0.05" value="0.95" aria-label="語速">
+    <span class="rate" id="vRateVal">0.95×</span>
+    <button class="play" id="vPlayAll">▶ 連續播放目前清單</button>
+    <button class="stop" id="vStop">■ 停止</button>
+  </div>
+  <p class="note" id="vNote">點任一句的 🔊 就能單獨朗讀；「連續播放」會依目前的篩選條件一句一句唸下去，正在唸的那一句會亮起來。</p>
+</div>
+
+<div class="filters" id="filters">
+  <button class="cat" data-cat="all" aria-pressed="true">全部 108</button>
+  <button class="cat" data-cat="1" aria-pressed="false">① 啟動</button>
+  <button class="cat" data-cat="2" aria-pressed="false">② 試錯</button>
+  <button class="cat" data-cat="3" aria-pressed="false">③ 策略</button>
+  <button class="cat" data-cat="4" aria-pressed="false">④ 恢復</button>
+  <button class="cat" data-cat="5" aria-pressed="false">⑤ 聯想</button>
+  <button class="cat" data-cat="6" aria-pressed="false">⑥ 考前</button>
+  <button class="star" id="favOnly" aria-pressed="false">★ 只看收藏</button>
+</div>
+<p class="counter" id="counter">顯示 108 句</p>
+
+<div id="list"></div>
+
+<footer>麥斯語錄 · 108 句 · 支援中英語音朗讀 · 收藏紀錄只存在這台裝置的瀏覽器裡。</footer>
+</div>
+
+<script>
+(function(){
+"use strict";
+
+var CATS = [
+  { id: "1", name: "登入遊戲　啟動成長心態", en: "Mindset & Startup",
+    desc: "開場、開學、每天第一題之前用。把「還不會」講成「還沒解鎖」。" },
+  { id: "2", name: "遇見魔王　勇敢試錯", en: "Embracing Mistakes",
+    desc: "訂正時用。把紅筆從懲罰變成情報。" },
+  { id: "3", name: "解密技巧　破關策略", en: "Strategies & Logic",
+    desc: "教方法時用。每一句都是一條可以立刻執行的規則。" },
+  { id: "4", name: "補充 HP　挫折恢復力", en: "Bouncing Back",
+    desc: "考砸之後用。先補血，再談哪個觀念沒打通。" },
+  { id: "5", name: "數學宇宙　跨界聯想", en: "Math & Life Metaphors",
+    desc: "課堂結尾或聯絡簿用。讓數學跟生活接上線。" },
+  { id: "6", name: "巔峰對決　考前激勵", en: "Final Showdown & Exam Prep",
+    desc: "段考前一天用。策略提醒比精神喊話更有效。" }
+];
+
+var Q = {
+"1": [
+["算錯不是扣分，是幫你找到正確的破關路線！","A calculation mistake isn't a penalty; it's a map to the winning route!"],
+["大腦火力 Max！我們一起打敗這個大魔王！","Brainpower Max! Let's defeat this boss together!"],
+["數學就像打怪，卡關是為了讓你獲得更多經驗值。","Math is like gaming; getting stuck just means you're about to earn more EXP."],
+["沒有天生不會算的人，只有還沒找到裝備的玩家。","There are no bad math players, only gamers who haven't found the right gear yet."],
+["你的努力就像絕對值，永遠都是正向的！","Your effort is like an absolute value\u2014it's always positive!"],
+["每一次動筆，都是在幫你的大腦伺服器升級。","Every time you pick up your pen, you're upgrading your brain's server."],
+["不要害怕未知數 x，它是帶你通往答案的隱藏 NPC。","Don't fear the unknown variable x; it's the hidden NPC guiding you to the answer."],
+["當你覺得數學很難時，代表你正在挑戰困難模式，帥呆了！","When math feels hard, it means you're playing on Hard Mode. How cool is that!"],
+["放棄很容易，但破關的那一刻絕對更過癮。","Quitting is easy, but the moment you clear the stage is way more satisfying."],
+["數學的魔法在於：再複雜的混亂，最後都能化為一個俐落的答案。","The magic of math: no matter how chaotic it seems, it always simplifies to a neat answer."],
+["我們不是在寫作業，我們是在解鎖宇宙的密碼。","We aren't just doing homework; we're unlocking the codes of the universe."],
+["給自己一點時間，進度條雖然跑得慢，但一定會到 100%。","Give yourself some time. The loading bar might be slow, but it will reach 100%."],
+["現在卡住沒關係，先存檔，明天再來挑戰！","It's okay to get stuck. Save your game and try again tomorrow!"],
+["別把數學當敵人，把它當成需要破解的密室逃脫。","Don't treat math as an enemy; treat it as an escape room waiting to be solved."],
+["解題就像拼拼圖，把已知的條件一塊塊放上去就對了。","Solving math is like a puzzle; just put the known pieces together one by one."],
+["你不需要一開始就很厲害，但你需要開始才會變厲害。","You don't have to be great to start, but you have to start to be great."],
+["大腦的潛力是無限大 (\u221E)，別自己設下限制！","Your brain's potential is infinity (\u221E); don't limit yourself!"],
+["準備好你的筆，麥斯領航員上線，我們出發！","Get your pen ready. Navigator Max is online. Let's go!"]
+],
+"2": [
+["抓出計算錯誤，就像抓出程式裡的 Bug，修好就完美了！","Spotting a calculation error is like finding a bug in the code. Fix it, and it's perfect!"],
+["粗心只是小怪，多留意符號就能輕鬆秒殺它。","Carelessness is just a low-level monster; watch your signs and you can easily one-shot it."],
+["等號就像一座橋，過橋記得要變號喔！","The equal sign is like a bridge\u2014remember to change signs when you cross it!"],
+["寫錯了？太好了，代表我們排除了錯誤答案！","Got it wrong? Great! That means we've eliminated a wrong answer!"],
+["橡皮擦是你的復活幣，擦掉重來又是一條好漢。","The eraser is your revive token. Erase it, respawn, and fight again."],
+["不要怕紅筆，每一道紅色的訂正，都是你升級的軌跡。","Don't fear the red pen. Every red correction is a trail of your level-up journey."],
+["分母不能為零，就像遊戲不能拔電源，這是鐵律！","The denominator can't be zero, just like you can't pull the plug on a game. It's the golden rule!"],
+["計算過程越亂，越容易掉進陷阱，保持版面整潔是防禦裝備。","Messy calculations lead to traps. A neat layout is your best defense gear."],
+["迷路了嗎？回到題目第一句話，線索通常藏在那裡。","Lost? Go back to the first sentence of the question. Clues usually hide there."],
+["括號前面有負號，記得要給裡面每一項發放「變號通知」！","When there's a minus sign before a bracket, send a sign-change notice to every term inside!"],
+["你不是不會，你只是大腦的 RAM 暫時滿了，清空一下再來。","It's not that you can't do it; your brain's RAM is just full. Clear it and try again."],
+["把錯誤當成導航系統的重新計算，我們離終點更近了。","Treat mistakes like a GPS recalculating\u2014we are getting closer to the destination."],
+["沒有算不出的題目，只有還沒想到的破關機制。","There are no unsolvable questions, only game mechanics you haven't figured out yet."],
+["遇到分數加減不要慌，先找最小公倍數幫它們「同步」。","Don't panic at fraction additions. Find the least common multiple to sync them."],
+["把應用問題想像成 RPG 任務，找出村長到底要你幫什麼忙。","Imagine word problems as RPG quests. Figure out what the village chief actually wants you to do."],
+["卡關超過五分鐘？呼叫麥斯，領取你的專屬提示！","Stuck for over 5 minutes? Call Max and claim your exclusive hint!"],
+["不要害怕括號，它只是在保護裡面的數字，慢慢拆開就好。","Don't be afraid of brackets. They're just shielding the numbers; simply dismantle them step by step."],
+["解錯方程式沒關係，再代回原式檢驗，它會告訴你真相。","It's okay to solve an equation wrong. Plug it back in to check; it will tell you the truth."]
+],
+"3": [
+["先乘除後加減，這是數學宇宙的最高指令。","Multiplication and division before addition and subtraction. This is the supreme directive of the math universe."],
+["有括號先算，它就像是有著無敵星星的優先處理區。","Calculate brackets first. They are the priority zones with an invincibility star."],
+["遇到指數律，口訣唸出來：底數相同，相乘指數相加！","Encountering exponent rules? Chant the spell: Same base, multiply to add exponents!"],
+["同類項才能合併，你不能把蘋果跟香蕉加在一起。","Only like terms can be combined. You can't add apples to bananas."],
+["列方程式就像寫翻譯蒟蒻，把中文翻譯成數學符號。","Setting up an equation is like using a translation tool\u2014translating Chinese into math symbols."],
+["不知道從何下手？先把題目的數字和條件圈起來！","Don't know where to start? Circle the numbers and conditions in the question first!"],
+["把大數字拆成標準分解式，就像看穿魔王的弱點。","Breaking large numbers into prime factorizations is like seeing through the boss's weakness."],
+["找最大公因數？挑大家都有的，指數選最小的！","Finding the greatest common divisor? Pick what everyone has, and choose the smallest exponent!"],
+["找最小公倍數？通通都拿來，指數選最大的！","Finding the least common multiple? Take everything, and choose the largest exponent!"],
+["畫圖是解題的最強外掛，看不懂題目時畫出來就對了。","Drawing is the ultimate cheat code for problem-solving. When in doubt, sketch it out."],
+["檢查答案的最好方法，就是用常理判斷「這可能嗎？」","The best way to check an answer is to use common sense: Is this even possible?"],
+["不知道未知數是多少？勇敢給它一個代號 x 吧！","Don't know the unknown? Bravely give it a codename: x!"],
+["負負得正！就像兩個反作用力互相抵銷。","Negative times negative equals positive! Just like two counter-forces canceling each other out."],
+["沒有等號只能通分，有等號才可以同乘，規則千萬別搞混！","No equal sign means only finding a common denominator; an equal sign means you can multiply both sides. Don't mix up the rules!"],
+["分配律的箭頭畫出來，確保每一個小兵都被攻擊到。","Draw the arrows for the distributive property to ensure every minion gets hit."],
+["圖形的周長就是繞一圈，面積就是鋪滿，概念對了就不會背錯公式。","Perimeter is walking around the edge; area is paving the surface. Grasp the concept, and you won't forget the formula."],
+["把小數變成整數再算，減少大腦的運算負載！","Turn decimals into integers before calculating to reduce your brain's processing load!"],
+["解題就像過河拆橋，把 x 旁邊的數字一個個移走。","Solving equations is like burning bridges behind you\u2014move the numbers next to x away one by one."]
+],
+"4": [
+["考砸了？幫你補血！我們來看是哪個觀念還沒打通。","Bombed a test? Let me heal your HP! Let's see which concept hasn't been unblocked yet."],
+["今天的挫折，是你明天的防禦力。","Today's frustration is tomorrow's defense power."],
+["不需要跟別人比等級，只要今天的你比昨天的你強就好。","You don't need to compare your level with others; just be stronger than you were yesterday."],
+["數學很誠實，你付出多少練習，它就會回報你多少實力。","Math is honest. The amount of practice you put in is exactly the amount of skill it returns."],
+["深呼吸，喝口水，大腦需要冷卻液才能繼續高效運作。","Take a deep breath, drink some water. The brain needs coolant to keep operating highly efficiently."],
+["別讓一次的低分定義你，這只是一場小測驗，不是最終結局。","Don't let one low score define you. This is just a mini-boss, not the final ending."],
+["有時候看不懂題目，真的只是國文問題，不是數學問題！","Sometimes not understanding the question is truly a reading comprehension issue, not a math issue!"],
+["就算只能寫出第一步的算式，你也在前進的路上了。","Even if you can only write down the first step of the equation, you are already moving forward."],
+["麥斯永遠是你的輔助，遇到困難記得隨時 Call 我！","Max is always your support class. Remember to call me whenever you encounter difficulties!"],
+["害怕數學很正常，打王的時候誰不緊張呢？","It's normal to be afraid of math. Who doesn't get nervous fighting the boss?"],
+["做錯的題目才是最有價值的，它們是你專屬的攻略本。","The questions you got wrong are the most valuable; they form your personalized strategy guide."],
+["不要因為暫時的卡關，就忘記你之前已經破解了多少難題。","Don't let a temporary roadblock make you forget how many tough problems you've already solved."],
+["每一次「原來如此」的頓悟，都是大腦煙火綻放的時刻。","Every Aha! moment of realization is a time when fireworks bloom in your brain."],
+["你的耐心，是解開所有複雜算式最銳利的武器。","Your patience is the sharpest weapon to solve any complex equation."],
+["數學沒有捷徑，但有更聰明的走法，我們一起找！","There are no shortcuts in math, but there are smarter paths. Let's find them together!"],
+["把錯誤當作遊戲裡的彩蛋，總能帶給你意外的收穫。","Treat mistakes like Easter eggs in a game; they always bring unexpected rewards."],
+["沒有永遠的零分，只有不斷累積的進步值。","There is no eternal zero, only continuously accumulating progress points."],
+["跌倒了拍拍灰塵，我們讀檔重來，這次你一定行！","Dust yourself off when you fall. We load the save file and try again. You got this!"]
+],
+"5": [
+["人生就像方程式，只要懂得移項，總能找到平衡。","Life is like an equation; as long as you know how to transpose terms, you can always find balance."],
+["你無法除以零，就像有些事情不需要強求答案。","You can't divide by zero, just like some things don't need a forced answer."],
+["科學記號告訴我們：再微小的事物，也有它專屬的位子。","Scientific notation tells us: even the tiniest things have their specific place."],
+["兩個負數相乘會變正數，兩次挫折相加也許會變成轉機。","Two negatives multiplied become a positive; two setbacks combined might become a turning point."],
+["座標平面上，原點 (0,0) 是出發的地方，你隨時可以重新開始。","On a coordinate plane, the origin (0,0) is the starting point. You can restart anytime."],
+["你的成長就像指數函數，一開始很慢，但最後會一飛衝天！","Your growth is like an exponential function: slow at first, but eventually skyrocketing!"],
+["絕對值把一切變成正數，願你也能擁有轉化負面情緒的能力。","Absolute value turns everything positive. May you also have the ability to transform negative emotions."],
+["質數雖然孤獨，但它們是構成所有數字的基石。","Prime numbers may be lonely, but they are the building blocks of all numbers."],
+["人生沒有標準答案，但數學有，這是它最迷人的地方。","Life has no standard answers, but math does\u2014that's its most charming trait."],
+["幾何圖形告訴我們，換個角度看，一切都會不一樣。","Geometry tells us that looking from a different angle changes everything."],
+["公因數就像共同興趣，找出來就能讓兩個人產生連結。","Common divisors are like shared interests; finding them creates a connection between two individuals."],
+["倒數就是顛倒過來看，遇到死胡同時，試著翻轉你的思維！","Reciprocals are about looking at things upside down. When hitting a dead end, flip your thinking!"],
+["未知數 y 依賴著 x 變化，這就是函數，也是我們與世界的關聯。","The unknown y changes depending on x. This is a function, and also our connection to the world."],
+["圓周率 \u03C0 永不循環，象徵你的人生有著無限可能。","Pi (\u03C0) never repeats, symbolizing that your life has infinite possibilities."],
+["不要做別人眼中的常數，要做自己生命中的變數。","Don't be a constant in others' eyes; be the variable in your own life."],
+["等差數列告訴我們，保持穩定的步伐，也能走到很遠的地方。","Arithmetic sequences tell us that maintaining a steady pace can take you very far."],
+["即使是最複雜的算式，也是由基礎的加減乘除組成的。","Even the most complex equations are made of basic addition, subtraction, multiplication, and division."],
+["數學教我們最重要的一課：每一個問題，都一定有解決的方法。","The most important lesson math teaches us: every problem has a solution."]
+],
+"6": [
+["裝備檢查完畢，準備進入考場副本，祝你武運昌隆！","Gear check complete. Prepare to enter the exam dungeon. Best of luck!"],
+["拿到考卷先深呼吸，把大腦的頻道切換到數學模式。","Take a deep breath when you get the exam paper. Switch your brain to math mode."],
+["遇到不會的題目先跳過，不要在小怪身上浪費太多時間！","Skip the questions you don't know first. Don't waste too much time on minor mobs!"],
+["選擇題不知道選什麼？用刪去法，提高你的暴擊機率！","Don't know what to choose in multiple choice? Use the process of elimination to increase your critical hit rate!"],
+["寫完記得檢查，有時候大魔王就藏在最後的加減法裡。","Remember to double-check. Sometimes the final boss hides in the last addition or subtraction."],
+["保持專注，現在的你，運算速度媲美超級電腦！","Stay focused. Right now, your calculation speed rivals a supercomputer!"],
+["考卷上的每一個空格，都是你展現火力的舞台。","Every blank space on the exam paper is a stage for you to unleash your firepower."],
+["不用緊張，這些題目你在麥斯的模擬訓練場都打過無數次了。","Don't be nervous. You've fought these questions countless times in Max's simulation training ground."],
+["相信你的直覺，更要相信你寫下的每一個推導過程。","Trust your intuition, but more importantly, trust every derivation step you've written down."],
+["鐘聲還沒響起前，絕對不要放棄任何拯救分數的機會！","Before the bell rings, never give up any chance to salvage your points!"],
+["字體寫工整，這能讓你的大腦在運算時減少干擾訊號。","Write neatly. This reduces interference signals in your brain during calculation."],
+["看到難題微笑一下，告訴它：「我早就看穿你的把戲了！」","Smile at a hard question and tell it: I've already seen through your tricks!"],
+["穩住節奏，不用搶快，準確度才是通關的最高評價標準。","Keep a steady pace; no need to rush. Accuracy is the highest grading standard for clearing the stage."],
+["計算紙是你的草稿圖，大膽在上面推演破關路徑吧。","Scratch paper is your blueprint. Boldly map out your winning path on it."],
+["每一題都是獨立的挑戰，上一題卡住不要影響下一題的發揮。","Every question is an independent challenge. Don't let getting stuck on the last one affect the next one."],
+["帶上你的自信，那是比任何公式都好用的無敵 Buff。","Bring your confidence. It's an invincible buff far better than any formula."],
+["不論結果如何，努力奮戰到最後一刻的你，已經是 MVP 了。","No matter the result, fighting hard until the very last second already makes you the MVP."],
+["火力全開 Max！放手一搏，去拿屬於你的高分吧！","Firepower Max! Give it your all and go grab the high score you deserve!"]
+]
+};
+
+/* 攤平成一維，附上編號 */
+var ALL = [];
+CATS.forEach(function(c){
+  (Q[c.id] || []).forEach(function(pair, i){
+    ALL.push({ cat: c.id, catName: c.name, no: c.id + "-" + (i + 1 < 10 ? "0" + (i + 1) : i + 1), zh: pair[0], en: pair[1] });
+  });
+});
+
+var KEY = "math-maxx-quotes-v1";
+var favs = {};
+try{ var raw = localStorage.getItem(KEY); if(raw) favs = JSON.parse(raw) || {}; }catch(e){ favs = {}; }
+function save(){ try{ localStorage.setItem(KEY, JSON.stringify(favs)); }catch(e){} }
+
+/* ---------- 抽卡 ---------- */
+var current = null;
+function drawOne(){
+  var pool = ALL;
+  if(pool.length === 0) return;
+  var pick;
+  do { pick = pool[Math.floor(Math.random() * pool.length)]; }
+  while(pool.length > 1 && current && pick.no === current.no);
+  current = pick;
+  document.getElementById("dZh").textContent = pick.zh;
+  document.getElementById("dEn").textContent = pick.en;
+  document.getElementById("dCat").textContent = pick.catName.split("\u3000")[0];
+  document.getElementById("dNo").textContent = "NO. " + pick.no;
+  var fb = document.getElementById("dFav");
+  fb.textContent = favs[pick.no] ? "\u2605 已收藏" : "收藏";
+}
+document.getElementById("dNext").addEventListener("click", drawOne);
+document.getElementById("dCopy").addEventListener("click", function(){
+  if(!current) return;
+  copyText(current.zh + "\n" + current.en, this, "複製這句");
+});
+if(document.getElementById("dSpeak")){
+  document.getElementById("dSpeak").addEventListener("click", function(){
+    var btn = this;
+    if(btn.classList.contains("on")){ TTS.stop(); clearSpeakingMarks(); return; }
+    if(!current) return;
+    clearSpeakingMarks();
+    btn.classList.add("on"); btn.textContent = "\u25A0 停止朗讀";
+    TTS.speakOne(current, function(){
+      btn.classList.remove("on"); btn.textContent = "\u25B6 朗讀";
+    });
+  });
+}
+document.getElementById("dFav").addEventListener("click", function(){
+  if(!current) return;
+  favs[current.no] = !favs[current.no];
+  if(!favs[current.no]) delete favs[current.no];
+  save();
+  this.textContent = favs[current.no] ? "\u2605 已收藏" : "收藏";
+  render();
+});
+
+function copyText(text, btn, restore){
+  var done = function(){
+    var old = btn.textContent;
+    btn.textContent = "\u5df2\u8907\u88fd";
+    btn.classList.add("copied");
+    setTimeout(function(){ btn.textContent = restore || old; btn.classList.remove("copied"); }, 1400);
+  };
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(done, function(){ fallback(text, done); });
+  } else fallback(text, done);
+}
+function fallback(text, done){
+  try{
+    var ta = document.createElement("textarea");
+    ta.value = text; ta.setAttribute("readonly", "");
+    ta.style.position = "fixed"; ta.style.opacity = "0";
+    document.body.appendChild(ta); ta.select();
+    document.execCommand("copy");
+    document.body.removeChild(ta);
+    done();
+  }catch(e){}
+}
+
+/* ---------- 語音導覽 ---------- */
+var TTS = (function(){
+  var ok = typeof window !== "undefined" && "speechSynthesis" in window && typeof SpeechSynthesisUtterance !== "undefined";
+  var voices = [], zhVoice = null, enVoice = null;
+  var mode = "both", rate = 0.95;
+  var queue = [], qi = 0, playing = false, onItem = null, onEnd = null;
+
+  function pickVoices(){
+    voices = window.speechSynthesis.getVoices() || [];
+    function best(prefs){
+      for(var p = 0; p < prefs.length; p++){
+        for(var i = 0; i < voices.length; i++){
+          var lang = (voices[i].lang || "").toLowerCase().replace("_", "-");
+          if(lang.indexOf(prefs[p]) === 0) return voices[i];
+        }
+      }
+      return null;
+    }
+    zhVoice = best(["zh-tw", "zh-hant", "cmn-hant", "zh-hk", "zh"]);
+    enVoice = best(["en-us", "en-gb", "en"]);
+    var el = document.getElementById("vEngine");
+    if(el){
+      if(!voices.length) el.textContent = "尚未載入語音";
+      else el.textContent = "中文：" + (zhVoice ? zhVoice.name : "無") + "　英文：" + (enVoice ? enVoice.name : "無");
+    }
+  }
+
+  function say(text, lang, cb){
+    if(!ok || !text){ if(cb) cb(); return; }
+    var u = new SpeechSynthesisUtterance(text);
+    if(lang === "zh"){ if(zhVoice) u.voice = zhVoice; u.lang = zhVoice ? zhVoice.lang : "zh-TW"; }
+    else { if(enVoice) u.voice = enVoice; u.lang = enVoice ? enVoice.lang : "en-US"; }
+    u.rate = (lang === "zh") ? rate : Math.min(1.3, rate + 0.03);
+    u.pitch = 1;
+    u.onend = function(){ if(cb) cb(); };
+    u.onerror = function(){ if(cb) cb(); };
+    window.speechSynthesis.speak(u);
+  }
+
+  /* 唸一句（依模式決定中／英／中英） */
+  function speakOne(q, done){
+    if(!ok){ if(done) done(); return; }
+    var steps = [];
+    if(mode === "zh" || mode === "both") steps.push(["zh", q.zh]);
+    if(mode === "en" || mode === "both") steps.push(["en", q.en]);
+    var i = 0;
+    (function next(){
+      if(i >= steps.length){ if(done) done(); return; }
+      var st = steps[i++];
+      say(st[1], st[0], next);
+    })();
+  }
+
+  function stop(){
+    playing = false; queue = []; qi = 0;
+    if(ok) window.speechSynthesis.cancel();
+    if(onEnd) onEnd();
+  }
+
+  function playList(items, itemCb, endCb){
+    stop();
+    if(!ok || !items.length) return;
+    queue = items.slice(); qi = 0; playing = true;
+    onItem = itemCb; onEnd = endCb;
+    (function step(){
+      if(!playing || qi >= queue.length){ playing = false; if(onEnd) onEnd(); return; }
+      var q = queue[qi++];
+      if(onItem) onItem(q);
+      speakOne(q, function(){
+        if(!playing) return;
+        setTimeout(step, 260);   /* 句與句之間留一點呼吸 */
+      });
+    })();
+  }
+
+  if(ok){
+    pickVoices();
+    if(typeof window.speechSynthesis.onvoiceschanged !== "undefined"){
+      window.speechSynthesis.onvoiceschanged = pickVoices;
+    }
+    /* 有些瀏覽器長句會自動暫停，定時喚醒 */
+    setInterval(function(){
+      if(playing && window.speechSynthesis.paused) window.speechSynthesis.resume();
+    }, 4000);
+  }
+
+  return {
+    ok: ok,
+    speakOne: function(q, done){ stop(); playing = true; speakOne(q, function(){ playing = false; if(done) done(); }); },
+    playList: playList,
+    stop: stop,
+    setMode: function(m){ mode = m; },
+    setRate: function(r){ rate = r; },
+    isPlaying: function(){ return playing; }
+  };
+})();
+
+(function voiceUI(){
+  var bar = document.getElementById("voicebar");
+  if(!TTS.ok){
+    bar.innerHTML = '<h4><span class="ico">\uD83D\uDD0A</span>語音導覽</h4>' +
+      '<p class="warn">這個瀏覽器不支援語音朗讀，其他功能都可以正常使用。建議改用 Chrome、Edge 或 Safari。</p>';
+    var ds = document.getElementById("dSpeak");
+    if(ds) ds.style.display = "none";
+    return;
+  }
+  Array.prototype.forEach.call(bar.querySelectorAll(".mode"), function(b){
+    b.addEventListener("click", function(){
+      TTS.setMode(b.getAttribute("data-mode"));
+      Array.prototype.forEach.call(bar.querySelectorAll(".mode"), function(x){
+        x.setAttribute("aria-pressed", x === b ? "true" : "false");
+      });
+    });
+  });
+  var rateEl = document.getElementById("vRate");
+  rateEl.addEventListener("input", function(){
+    TTS.setRate(Number(this.value));
+    document.getElementById("vRateVal").textContent = Number(this.value).toFixed(2) + "\u00D7";
+  });
+  document.getElementById("vStop").addEventListener("click", function(){
+    TTS.stop();
+    clearSpeakingMarks();
+  });
+  document.getElementById("vPlayAll").addEventListener("click", function(){
+    var items = visibleQuotes();
+    if(!items.length) return;
+    var btn = this;
+    btn.textContent = "\u25B6 播放中…";
+    TTS.playList(items, function(q){
+      clearSpeakingMarks();
+      var li = document.querySelector('li.line[data-no="' + q.no + '"]');
+      if(li){ li.classList.add("speaking"); li.scrollIntoView({ behavior: "smooth", block: "center" }); }
+    }, function(){
+      btn.textContent = "\u25B6 連續播放目前清單";
+      clearSpeakingMarks();
+    });
+  });
+})();
+
+function clearSpeakingMarks(){
+  Array.prototype.forEach.call(document.querySelectorAll("li.line.speaking"), function(li){ li.classList.remove("speaking"); });
+  Array.prototype.forEach.call(document.querySelectorAll("li.line .sp"), function(b){ b.setAttribute("aria-pressed", "false"); });
+  var ds = document.getElementById("dSpeak");
+  if(ds){ ds.classList.remove("on"); ds.textContent = "\u25B6 朗讀"; }
+}
+
+/* 目前畫面上（依篩選）看得到的句子 */
+function visibleQuotes(){
+  var out = [];
+  Array.prototype.forEach.call(document.querySelectorAll("li.line"), function(li){
+    var no = li.getAttribute("data-no");
+    ALL.forEach(function(q){ if(q.no === no) out.push(q); });
+  });
+  return out;
+}
+
+/* ---------- 清單 ---------- */
+var filterCat = "all", favOnly = false;
+
+function render(){
+  var box = document.getElementById("list");
+  var html = [];
+  var shown = 0;
+  CATS.forEach(function(c, ci){
+    if(filterCat !== "all" && filterCat !== c.id) return;
+    var items = ALL.filter(function(q){
+      return q.cat === c.id && (!favOnly || favs[q.no]);
+    });
+    if(!items.length) return;
+    shown += items.length;
+    html.push('<section id="g' + c.id + '">');
+    html.push('<div class="sechead"><span class="no">STAGE ' + c.id + '</span><h2>' + c.name + "</h2>" +
+      '<span class="en">' + c.en + "</span>" +
+      '<p class="desc">' + c.desc + "</p></div>");
+    html.push('<ul class="lines">');
+    items.forEach(function(q){
+      html.push('<li class="line' + (favs[q.no] ? " fav" : "") + '" data-no="' + q.no + '">' +
+        '<span class="n">NO. ' + q.no + "</span>" +
+        '<p class="zh">' + q.zh + "</p>" +
+        '<p class="en">' + q.en + "</p>" +
+        '<div class="tools">' +
+          '<button class="fv" aria-pressed="' + (favs[q.no] ? "true" : "false") + '">' + (favs[q.no] ? "\u2605 已收藏" : "\u2606 收藏") + "</button>" +
+          '<button class="sp" aria-pressed="false">\uD83D\uDD0A 朗讀</button>' +
+          '<button class="cp">複製</button>' +
+        "</div></li>");
+    });
+    html.push("</ul></section>");
+  });
+  if(!shown) html.push('<p class="empty">這個條件下沒有句子。' + (favOnly ? "先去收藏幾句吧。" : "") + "</p>");
+  box.innerHTML = html.join("");
+  document.getElementById("counter").textContent =
+    "顯示 " + shown + " 句" + (favOnly ? "（只看收藏）" : "") +
+    "　·　已收藏 " + Object.keys(favs).length + " 句";
+}
+
+document.getElementById("list").addEventListener("click", function(ev){
+  var li = ev.target.closest("li.line");
+  if(!li) return;
+  var no = li.getAttribute("data-no");
+  var q = ALL.filter(function(x){ return x.no === no; })[0];
+  if(!q) return;
+  if(ev.target.classList.contains("fv")){
+    favs[no] = !favs[no];
+    if(!favs[no]) delete favs[no];
+    save();
+    render();
+    if(current && current.no === no) document.getElementById("dFav").textContent = favs[no] ? "\u2605 已收藏" : "收藏";
+  } else if(ev.target.classList.contains("sp")){
+    var btn = ev.target;
+    if(btn.getAttribute("aria-pressed") === "true"){ TTS.stop(); clearSpeakingMarks(); return; }
+    clearSpeakingMarks();
+    btn.setAttribute("aria-pressed", "true");
+    li.classList.add("speaking");
+    TTS.speakOne(q, function(){
+      btn.setAttribute("aria-pressed", "false");
+      li.classList.remove("speaking");
+    });
+  } else if(ev.target.classList.contains("cp")){
+    copyText(q.zh + "\n" + q.en, ev.target, "複製");
+  }
+});
+
+Array.prototype.forEach.call(document.querySelectorAll(".filters .cat"), function(b){
+  b.addEventListener("click", function(){
+    filterCat = b.getAttribute("data-cat");
+    Array.prototype.forEach.call(document.querySelectorAll(".filters .cat"), function(x){
+      x.setAttribute("aria-pressed", x === b ? "true" : "false");
+    });
+    render();
+  });
+});
+document.getElementById("favOnly").addEventListener("click", function(){
+  favOnly = !favOnly;
+  this.setAttribute("aria-pressed", favOnly ? "true" : "false");
+  render();
+});
+
+Array.prototype.forEach.call(document.querySelectorAll(".jump"), function(b){
+  b.addEventListener("click", function(){
+    var t = document.getElementById(b.getAttribute("data-target"));
+    if(t) t.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+});
+
+drawOne();
+render();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>趣學步道．21 顆概念寶石</title>
+<style>
+:root{
+  --paper:#EEF2F4;--card:#FFFFFF;--ink:#12303C;--ink-soft:#5A737F;
+  --neg:#2F5FA8;--pos:#C87814;--zero:#17795C;--ok:#1B7A5C;--no:#B23C33;
+  --rule:#C6D5DC;--rule-soft:#DFE8ED;
+  --shadow:0 1px 0 #D7E1E6, 0 8px 24px -18px #1c3d4a;
+  --serif:"Noto Serif TC","Songti TC","Source Han Serif TC","PMingLiU",serif;
+  --sans:"PingFang TC","Microsoft JhengHei","Noto Sans TC","Heiti TC",system-ui,sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,"Courier New",monospace;
+  --gem:#3B7DD8;--gem2:#17795C;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{font-family:var(--sans);color:var(--ink);background-color:var(--paper);
+  background-image:linear-gradient(to right, rgba(47,95,168,.055) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(47,95,168,.055) 1px, transparent 1px);
+  background-size:26px 26px;line-height:1.7;-webkit-text-size-adjust:100%}
+.wrap{max-width:900px;margin:0 auto;padding:0 14px 80px}
+header.top{padding:34px 0 14px}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.18em;color:var(--ink-soft);margin:0 0 6px}
+h1{font-family:var(--serif);font-weight:700;font-size:clamp(28px,7vw,44px);line-height:1.22;margin:0 0 10px}
+h1 .neg{color:var(--neg)}
+.sub{margin:0;color:var(--ink-soft);font-size:15px}
+nav.stations{position:sticky;top:0;z-index:40;margin:16px -14px 0;padding:8px 14px;
+  background:rgba(238,242,244,.94);backdrop-filter:blur(6px);border-bottom:1px solid var(--rule);
+  overflow-x:auto;white-space:nowrap;-webkit-overflow-scrolling:touch}
+nav.stations button{font-family:var(--sans);font-size:13px;color:var(--ink);background:var(--card);
+  border:1px solid var(--rule);border-radius:999px;padding:6px 13px;margin-right:6px;cursor:pointer}
+nav.stations button:hover{border-color:var(--neg);color:var(--neg)}
+
+/* 寶石計分板 */
+.board{background:var(--card);border:1px solid var(--rule);border-radius:12px;padding:15px 14px;margin-top:16px;box-shadow:var(--shadow)}
+.board .row{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.board .lab{font-family:var(--mono);font-size:12px;letter-spacing:.08em;color:var(--ink-soft)}
+.board .big{font-family:var(--mono);font-size:28px;font-weight:700;margin-left:auto}
+.board .big small{font-size:14px;color:var(--ink-soft);font-weight:400}
+.gems{display:flex;flex-wrap:wrap;gap:5px;margin-top:12px}
+.gems i{width:17px;height:17px;transform:rotate(45deg);border-radius:3px;
+  background:var(--rule-soft);border:1px solid var(--rule);display:block;transition:background .3s ease}
+.gems i.on{background:var(--gem);border-color:var(--gem);box-shadow:0 0 0 2px rgba(59,125,216,.16)}
+.gems i.on2{background:var(--gem2);border-color:var(--gem2);box-shadow:0 0 0 2px rgba(23,121,92,.16)}
+.levels{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+.lv{flex:1;min-width:150px;border:1px solid var(--rule);border-radius:10px;padding:9px 11px;background:#F7FAFB;opacity:.5}
+.lv.on{opacity:1;border-color:var(--pos);background:#FFF8EE}
+.lv b{display:block;font-family:var(--mono);font-size:13px;letter-spacing:.06em}
+.lv span{font-size:12.5px;color:var(--ink-soft)}
+.lv1.on b{color:#C9A227} .lv2.on b{color:#C0632A} .lv3.on b{color:#8E2B2B}
+.board p.tip{margin:12px 0 0;font-size:12.5px;color:var(--ink-soft)}
+.board button{margin-top:12px}
+
+section{margin:32px 0 0;scroll-margin-top:60px}
+.sechead{display:flex;align-items:baseline;gap:10px;border-bottom:2px solid var(--ink);padding-bottom:6px;flex-wrap:wrap}
+.sechead .no{font-family:var(--mono);font-size:13px;color:var(--neg);letter-spacing:.1em}
+.sechead h2{font-family:var(--serif);font-size:clamp(19px,4.4vw,25px);margin:0;font-weight:700}
+.sechead .cnt{margin-left:auto;font-family:var(--mono);font-size:12.5px;color:var(--ink-soft)}
+
+.cards{display:grid;grid-template-columns:1fr 1fr;gap:13px;margin-top:14px}
+@media (max-width:660px){ .cards{grid-template-columns:1fr} }
+.card{background:var(--card);border:1px solid var(--rule);border-radius:12px;padding:13px 13px 12px;box-shadow:var(--shadow);position:relative}
+.card.done{border-color:var(--ok);background:#F7FCFA}
+.card h3{font-family:var(--sans);font-size:14px;margin:0 0 8px;font-weight:700;display:flex;align-items:center;gap:8px}
+.card .idx{font-family:var(--mono);font-size:15px;color:var(--neg);font-weight:700}
+.card .gem{width:15px;height:15px;transform:rotate(45deg);border-radius:3px;background:var(--rule-soft);border:1px solid var(--rule);display:inline-block}
+.card.done .gem{background:var(--gem);border-color:var(--gem)}
+.card .from{margin-left:auto;font-family:var(--mono);font-size:11px;background:var(--rule-soft);color:var(--ink-soft);border-radius:4px;padding:2px 7px;font-weight:400}
+.card p.rule{margin:0 0 9px;font-size:13.5px;color:var(--ink)}
+.card p.eg{margin:0;font-size:13.5px;color:var(--ink-soft);border-top:1px dashed var(--rule);padding-top:9px}
+.card p.eg b{color:var(--ink)}
+.mono{font-family:var(--mono)}
+sup{font-size:.72em}
+
+input.blank{font-family:var(--mono);font-size:14.5px;color:var(--ink);width:86px;padding:3px 6px;text-align:center;
+  border:none;border-bottom:2px solid var(--neg);background:#F7FAFB;border-radius:4px 4px 0 0;margin:0 2px}
+input.blank:focus{outline:2px solid var(--neg);outline-offset:1px}
+input.blank.ok{border-bottom-color:var(--ok);background:#EEF7F3;color:var(--ok)}
+input.blank.no{border-bottom-color:var(--no);background:#FBEFEE;color:var(--no)}
+input.blank.sm{width:56px}
+input.blank.lg{width:132px}
+input.blank.xl{width:100%;max-width:230px;text-align:left}
+
+button.act{font-family:var(--sans);font-size:13px;font-weight:700;background:var(--ink);color:#fff;border:none;border-radius:8px;padding:6px 13px;cursor:pointer;margin-top:10px}
+button.act.ghost{background:transparent;color:var(--ink-soft);border:1px solid var(--rule);font-weight:400}
+button.act:focus-visible{outline:2px solid var(--neg);outline-offset:2px}
+.fb{font-size:13px;margin:8px 0 0;min-height:19px;font-weight:700}
+.fb.ok{color:var(--ok)} .fb.no{color:var(--no)}
+details.sol{margin-top:8px}
+details.sol summary{font-size:12.5px;color:var(--neg);cursor:pointer;list-style:none}
+details.sol summary::-webkit-details-marker{display:none}
+details.sol summary::before{content:"▸ ";font-family:var(--mono)}
+details.sol[open] summary::before{content:"▾ "}
+details.sol .body{font-size:13px;color:var(--ink-soft);margin-top:6px}
+details.sol .body b{color:var(--ink)}
+footer{margin-top:44px;border-top:1px solid var(--rule);padding-top:14px;font-size:12px;color:var(--ink-soft)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+
+/* ===== 回總覽按鈕 ===== */
+nav.stations a.home,nav.toc a.home{
+  display:inline-block;font-family:var(--sans);font-size:13px;font-weight:700;
+  color:#fff;background:var(--ink);border:1px solid var(--ink);border-radius:999px;
+  padding:6px 14px;margin-right:8px;text-decoration:none;white-space:nowrap;
+}
+nav.stations a.home:hover{background:var(--neg);border-color:var(--neg)}
+nav.stations a.home:focus-visible{outline:2px solid var(--neg);outline-offset:2px}
+
+/* ===== 淺藍主題 ===== */
+:root{
+  --paper:#E6F0F8;          /* 底圖：淺藍 */
+  --card:#FFFFFF;
+  --ink:#0F2A3D;            /* 深藍墨 */
+  --ink-soft:#55707F;
+  --neg:#2563A8;            /* 主藍 */
+  --pos:#C2761A;            /* 琥珀 */
+  --zero:#15795B;
+  --ok:#177A5A;
+  --no:#B23C33;
+  --rule:#C2D6E5;
+  --rule-soft:#DAE7F1;
+  --shadow:0 1px 0 #CBDDEB, 0 10px 26px -18px rgba(15,42,61,.45);
+}
+body{
+  background-color:var(--paper);
+  background-image:
+    linear-gradient(to right, rgba(37,99,168,.07) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(37,99,168,.07) 1px, transparent 1px);
+  background-size:26px 26px;
+}
+nav.stations,nav.toc{background:rgba(230,240,248,.94);border-bottom-color:var(--rule)}
+.card{border-color:var(--rule)}
+.rule-box{background:#F1F7FC;border-left-color:var(--neg)}
+input.blank{background:#F3F8FC}
+.chip,.cmp .ops button,.opts button,.modes button,.presets button,.numrow button,
+.picker button,.nudge button,.varrow button,.factors button{background:#F3F8FC}
+th{background:#EEF5FA}
+.sechead{border-bottom-color:var(--ink)}
+footer{border-top-color:var(--rule)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="top">
+  <p class="eyebrow">國中數學 1 上 · 概念統整</p>
+  <h1>趣學步道<br><span class="neg">21 顆</span>概念寶石</h1>
+  <p class="sub">前面的工具練的是「算得對不對」，這一關考的是「說不說得出來」。每格填完全對就點亮一顆寶石，集滿 21 顆通關。</p>
+</header>
+
+<nav class="stations" aria-label="關卡導覽">
+  <a class="home" href="index.html">← 總覽</a>
+  <button class="jump" data-target="board">寶石計分板</button>
+  <button class="jump" data-target="s1">第一單元（01–09）</button>
+  <button class="jump" data-target="s2">第二單元（10–18）</button>
+  <button class="jump" data-target="s3">第三單元（19–21）</button>
+</nav>
+
+<div class="board" id="board">
+  <div class="row">
+    <span class="lab">已點亮的寶石</span>
+    <span class="big" id="gemCount">0<small> / 21</small></span>
+  </div>
+  <div class="gems" id="gemRow"></div>
+  <div class="levels">
+    <div class="lv lv1" id="lv1"><b>LEVEL 1</b><span>1～7 顆　基礎啟程</span></div>
+    <div class="lv lv2" id="lv2"><b>LEVEL 2</b><span>8～14 顆　穩健推進</span></div>
+    <div class="lv lv3" id="lv3"><b>LEVEL 3</b><span>15～21 顆　全線通關</span></div>
+  </div>
+  <p class="tip" id="tip">還沒開始。每一格只要全部填對就會點亮一顆寶石，答錯不扣，改到對為止。</p>
+  <button class="act ghost" id="reset">清除紀錄</button>
+</div>
+
+<!-- 第一單元 -->
+<section id="s1">
+  <div class="sechead"><span class="no">UNIT 1</span><h2>整數與運算</h2><span class="cnt" id="c1">—</span></div>
+  <div class="cards">
+
+    <div class="card task" data-id="t01">
+      <h3><span class="idx">01</span><span class="gem"></span>正數與負數<span class="from">1-1</span></h3>
+      <p class="rule">比 0 大的數稱為<b>正數</b>，比 0 小的數稱為<b>負數</b>。</p>
+      <p class="eg">2、3.2 為 <input class="blank sm" data-ans="正|正數" aria-label="a1"> 數；
+        −1/5、−4 為 <input class="blank sm" data-ans="負|負數" aria-label="a2"> 數；
+        <input class="blank sm" data-ans="0" aria-label="a3"> 不是正數，也不是負數。</p>
+      <button class="act check">檢查</button><p class="fb"></p>
+    </div>
+
+    <div class="card task" data-id="t02">
+      <h3><span class="idx">02</span><span class="gem"></span>相反數<span class="from">1-1</span></h3>
+      <p class="rule">數線上位於原點左右兩側、與原點<b>距離相等</b>的兩個點，所對應的數互為相反數。</p>
+      <p class="eg">3 的相反數為 <input class="blank sm" data-ans="-3" aria-label="b1">；
+        −2.5 的相反數為 <input class="blank sm" data-ans="2.5" aria-label="b2">；
+        0 的相反數為 <input class="blank sm" data-ans="0" aria-label="b3">。</p>
+      <button class="act check">檢查</button><p class="fb"></p>
+    </div>
+
+    <div class="card task" data-id="t03">
+      <h3><span class="idx">03</span><span class="gem"></span>絕對值<span class="from">1-1</span></h3>
+      <p class="rule">一個數的 <input class="blank lg" data-ans="絕對值" aria-label="c0">，就是數線上對應這個數的點與<b>原點的距離</b>。</p>
+      <p class="eg">|−2| = <input class="blank sm" data-ans="2" aria-label="c1">，
+        |3| = <input class="blank sm" data-ans="3" aria-label="c2">，
+        |0| = <input class="blank sm" data-ans="0" aria-label="c3">。</p>
+      <button class="act check">檢查</button><p class="fb"></p>
+      <details class="sol"><summary>看解析</summary><div class="body">距離不會是負的，所以<b>絕對值一定 ≥ 0</b>。</div></details>
+    </div>
+
+    <div class="card task" data-id="t04">
+      <h3><span class="idx">04</span><span class="gem"></span>整數的加法<span class="from">1-2</span></h3>
+      <p class="rule">a、b 為正數時：(−a)+(−b) = −(a+b)；a+(−b) = +(a−b)；(−a)+b = −(a−b)（其中 a &gt; b）。</p>
+      <p class="eg">(−9)+(−4) = <input class="blank sm" data-ans="-|−" aria-label="d1">(9+4)；
+        11+(−6) = <input class="blank sm" data-ans="+" aria-label="d2">(11−6)。</p>
+      <button class="act check">檢查</button><p class="fb"></p>
+      <details class="sol"><summary>看解析</summary><div class="body">
+        同號相加 → 符號照抄、數字相加；異號相加 → <b>跟絕對值大的那個同號</b>、數字相減。
+      </div></details>
+    </div>
+
+    <div class="card task" data-id="t05">
+      <h3><span class="idx">05</span><span class="gem"></span>整數的減法<span class="from">1-2</span></h3>
+      <p class="rule">1. 無論 a 為正數、0 或負數，a 與其相反數的和為 <input class="blank sm" data-ans="0" aria-label="e0">。<br>
+        2. 減去一個數，就相當於加上這個數的 <input class="blank lg" data-ans="相反數" aria-label="e1">。</p>
+      <p class="eg">(−2)−3 = −2+<input class="blank sm" data-ans="-3|−3|(-3)" aria-label="e2">；
+        7−(−5) = 7+<input class="blank sm" data-ans="5" aria-label="e3">。</p>
+      <button class="act check">檢查</button><p class="fb"></p>
+    </div>
+
+    <div class="card task" data-id="t06">
+      <h3><span class="idx">06</span><span class="gem"></span>數線上兩點距離<span class="from">1-2</span></h3>
+      <p class="rule">數線上 A(a)、B(b) 兩點間的距離記作 AB，
+        AB = | <input class="blank lg" data-ans="a-b|b-a" aria-label="f0"> |。</p>
+      <p class="eg">若 A(3)、B(−4)，則 AB = |3−<input class="blank sm" data-ans="-4|−4|(-4)" aria-label="f1">| = 7。</p>
+      <button class="act check">檢查</button><p class="fb"></p>
+      <details class="sol"><summary>看解析</summary><div class="body">
+        寫 a−b 或 b−a 都可以，<b>因為外面有絕對值</b>，結果一樣。
+      </div></details>
+    </div>
+
+    <div class="card task" data-id="t07">
+      <h3><span class="idx">07</span><span class="gem"></span>負數相乘的正負<span class="from">1-3</span></h3>
+      <p class="rule">偶數個負數相乘，乘積為 <input class="blank sm" data-ans="正" aria-label="g0">；
+        奇數個負數相乘，乘積為 <input class="blank sm" data-ans="負" aria-label="g1">。</p>
+      <p class="eg">已知 3×4×5 = 60，則 3×(−4)×5 = <input class="blank" data-ans="-60" aria-label="g2">，
+        3×(−4)×(−5) = <input class="blank sm" data-ans="60" aria-label="g3">。</p>
+      <button class="act check">檢查</button><p class="fb"></p>
+      <details class="sol"><summary>看解析</summary><div class="body">
+        <b>數字部分完全不用重算</b>，只要數負號有幾個：奇數個 → 負、偶數個 → 正。
+      </div></details>
+    </div>
+
+    <div class="card task" data-id="t08">
+      <h3><span class="idx">08</span><span class="gem"></span>指數記法<span class="from">1-4</span></h3>
+      <p class="rule">將 a 連乘 m 次，可簡記為 <input class="blank sm" data-ans="a^m|a^m次方" aria-label="h0"> 的指數形式，
+        其中 <input class="blank sm" data-ans="a" aria-label="h1"> 為底數、<input class="blank sm" data-ans="m" aria-label="h2"> 為指數。</p>
+      <p class="eg">7×7×7×7×7 記為 <input class="blank" data-ans="7^5" aria-label="h3">；
+        (−3)×(−3) 記為 <input class="blank" data-ans="(-3)^2" aria-label="h4">；
+        −2×2×2 記為 <input class="blank" data-ans="-2^3|−2^3" aria-label="h5">。</p>
+      <button class="act check">檢查</button><p class="fb"></p>
+      <details class="sol"><summary>看解析</summary><div class="body">
+        最後兩格的差別就是<b>負號有沒有被括號包住</b>：(−3)<sup>2</sup> = 9，但 −2<sup>3</sup> = −(2<sup>3</sup>) = −8。
+      </div></details>
+    </div>
+
+    <div class="card task" data-id="t09">
+      <h3><span class="idx">09</span><span class="gem"></span>科學記號<span class="from">1-4</span></h3>
+      <p class="rule">以 a×10<sup>m</sup> 表示一個數，且 1 ≤ a &lt; 10、m 為整數，
+        這種記錄方法稱為 <input class="blank lg" data-ans="科學記號" aria-label="i0"> 表示法。</p>
+      <p class="eg">2390000 = <input class="blank lg" data-ans="2.39*10^6" aria-label="i1">；
+        0.0000125 = <input class="blank lg" data-ans="1.25*10^-5|1.25*10^(-5)" aria-label="i2">。</p>
+      <button class="act check">檢查</button><p class="fb"></p>
+      <details class="sol"><summary>看解析</summary><div class="body">輸入方式：<span class="mono">2.39*10^6</span>、<span class="mono">1.25*10^-5</span>（乘號可用 * 或 x）。</div></details>
+    </div>
+
+  </div>
+</section>
+
+<!-- 第二單元 -->
+<section id="s2">
+  <div class="sechead"><span class="no">UNIT 2</span><h2>因倍數與分數</h2><span class="cnt" id="c2">—</span></div>
+  <div class="cards">
+
+    <div class="card task" data-id="t10">
+      <h3><span class="idx">10</span><span class="gem"></span>質數與合數<span class="from">2-1</span></h3>
+      <p class="rule">大於 1 的整數只有 1 和本身兩個因數，稱此數為 <input class="blank sm" data-ans="質數" aria-label="j0">；
+        除了 1 和本身還有其他因數，稱此數為 <input class="blank sm" data-ans="合數" aria-label="j1">。</p>
+      <p class="eg">7 為 <input class="blank sm" data-ans="質數|質" aria-label="j2">，
+        24 為 <input class="blank sm" data-ans="合數|合" aria-label="j3">。</p>
+      <button class="act check">檢查</button><p class="fb"></p>
+      <details class="sol"><summary>看解析</summary><div class="body"><b>1 既不是質數也不是合數</b>，它只有一個因數。</div></details>
+    </div>
+
+    <div class="card task" data-id="t11">
+      <h3><span class="idx">11</span><span class="gem"></span>質因數<span class="from">2-1</span></h3>
+      <p class="rule">如果 a 是 b 的因數，而且 a 是質數，就稱 a 為 b 的 <input class="blank lg" data-ans="質因數" aria-label="k0">。</p>
+      <p class="eg">18 的因數有 <input class="blank xl" data-ans="1,2,3,6,9,18" aria-label="k1">，
+        其中質因數有 <input class="blank lg" data-ans="2,3" aria-label="k2">。</p>
+      <button class="act check">檢查</button><p class="fb"></p>
+      <details class="sol"><summary>看解析</summary><div class="body">因數用逗號隔開、由小到大：1, 2, 3, 6, 9, 18。其中是質數的只有 <b>2 和 3</b>。</div></details>
+    </div>
+
+    <div class="card task" data-id="t12">
+      <h3><span class="idx">12</span><span class="gem"></span>標準分解式<span class="from">2-1</span></h3>
+      <p class="rule">將質因數由小而大相乘，遇到相同的質因數連乘時以指數表示，這種表示方式稱為
+        <input class="blank lg" data-ans="標準分解式" aria-label="l0">。</p>
+      <p class="eg">90 的標準分解式為 <input class="blank lg" data-ans="2*3^2*5" aria-label="l1">。</p>
+      <button class="act check">檢查</button><p class="fb"></p>
+      <details class="sol"><summary>看解析</summary><div class="body">90 = 2×45 = 2×9×5 = <b>2×3<sup>2</sup>×5</b>。輸入 <span class="mono">2*3^2*5</span>。</div></details>
+    </div>
+
+    <div class="card task" data-id="t13">
+      <h3><span class="idx">13</span><span class="gem"></span>最大公因數的求法<span class="from">2-2</span></h3>
+      <p class="rule">由兩數的標準分解式中找出<b>共同的</b>質因數，再由共同的質因數中分別取指數
+        <input class="blank sm" data-ans="最小|小" aria-label="m0"> 者相乘。</p>
+      <p class="eg">(2<sup>2</sup>×3<sup>5</sup>, 2×3<sup>2</sup>×5) = <input class="blank lg" data-ans="2*3^2|18" aria-label="m1">。</p>
+      <button class="act check">檢查</button><p class="fb"></p>
+      <details class="sol"><summary>看解析</summary><div class="body">
+        共同的質因數是 2 和 3（5 只有一邊有），指數取小的 → 2<sup>1</sup>×3<sup>2</sup> = <b>18</b>。
+        填 <span class="mono">2*3^2</span> 或 <span class="mono">18</span> 都算對。
+      </div></details>
+    </div>
+
+    <div class="card task" data-id="t14">
+      <h3><span class="idx">14</span><span class="gem"></span>最小公倍數的求法<span class="from">2-2</span></h3>
+      <p class="rule">由兩數的標準分解式中找出<b>全部的</b>質因數，再由全部的質因數中分別取指數
+        <input class="blank sm" data-ans="最大|大" aria-label="n0"> 者相乘。</p>
+      <p class="eg">[2<sup>2</sup>×3<sup>5</sup>, 2×3<sup>2</sup>×5] = <input class="blank lg" data-ans="2^2*3^5*5|4860" aria-label="n1">。</p>
+      <button class="act check">檢查</button><p class="fb"></p>
+      <details class="sol"><summary>看解析</summary><div class="body">
+        全部質因數 2、3、5，指數取大的 → 2<sup>2</sup>×3<sup>5</sup>×5 = <b>4860</b>。
+        <b>只有一邊有的 5 也要帶走</b>——這正是跟最大公因數相反的地方。
+      </div></details>
+    </div>
+
+    <div class="card task" data-id="t15">
+      <h3><span class="idx">15</span><span class="gem"></span>異分母的加減<span class="from">2-3</span></h3>
+      <p class="rule">進行異分母分數的加減時，通常先 <input class="blank lg" data-ans="通分" aria-label="o0">，
+        使分母相同後再計算。</p>
+      <p class="eg">[3, 4] = <input class="blank sm" data-ans="12" aria-label="o1">，
+        (−2/3)+1/4 = <input class="blank" data-ans="-5/12" aria-label="o2">。</p>
+      <button class="act check">檢查</button><p class="fb"></p>
+      <details class="sol"><summary>看解析</summary><div class="body">通分到 12：−8/12 + 3/12 = <b>−5/12</b>。</div></details>
+    </div>
+
+    <div class="card task" data-id="t16">
+      <h3><span class="idx">16</span><span class="gem"></span>倒數<span class="from">2-3</span></h3>
+      <p class="rule">當兩個數的乘積為 1 時，稱這兩個數互為 <input class="blank lg" data-ans="倒數" aria-label="p0">。
+        除以一個不為 0 的數，就是乘以這個數的倒數。</p>
+      <p class="eg">4/5 的倒數為 <input class="blank sm" data-ans="5/4" aria-label="p1">；
+        (−16/15)÷(4/5) = <input class="blank" data-ans="-4/3" aria-label="p2">。</p>
+      <button class="act check">檢查</button><p class="fb"></p>
+      <details class="sol"><summary>看解析</summary><div class="body">
+        (−16/15)×(5/4)：16 和 4 約成 4、15 和 5 約成 3 → <b>−4/3</b>。<b>負數的倒數還是負數。</b>
+      </div></details>
+    </div>
+
+    <div class="card task" data-id="t17">
+      <h3><span class="idx">17</span><span class="gem"></span>分數的乘方<span class="from">2-4</span></h3>
+      <p class="rule">若 m 為任意正整數，a、b 為整數且 a ≠ 0，則 (b/a)<sup>m</sup> =
+        <input class="blank lg" data-ans="b^m/a^m" aria-label="q0">。</p>
+      <p class="eg">(9/8)<sup>7</sup> = <input class="blank lg" data-ans="9^7/8^7" aria-label="q1">。</p>
+      <button class="act check">檢查</button><p class="fb"></p>
+      <details class="sol"><summary>看解析</summary><div class="body">次方要<b>分子分母各分一份</b>。輸入 <span class="mono">9^7/8^7</span>。</div></details>
+    </div>
+
+    <div class="card task" data-id="t18">
+      <h3><span class="idx">18</span><span class="gem"></span>指數律四條<span class="from">2-4</span></h3>
+      <p class="rule">a<sup>m</sup>×a<sup>n</sup> = <input class="blank" data-ans="a^(m+n)|a^m+n" aria-label="r0">；
+        a<sup>m</sup>÷a<sup>n</sup> = <input class="blank" data-ans="a^(m-n)|a^m-n" aria-label="r1">；<br>
+        (a<sup>m</sup>)<sup>n</sup> = <input class="blank" data-ans="a^(mn)|a^(m*n)|a^mn" aria-label="r2">；
+        (a×b)<sup>m</sup> = <input class="blank" data-ans="a^m*b^m|a^mb^m" aria-label="r3">。</p>
+      <p class="eg">3<sup>4</sup>×3<sup>5</sup>÷3<sup>7</sup> = <input class="blank sm" data-ans="3^2|9" aria-label="r4">；
+        (3<sup>2</sup>×5)<sup>4</sup> = <input class="blank lg" data-ans="3^8*5^4" aria-label="r5">。</p>
+      <button class="act check">檢查</button><p class="fb"></p>
+      <details class="sol"><summary>看解析</summary><div class="body">
+        指數的部分請用括號寫，例如 <span class="mono">a^(m+n)</span>。<br>
+        4+5−7 = 2 → 3<sup>2</sup> = 9；(3<sup>2</sup>)<sup>4</sup>×5<sup>4</sup> = <b>3<sup>8</sup>×5<sup>4</sup></b>。
+      </div></details>
+    </div>
+
+  </div>
+</section>
+
+<!-- 第三單元 -->
+<section id="s3">
+  <div class="sechead"><span class="no">UNIT 3</span><h2>代數與方程式</h2><span class="cnt" id="c3">—</span></div>
+  <div class="cards">
+
+    <div class="card task" data-id="t19">
+      <h3><span class="idx">19</span><span class="gem"></span>一元一次式的化簡<span class="from">3-1</span></h3>
+      <p class="rule">一元一次式的化簡，<input class="blank lg" data-ans="同類項" aria-label="s0"> 需合併，
+        不是 <input class="blank lg" data-ans="同類項" aria-label="s1"> 不能合併。</p>
+      <p class="eg">3x+(−6)+5x−9 = <input class="blank lg" data-ans="8x-15" aria-label="s2">。</p>
+      <button class="act check">檢查</button><p class="fb"></p>
+      <details class="sol"><summary>看解析</summary><div class="body">
+        有 x 的：3x+5x = 8x；純數字：−6−9 = −15 → <b>8x−15</b>。這兩堆<b>不能再合併</b>。
+      </div></details>
+    </div>
+
+    <div class="card task" data-id="t20">
+      <h3><span class="idx">20</span><span class="gem"></span>方程式的解<span class="from">3-2</span></h3>
+      <p class="rule">如果一個數代入一元一次方程式後，能使等號左右兩邊的值相等，稱這個數為此一元一次方程式的
+        <input class="blank sm" data-ans="解" aria-label="u0">。</p>
+      <p class="eg">x = 2 代入 3x−2 = −x+6：左邊 = <input class="blank sm" data-ans="4" aria-label="u1">，
+        右邊 = <input class="blank sm" data-ans="4" aria-label="u2">，所以 x = 2
+        <input class="blank sm" data-ans="是" aria-label="u3"> 其解。</p>
+      <button class="act check">檢查</button><p class="fb"></p>
+      <details class="sol"><summary>看解析</summary><div class="body">
+        左邊 3(2)−2 = 4、右邊 −2+6 = 4，兩邊相等 → <b>是</b>其解。最後一格填「是」或「不是」。
+      </div></details>
+    </div>
+
+    <div class="card task" data-id="t21">
+      <h3><span class="idx">21</span><span class="gem"></span>解一元一次方程式<span class="from">3-2</span></h3>
+      <p class="rule">求一元一次方程式中未知數所代表的數之過程，稱為
+        <input class="blank xl" data-ans="解一元一次方程式|解方程式" aria-label="v0">。</p>
+      <p class="eg">3x−2 = 4 → 3x = <input class="blank sm" data-ans="6" aria-label="v1">
+        → x = <input class="blank sm" data-ans="2" aria-label="v2">。</p>
+      <button class="act check">檢查</button><p class="fb"></p>
+      <details class="sol"><summary>看解析</summary><div class="body">
+        兩邊同加 2 → 3x = 6；兩邊同除 3 → <b>x = 2</b>。記得代回去驗算：3(2)−2 = 4 ✓
+      </div></details>
+    </div>
+
+  </div>
+</section>
+
+<footer>趣學步道 · 概念統整 21 格 · 作答紀錄只存在這台裝置的瀏覽器裡。</footer>
+</div>
+
+<script>
+(function(){
+"use strict";
+var KEY = "math-trail-v1";
+var state = {};
+try{ var raw = localStorage.getItem(KEY); if(raw) state = JSON.parse(raw) || {}; }catch(e){ state = {}; }
+function save(){ try{ localStorage.setItem(KEY, JSON.stringify(state)); }catch(e){} }
+
+function halfWidth(s){
+  return String(s == null ? "" : s)
+    .replace(/[\uFF10-\uFF19\uFF21-\uFF3A\uFF41-\uFF5A]/g, function(c){ return String.fromCharCode(c.charCodeAt(0) - 0xFEE0); })
+    .replace(/[\u2212\u2013\u2014\uFF0D\u30FC]/g, "-")
+    .replace(/[\uFF0F\u2044]/g, "/").replace(/[\uFF0B]/g, "+")
+    .replace(/[\uFF0E\u3002]/g, ".").replace(/[\uFF0C\u3001]/g, ",")
+    .replace(/[\uFF08]/g, "(").replace(/[\uFF09]/g, ")")
+    .replace(/[\uFF3E]/g, "^");
+}
+/* 文字／算式一律正規化後比對 */
+function norm(str){
+  var s = halfWidth(str).toLowerCase().replace(/\s+/g, "");
+  s = s.replace(/[\u00D7\u2217x\u00B7]/g, "*").replace(/[\u00F7]/g, "/");
+  s = s.replace(/\*\*/g, "^");
+  s = s.replace(/[\u3002\uFF61]/g, "");
+  s = s.replace(/,+$/, "");
+  /* 數字清單：排序後比對 */
+  if(/^[-\d,]+$/.test(s) && s.indexOf(",") >= 0){
+    var arr = s.split(",").filter(function(x){ return x !== ""; }).map(Number);
+    if(arr.every(function(x){ return !isNaN(x); })) return arr.sort(function(a, b){ return a - b; }).join(",");
+  }
+  /* 純數值：容忍 2.50 / 2.5 這類寫法 */
+  if(/^[+-]?(\d+\.?\d*|\.\d+)$/.test(s)) return String(Number(s));
+  if(/^[+-]?\d+\/\d+$/.test(s)){
+    var p = s.split("/"), v = Number(p[0]) / Number(p[1]);
+    if(isFinite(v)) return "num:" + Math.round(v * 1e9) / 1e9;
+  }
+  return s;
+}
+function match(want, got){
+  var gs = norm(got);
+  return String(want).split("|").some(function(w){ return norm(w) === gs; });
+}
+
+var tasks = Array.prototype.slice.call(document.querySelectorAll(".task"));
+
+function paintCard(task){
+  var done = state[task.getAttribute("data-id")] && state[task.getAttribute("data-id")].ok;
+  task.classList.toggle("done", !!done);
+}
+
+function checkCard(task){
+  var inputs = task.querySelectorAll("input.blank");
+  var bad = 0, blank = 0;
+  Array.prototype.forEach.call(inputs, function(inp){
+    inp.classList.remove("ok", "no");
+    if(inp.value.trim() === ""){ blank++; return; }
+    if(match(inp.getAttribute("data-ans"), inp.value)) inp.classList.add("ok");
+    else { inp.classList.add("no"); bad++; }
+  });
+  if(blank && !bad) return { ok: false, msg: "還有 " + blank + " 格沒填。" };
+  if(bad) return { ok: false, msg: "紅色的再想一次，格式可以看解析。" };
+  return { ok: true, msg: "全對，寶石點亮了。" };
+}
+
+tasks.forEach(function(task){
+  paintCard(task);
+  var btn = task.querySelector(".check");
+  if(btn) btn.addEventListener("click", function(){
+    var res = checkCard(task);
+    var fb = task.querySelector(".fb");
+    fb.textContent = res.msg;
+    fb.className = "fb " + (res.ok ? "ok" : "no");
+    state[task.getAttribute("data-id")] = { ok: res.ok };
+    save();
+    paintCard(task);
+    updateBoard();
+  });
+});
+
+function updateBoard(){
+  var done = 0, byUnit = { 1: 0, 2: 0, 3: 0 }, tot = { 1: 9, 2: 9, 3: 3 };
+  tasks.forEach(function(t){
+    var id = t.getAttribute("data-id");
+    if(state[id] && state[id].ok){
+      done++;
+      var n = Number(id.slice(1));
+      if(n <= 9) byUnit[1]++; else if(n <= 18) byUnit[2]++; else byUnit[3]++;
+    }
+  });
+  document.getElementById("gemCount").innerHTML = done + "<small> / 21</small>";
+  var row = document.getElementById("gemRow"), html = [];
+  for(var i = 1; i <= 21; i++){
+    var on = false, idx = 0;
+    tasks.forEach(function(t){ if(Number(t.getAttribute("data-id").slice(1)) === i){ idx = i; on = !!(state["t" + (i < 10 ? "0" + i : i)] && state["t" + (i < 10 ? "0" + i : i)].ok); } });
+    html.push('<i class="' + (on ? (i > 18 ? "on2" : "on") : "") + '"></i>');
+  }
+  row.innerHTML = html.join("");
+
+  [1, 2, 3].forEach(function(u){
+    var el = document.getElementById("c" + u);
+    if(el) el.textContent = "寶石 " + byUnit[u] + " / " + tot[u];
+  });
+
+  document.getElementById("lv1").classList.toggle("on", done >= 1);
+  document.getElementById("lv2").classList.toggle("on", done >= 8);
+  document.getElementById("lv3").classList.toggle("on", done >= 15);
+
+  var tip;
+  if(done === 0) tip = "還沒開始。每一格只要全部填對就會點亮一顆寶石，答錯不扣，改到對為止。";
+  else if(done < 8) tip = "LEVEL 1 進行中——再 " + (8 - done) + " 顆進入 LEVEL 2。";
+  else if(done < 15) tip = "LEVEL 2 進行中——再 " + (15 - done) + " 顆進入 LEVEL 3。";
+  else if(done < 21) tip = "LEVEL 3！剩最後 " + (21 - done) + " 顆就全線通關。";
+  else tip = "21 顆全亮，全線通關。整本的概念都說得出來了。";
+  document.getElementById("tip").textContent = tip;
+}
+updateBoard();
+
+document.getElementById("reset").addEventListener("click", function(){
+  state = {}; save();
+  try{ localStorage.removeItem(KEY); }catch(e){}
+  window.location.reload();
+});
+Array.prototype.forEach.call(document.querySelectorAll(".jump"), function(b){
+  b.addEventListener("click", function(){
+    var t = document.getElementById(b.getAttribute("data-target"));
+    if(t) t.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+});
+})();
+</script>
+</body>
+</html>
