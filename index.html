@@ -204,18 +204,18 @@ footer{border-top-color:var(--rule)}
 <header class="top">
   <p class="eyebrow">國中數學 1 上 · 計算熟練</p>
   <h1>國一數學<br><span class="neg">互動學習單</span>總覽</h1>
-  <p class="sub">單元一到單元三，共 14 份學習單＋概念檢核步道＋麥斯道館與 108 句語錄。每一份都是單一 HTML 檔，離線可用，作答紀錄存在這台裝置的瀏覽器裡。</p>
+  <p class="sub">單元一到單元三，共 14 份學習單＋概念檢核步道＋判別法工具箱＋麥斯道館與 108 句語錄。每一份都是單一 HTML 檔，離線可用，作答紀錄存在這台裝置的瀏覽器裡。</p>
 </header>
 
 <nav class="toc" aria-label="目錄">
   <button class="mxopen" id="mxOpen">麥斯</button>
+  <button class="jump" data-target="nb">錯題本</button>
   <button class="jump" data-target="u1">第一單元</button>
   <button class="jump" data-target="u2">第二單元</button>
   <button class="jump" data-target="u3">第三單元</button>
-  <button class="jump" data-target="trail">概念檢核</button>
+  <button class="jump" data-target="trail">概念檢核・工具箱</button>
   <button class="jump" data-target="uf">總測驗</button>
   <button class="jump" data-target="maxx">麥斯道館・語錄</button>
-  <button class="jump" data-target="traps">錯誤模式總表</button>
   <button class="jump" data-target="howto">使用方式</button>
 </nav>
 
@@ -227,6 +227,20 @@ footer{border-top-color:var(--rule)}
   <span class="bar"><i id="allBar"></i></span>
   <p class="tiny" id="allNote">還沒開始。點任一張卡片就可以進去作答。</p>
 </div>
+
+<section id="nb">
+  <div class="sechead"><span class="no">REVIEW</span><h2>錯題本</h2></div>
+  <div class="decks">
+    <a class="deck wide static" href="20-notebook.html">
+      <span class="code">NOTEBOOK</span>
+      <h3>錯題本　複習與確認</h3>
+      <p class="desc">自動讀取全部 16 份工具的作答紀錄，把<b>答錯的</b>和<b>還沒寫的</b>整理成一張清單，可依單元或錯誤模式分組，並依目前狀況給下一步建議。寫對之後還能自己勾「確認」——代表不只寫對，還說得出為什麼。清單可一鍵複製成文字。</p>
+      <div class="tags"><span class="tag">自動彙整</span><span class="tag new-tag">學習建議</span><span class="tag">複習確認</span></div>
+      <div class="meter"><span class="cnt" id="nbCnt">讀取中…</span></div>
+      <span class="go">打開錯題本</span>
+    </a>
+  </div>
+</section>
 
 <section id="u1">
   <div class="sechead"><span class="no">UNIT 1</span><h2>第一單元　整數與運算</h2><span class="cnt" id="c1">—</span></div>
@@ -379,7 +393,7 @@ footer{border-top-color:var(--rule)}
 </section>
 
 <section id="trail">
-  <div class="sechead"><span class="no">CONCEPT</span><h2>概念檢核　趣學步道</h2><span class="cnt" id="ct">—</span></div>
+  <div class="sechead"><span class="no">CONCEPT</span><h2>概念檢核與隨身工具箱</h2><span class="cnt" id="ct">—</span></div>
   <span class="unitbar"><i id="bt"></i></span>
   <div class="decks">
     <a class="deck wide" href="17-trail.html" data-key="math-trail-v1" data-total="21" data-unit="t">
@@ -389,6 +403,15 @@ footer{border-top-color:var(--rule)}
       <div class="tags"><span class="tag">21 格</span><span class="tag">定義與規則</span><span class="tag">跨三單元</span></div>
       <div class="meter"><span class="cnt">—</span><span class="bar"><i></i></span></div>
       <span class="go">開始點亮</span>
+    </a>
+
+    <a class="deck wide static" href="19-tips.html">
+      <span class="code">TOOLBOX</span>
+      <h3>數學小撇步　判別法工具箱</h3>
+      <p class="desc">不計分、隨時查。1–100 質數大全與偵測器；倍數判別法 2–11 綜合掃描器（補上課本沒教的 <b>7 的判別法</b>）；因數全列表機（指數組合法，保證不漏，附因數個數公式）；0 為什麼不是因數卻是倍數；交換律為什麼是同類項的底層原理。</p>
+      <div class="tags"><span class="tag">五組工具</span><span class="tag new-tag">丟數字就試算</span><span class="tag">不計分</span></div>
+      <div class="meter"><span class="cnt">質數 · 倍數 · 因數 · 0 · 交換律</span></div>
+      <span class="go">打開工具箱</span>
     </a>
   </div>
 </section>
@@ -432,48 +455,6 @@ footer{border-top-color:var(--rule)}
   </div>
 </section>
 
-<section id="traps">
-  <div class="sechead"><span class="no">＊</span><h2>錯誤模式總表</h2></div>
-  <p class="legend">歷次考卷逐題比對後的結果。同一種錯在不同單元反覆出現，代表要練的是<b>習慣</b>而不是觀念。</p>
-  <div class="tablewrap">
-    <table>
-      <thead><tr><th>錯誤模式</th><th>出現位置</th><th>訂正方向</th></tr></thead>
-      <tbody>
-        <tr><td><b>沒讀到題目要的東西</b></td>
-          <td class="where">1-4 熟練 6<br>2-1 熟練 1<br>2-3 熟練 1</td>
-          <td><b>三次</b>都是「算得出來卻沒交出題目要的東西」：該寫科學記號、該列出所有因數、該把分數化簡。作答前把題目<b>最後一句</b>圈起來。</td></tr>
-        <tr><td><b>不等號方向畫反</b></td>
-          <td class="where">1-4 熟練 9<br>2-3 熟練 2、3</td>
-          <td>大小關係其實判斷對了，只是符號畫反。開口朝大數，寫完<b>從左往右唸一次</b>。</td></tr>
-        <tr><td><b>負號漏寫</b></td>
-          <td class="where">1-1 熟練 1、5<br>1-2 熟練 4-1<br>1-3 熟練 3-4</td>
-          <td>動筆前先決定符號再寫數字。除法時負號跑到除數位置特別容易漏。</td></tr>
-        <tr><td><b>沒先確認刻度</b></td>
-          <td class="where">1-1 熟練 5</td>
-          <td>找兩個有標數字的刻度 → 數中間幾格 → 一格＝差÷格數。同一條數線每段可能不同。</td></tr>
-        <tr><td><b>絕對值反推只寫一解</b></td>
-          <td class="where">1-1 熟練 10、13</td>
-          <td>|a| = 正數 ⇒ 左右各一個答案；只有 |a| = 0 唯一。</td></tr>
-        <tr><td><b>算到一半當答案</b></td>
-          <td class="where">1-2 熟練 9-2、7-1<br>2-2 熟練 10-2</td>
-          <td>寫答案前數一次題目有幾項；公式列完記得真的把除法算完。</td></tr>
-        <tr><td><b>絕對值／括號的處理順序</b></td>
-          <td class="where">1-2 熟練 10、11<br>1-3 熟練 5-3、6-4<br>2-3 熟練 6</td>
-          <td>絕對值＝括號，先算成一個數再脫掉，脫掉後<b>一定非負</b>；連續負號一次只翻一層。</td></tr>
-        <tr><td><b>列表錯 → 連帶錯下一格</b></td>
-          <td class="where">2-2 熟練 6</td>
-          <td>8 的倍數寫成「12、24」，接著 [4,6,8] 就跟著錯。<b>寫完公倍數回頭除一次。</b></td></tr>
-        <tr><td><b>約分沒約完</b></td>
-          <td class="where">2-3 熟練 11-3、11-4</td>
-          <td>分母多留一個因數。算完再檢查一次分子分母還有沒有公因數。</td></tr>
-        <tr><td><b>整題空白</b></td>
-          <td class="where">2-2 熟練 12<br>2-3 熟練 13<br>2-4／3-1／3-2／3-3 整份</td>
-          <td>先掃過整張考卷把會的寫完再回頭。第三單元的三份工具都是教學型，從填空開始建立手感。</td></tr>
-      </tbody>
-    </table>
-  </div>
-</section>
-
 <section id="howto">
   <div class="sechead"><span class="no">＊</span><h2>使用方式</h2></div>
   <div class="howto">
@@ -481,6 +462,8 @@ footer{border-top-color:var(--rule)}
       <li><b>建議順序：</b>1-1 → 1-2 → 1-3 → 1-4 →（第一單元總複習）→ 2-1 → 2-2 → 2-3 → 2-4 →（第二單元總複習）→ 3-1 → 3-2 → 3-3 →（第三單元總複習）→ 第一至三單元總測驗。</li>
       <li><b>每一頁最上方都有「總覽」按鈕</b>，可以隨時回到這一頁。</li>
       <li><b>每一關都有「檢查」按鈕</b>，答對變綠、答錯變紅，可以立刻看解析再改。</li>
+      <li><b>不知道下一步做什麼就開「錯題本」</b>：它會自動列出答錯和還沒寫的題目，並告訴你先補哪一類。</li>
+      <li><b>卡住的時候先開「數學小撇步」</b>：質數怎麼判、7 的倍數怎麼看、因數怎麼列才不會漏，丟個數字進去它會把過程攤開給你看。</li>
       <li><b>寫完一個單元可以去「概念檢核 趣學步道」</b>對一次定義：算得出來不代表說得出來，那 21 格專門考規則本身。</li>
       <li><b>第三單元的三份是教學型</b>（原卷空白），建議第一輪只做填空，把口訣練熟再往下。</li>
       <li><b>紀錄自動保存</b>在瀏覽器（localStorage），關掉再打開會延續；換裝置或換瀏覽器則從頭開始。每份工具內都有「清除紀錄」。</li>
@@ -490,7 +473,7 @@ footer{border-top-color:var(--rule)}
   </div>
 </section>
 
-<footer>國中數學 1 上 · 單元一～單元三 · 14 份互動學習單＋概念檢核步道＋麥斯道館＋108 句語錄</footer>
+<footer>國中數學 1 上 · 單元一～單元三 · 14 份互動學習單＋概念檢核步道＋判別法工具箱＋麥斯道館＋108 句語錄</footer>
 </div>
 
 <script>
@@ -560,9 +543,18 @@ document.getElementById("allCount").innerHTML = doneAll + "<small> / " + totalAl
 document.getElementById("allBar").style.width = totalAll ? (doneAll / totalAll * 100) + "%" : "0%";
 var note;
 if(doneAll === 0) note = "還沒開始。點任一張卡片就可以進去作答。";
-else if(doneAll === totalAll) note = "全部完成了，可以回頭重寫錯誤模式總表裡還不順的那幾類。";
+else if(doneAll === totalAll) note = "全部完成了，可以打開錯題本，把還沒勾「確認」的那幾關再看一次。";
 else note = "已完成 " + doneAll + " 關，還有 " + (totalAll - doneAll) + " 關。進度只記在這台裝置上。";
 document.getElementById("allNote").textContent = note;
+
+var nbEl = document.getElementById("nbCnt");
+if(nbEl){
+  var openCnt = totalAll - doneAll;
+  nbEl.textContent = doneAll === 0
+    ? "還沒開始作答"
+    : (openCnt === 0 ? "全部完成，沒有待處理的題目" : "目前有 " + openCnt + " 關待處理");
+  if(openCnt && doneAll) nbEl.style.color = "#B23C33";
+}
 
 /* ---------- 麥斯歡迎彈窗 ---------- */
 (function welcome(){

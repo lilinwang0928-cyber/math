@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>錯題本．複習與確認</title>
+<style>
+:root{
+  --paper:#E6F0F8;--card:#FFFFFF;--ink:#0F2A3D;--ink-soft:#55707F;
+  --neg:#2563A8;--pos:#C2761A;--zero:#15795B;--ok:#177A5A;--no:#B23C33;
+  --rule:#C2D6E5;--rule-soft:#DAE7F1;
+  --shadow:0 1px 0 #CBDDEB, 0 10px 26px -18px rgba(15,42,61,.45);
+  --serif:"Noto Serif TC","Songti TC","Source Han Serif TC","PMingLiU",serif;
+  --sans:"PingFang TC","Microsoft JhengHei","Noto Sans TC","Heiti TC",system-ui,sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,"Courier New",monospace;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{font-family:var(--sans);color:var(--ink);background-color:var(--paper);
+  background-image:linear-gradient(to right, rgba(37,99,168,.07) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(37,99,168,.07) 1px, transparent 1px);
+  background-size:26px 26px;line-height:1.7;-webkit-text-size-adjust:100%}
+.wrap{max-width:900px;margin:0 auto;padding:0 14px 80px}
+header.top{padding:34px 0 12px}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.18em;color:var(--ink-soft);margin:0 0 6px}
+h1{font-family:var(--serif);font-weight:700;font-size:clamp(28px,7vw,44px);line-height:1.22;margin:0 0 10px}
+h1 .neg{color:var(--neg)}
+.sub{margin:0;color:var(--ink-soft);font-size:15px}
+nav.stations{position:sticky;top:0;z-index:40;margin:16px -14px 0;padding:8px 14px;
+  background:rgba(230,240,248,.94);backdrop-filter:blur(6px);border-bottom:1px solid var(--rule);
+  overflow-x:auto;white-space:nowrap;-webkit-overflow-scrolling:touch}
+nav.stations a.home{display:inline-block;font-family:var(--sans);font-size:13px;font-weight:700;
+  color:#fff;background:var(--ink);border:1px solid var(--ink);border-radius:999px;
+  padding:6px 14px;margin-right:8px;text-decoration:none;white-space:nowrap}
+nav.stations a.home:hover{background:var(--neg);border-color:var(--neg)}
+nav.stations button{font-family:var(--sans);font-size:13px;color:var(--ink);background:var(--card);
+  border:1px solid var(--rule);border-radius:999px;padding:6px 13px;margin-right:6px;cursor:pointer}
+nav.stations button:hover{border-color:var(--neg);color:var(--neg)}
+
+section{margin:32px 0 0;scroll-margin-top:60px}
+.sechead{display:flex;align-items:baseline;gap:10px;border-bottom:2px solid var(--ink);padding-bottom:6px;flex-wrap:wrap}
+.sechead .no{font-family:var(--mono);font-size:13px;color:var(--neg);letter-spacing:.1em}
+.sechead h2{font-family:var(--serif);font-size:clamp(20px,4.4vw,26px);margin:0;font-weight:700}
+.sechead .cnt{margin-left:auto;font-family:var(--mono);font-size:12.5px;color:var(--ink-soft)}
+
+/* 戰情板 */
+.board{background:var(--card);border:1px solid var(--rule);border-radius:12px;padding:16px 14px;margin-top:18px;box-shadow:var(--shadow)}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}
+@media (max-width:560px){ .stats{grid-template-columns:1fr 1fr} }
+.stat{border:1px solid var(--rule-soft);border-radius:10px;padding:10px 9px;text-align:center;background:#F7FAFD}
+.stat b{display:block;font-family:var(--mono);font-size:clamp(20px,5.6vw,27px);line-height:1.2}
+.stat span{font-size:11.5px;color:var(--ink-soft);letter-spacing:.06em}
+.stat.done b{color:var(--ok)} .stat.todo b{color:var(--no)}
+.stat.blank b{color:var(--ink-soft)} .stat.closed b{color:var(--pos)}
+.bigbar{height:12px;border-radius:99px;overflow:hidden;margin-top:13px;display:flex;background:var(--rule-soft)}
+.bigbar i{display:block;height:100%}
+.bigbar i.d{background:var(--ok)} .bigbar i.t{background:var(--no)}
+.barkey{display:flex;gap:14px;flex-wrap:wrap;margin-top:8px;font-size:12px;color:var(--ink-soft)}
+.barkey i{display:inline-block;width:10px;height:10px;border-radius:3px;vertical-align:-1px;margin-right:4px}
+.units{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-top:14px}
+@media (max-width:560px){ .units{grid-template-columns:1fr 1fr} }
+.unit{border:1px solid var(--rule-soft);border-radius:9px;padding:9px}
+.unit .h{display:flex;align-items:baseline;gap:6px;font-size:12.5px;color:var(--ink-soft)}
+.unit .h b{font-family:var(--mono);font-size:14px;color:var(--ink);margin-left:auto}
+.unit .ub{height:5px;background:var(--rule-soft);border-radius:99px;overflow:hidden;margin-top:6px}
+.unit .ub i{display:block;height:100%;background:var(--neg)}
+.board p.note{margin:12px 0 0;font-size:12.5px;color:var(--ink-soft)}
+
+/* 建議 */
+.advice{display:grid;grid-template-columns:1fr;gap:11px;margin-top:14px}
+.tip{background:var(--card);border:1px solid var(--rule);border-left:4px solid var(--neg);
+  border-radius:10px;padding:12px 13px;box-shadow:var(--shadow)}
+.tip.hot{border-left-color:var(--no)}
+.tip.good{border-left-color:var(--ok)}
+.tip.warm{border-left-color:var(--pos)}
+.tip h4{margin:0 0 5px;font-size:15px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.tip h4 .badge{font-family:var(--mono);font-size:10.5px;background:var(--rule-soft);color:var(--ink-soft);
+  border-radius:4px;padding:2px 7px;font-weight:400}
+.tip.hot h4 .badge{background:#FBEFEE;color:var(--no)}
+.tip.good h4 .badge{background:#EEF7F3;color:var(--ok)}
+.tip.warm h4 .badge{background:#FDF2E6;color:var(--pos)}
+.tip p{margin:0;font-size:13.5px;color:var(--ink-soft)}
+.tip p b{color:var(--ink)}
+.tip a{color:var(--neg);font-weight:700;text-decoration:none}
+.tip a:hover{text-decoration:underline}
+
+/* 篩選列 */
+.bar2{display:flex;gap:6px;flex-wrap:wrap;margin-top:14px;align-items:center}
+.bar2 .lab{font-family:var(--mono);font-size:11.5px;color:var(--ink-soft);letter-spacing:.06em;margin-right:2px}
+.bar2 button{font-family:var(--sans);font-size:13px;border:1px solid var(--rule);background:var(--card);
+  border-radius:999px;padding:6px 13px;cursor:pointer;color:var(--ink)}
+.bar2 button[aria-pressed="true"]{background:var(--neg);border-color:var(--neg);color:#fff}
+.bar2 button.act2{background:var(--ink);border-color:var(--ink);color:#fff;font-weight:700}
+.bar2 button.act2:hover{background:var(--neg);border-color:var(--neg)}
+.counter{font-family:var(--mono);font-size:12.5px;color:var(--ink-soft);margin:10px 0 0}
+
+/* 清單 */
+.grp{margin-top:16px}
+.grph{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap;border-bottom:1px solid var(--rule);padding-bottom:5px}
+.grph h3{font-family:var(--serif);font-size:17px;margin:0;font-weight:700}
+.grph .n{font-family:var(--mono);font-size:12.5px;color:var(--ink-soft);margin-left:auto}
+.grph .go{font-size:12.5px;color:var(--neg);text-decoration:none;font-weight:700}
+.grph .go:hover{text-decoration:underline}
+ul.items{list-style:none;margin:9px 0 0;padding:0}
+li.item{display:flex;align-items:flex-start;gap:10px;background:var(--card);border:1px solid var(--rule-soft);
+  border-radius:9px;padding:9px 11px;margin-bottom:7px;flex-wrap:wrap}
+li.item.todo{border-color:#E8C3BD;background:#FEF8F7}
+li.item.closed{background:#F4FBF8;border-color:#BEDFD2}
+li.item .st{font-family:var(--mono);font-size:11px;border-radius:4px;padding:2px 7px;white-space:nowrap;flex:none}
+li.item .st.d{background:#EEF7F3;color:var(--ok)}
+li.item .st.t{background:#FBEFEE;color:var(--no)}
+li.item .st.b{background:var(--rule-soft);color:var(--ink-soft)}
+li.item .txt{flex:1;min-width:180px;font-size:13.5px;line-height:1.55}
+li.item .txt .src{display:block;font-family:var(--mono);font-size:11.5px;color:var(--ink-soft);margin-top:1px}
+li.item .txt .src .boss{color:var(--pos)}
+li.item .act{display:flex;gap:8px;align-items:center;flex:none}
+li.item .act a{font-size:12.5px;color:var(--neg);text-decoration:none;font-weight:700;white-space:nowrap}
+li.item .act a:hover{text-decoration:underline}
+li.item label{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--ink-soft);cursor:pointer;white-space:nowrap}
+li.item label input{width:15px;height:15px;cursor:pointer}
+li.item.conf label{color:var(--ok);font-weight:700}
+.empty{background:var(--card);border:1px dashed var(--rule);border-radius:11px;padding:24px 16px;text-align:center;margin-top:14px}
+.empty p{margin:0 0 6px;font-size:14.5px}
+.empty p.s{font-size:13px;color:var(--ink-soft);margin:0}
+footer{margin-top:44px;border-top:1px solid var(--rule);padding-top:14px;font-size:12px;color:var(--ink-soft)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="top">
+  <p class="eyebrow">國中數學 1 上 · 單元一～三</p>
+  <h1>錯題本<br><span class="neg">複習</span>與確認</h1>
+  <p class="sub">這一頁會自動讀取全部 16 份工具的作答紀錄，把<b>還沒對的題目</b>整理出來，並依照目前的狀況給下一步建議。不用手動登記，寫完回來看就會更新。</p>
+</header>
+
+<nav class="stations" aria-label="導覽">
+  <a class="home" href="index.html">← 總覽</a>
+  <button class="jump" data-target="board">戰情板</button>
+  <button class="jump" data-target="advice">學習建議</button>
+  <button class="jump" data-target="list">錯題清單</button>
+</nav>
+
+<section id="board">
+  <div class="sechead"><span class="no">01</span><h2>戰情板</h2><span class="cnt" id="updated"></span></div>
+  <div class="board">
+    <div class="stats">
+      <div class="stat done"><b id="sDone">0</b><span>已訂正</span></div>
+      <div class="stat todo"><b id="sTodo">0</b><span>答錯待訂正</span></div>
+      <div class="stat blank"><b id="sBlank">0</b><span>還沒寫</span></div>
+      <div class="stat closed"><b id="sClosed">0</b><span>訂正＋確認</span></div>
+    </div>
+    <div class="bigbar"><i class="d" id="barD"></i><i class="t" id="barT"></i></div>
+    <div class="barkey">
+      <span><i style="background:var(--ok)"></i>已訂正</span>
+      <span><i style="background:var(--no)"></i>待訂正</span>
+      <span><i style="background:var(--rule-soft)"></i>還沒寫</span>
+      <span id="pct"></span>
+    </div>
+    <div class="units" id="units"></div>
+    <p class="note">紀錄存在這台裝置的瀏覽器裡，換裝置或換瀏覽器會從頭算。<b>「確認」</b>是你自己勾的：代表這一題你不只寫對，還說得出為什麼。</p>
+  </div>
+</section>
+
+<section id="advice">
+  <div class="sechead"><span class="no">02</span><h2>學習建議</h2><span class="cnt">依目前狀況自動產生</span></div>
+  <div class="advice" id="adviceBox"></div>
+</section>
+
+<section id="list">
+  <div class="sechead"><span class="no">03</span><h2>錯題清單</h2><span class="cnt" id="listCnt"></span></div>
+  <div class="bar2">
+    <span class="lab">顯示</span>
+    <button class="f" data-f="open" aria-pressed="true">待處理</button>
+    <button class="f" data-f="todo" aria-pressed="false">只看答錯</button>
+    <button class="f" data-f="blank" aria-pressed="false">只看沒寫</button>
+    <button class="f" data-f="done" aria-pressed="false">已訂正</button>
+    <button class="f" data-f="all" aria-pressed="false">全部</button>
+  </div>
+  <div class="bar2">
+    <span class="lab">分組</span>
+    <button class="g" data-g="unit" aria-pressed="true">按單元</button>
+    <button class="g" data-g="fam" aria-pressed="false">按錯誤模式</button>
+    <button class="act2" id="copyBtn" style="margin-left:auto">複製清單</button>
+  </div>
+  <p class="counter" id="counter"></p>
+  <div id="listBox"></div>
+</section>
+
+<footer>錯題本 · 自動讀取 16 份工具的作答紀錄 · 確認紀錄只存在這台裝置的瀏覽器裡。</footer>
+</div>
+
+<script>
+(function(){
+"use strict";
+
+var CATALOG = [{"f":"01-number-line.html","n":"1-1 正數與負數","u":"1","k":"math-1-1-numberline-v1","tasks":[{"id":"t1a","t":"熟練 1","s":"s1","p":"負號小偷","fam":"負號與符號"},{"id":"t1b","t":"熟練 2-1","s":"s1","p":"負號小偷","fam":"負號與符號"},{"id":"t1c","t":"熟練 2-2","s":"s1","p":"負號小偷","fam":"負號與符號"},{"id":"t2a","t":"熟練 3-1","s":"s2","p":"負號小偷","fam":"負號與符號"},{"id":"t2b","t":"熟練 3-2","s":"s2","p":"負號小偷","fam":"負號與符號"},{"id":"t2c","t":"熟練 4-1","s":"s2","p":"負號小偷","fam":"負號與符號"},{"id":"t2d","t":"熟練 4-2","s":"s2","p":"負號小偷","fam":"負號與符號"},{"id":"t3a1","t":"第一步：破解刻度","s":"s3","p":"刻度陷阱","fam":"數線與刻度"},{"id":"t3a2","t":"第二步：讀出各點座標","s":"s3","p":"刻度陷阱","fam":"數線與刻度"},{"id":"t3b1","t":"第一步：破解刻度","s":"s3","p":"刻度陷阱","fam":"數線與刻度"},{"id":"t3b2","t":"第二步：讀出各點座標","s":"s3","p":"刻度陷阱","fam":"數線與刻度"},{"id":"t4a","t":"熟練 6-1","s":"s4","p":"鏡子不等號","fam":"大小與方向"},{"id":"t4b","t":"熟練 6-2","s":"s4","p":"鏡子不等號","fam":"大小與方向"},{"id":"t4c","t":"熟練 6-3","s":"s4","p":"鏡子不等號","fam":"大小與方向"},{"id":"t5a","t":"熟練 7","s":"s5","p":"絕對值面具","fam":"絕對值與括號"},{"id":"t5b","t":"熟練 8","s":"s5","p":"絕對值面具","fam":"絕對值與括號"},{"id":"t5c","t":"熟練 9-1","s":"s5","p":"絕對值面具","fam":"絕對值與括號"},{"id":"t5d","t":"熟練 9-2 · 第一步","s":"s5","p":"絕對值面具","fam":"絕對值與括號"},{"id":"t5e","t":"熟練 9-2 · 第二步","s":"s5","p":"絕對值面具","fam":"絕對值與括號"},{"id":"t6a","t":"熟練 10","s":"s6","p":"雙解雙胞胎","fam":"沒收尾"},{"id":"t6b","t":"熟練 11-1","s":"s6","p":"絕對值面具","fam":"絕對值與括號"},{"id":"t6c","t":"熟練 11-2","s":"s6","p":"絕對值面具","fam":"絕對值與括號"}]},{"f":"02-add-subtract.html","n":"1-2 整數的加減","u":"1","k":"math-1-2-integers-v1","tasks":[{"id":"a1","t":"熟練 1","s":"s1","p":"負號小偷","fam":"負號與符號"},{"id":"a2","t":"熟練 2","s":"s1","p":"負號小偷","fam":"負號與符號"},{"id":"b1","t":"熟練 3","s":"s2","p":"負號小偷","fam":"負號與符號"},{"id":"b2","t":"先判斷符號","s":"s2","p":"負號小偷","fam":"負號與符號"},{"id":"b3","t":"熟練 4","s":"s2","p":"負號小偷","fam":"負號與符號"},{"id":"c1","t":"熟練 5・6","s":"s3","p":"負號小偷","fam":"負號與符號"},{"id":"d1","t":"熟練 7","s":"s4","p":"半路休息站","fam":"沒收尾"},{"id":"e1","t":"先改寫成加法","s":"s5","p":"括號變號官","fam":"絕對值與括號"},{"id":"e2","t":"熟練 8","s":"s5","p":"括號變號官","fam":"絕對值與括號"},{"id":"f1","t":"熟練 9-1・9-2","s":"s6","p":"半路休息站","fam":"沒收尾"},{"id":"f2","t":"熟練 9-3","s":"s6","p":"半路休息站","fam":"沒收尾"},{"id":"f3","t":"熟練 9-4","s":"s6","p":"半路休息站","fam":"沒收尾"},{"id":"g1","t":"熟練 10-1・10-4","s":"s7","p":"絕對值面具","fam":"絕對值與括號"},{"id":"g2","t":"熟練 10-2・10-3","s":"s7","p":"絕對值面具","fam":"絕對值與括號"},{"id":"g3","t":"熟練 10-5・10-6","s":"s7","p":"絕對值面具","fam":"絕對值與括號"},{"id":"h1","t":"先決定每一項的符號","s":"s8","p":"括號變號官","fam":"絕對值與括號"},{"id":"h2","t":"熟練 11","s":"s8","p":"括號變號官","fam":"絕對值與括號"},{"id":"i1","t":"熟練 12","s":"s9","p":"絕對值面具","fam":"絕對值與括號"},{"id":"i2","t":"熟練 13","s":"s9","p":"雙解雙胞胎","fam":"沒收尾"},{"id":"i3","t":"熟練 14","s":"s9","p":"絕對值面具","fam":"絕對值與括號"}]},{"f":"03-multiply-divide.html","n":"1-3 整數的乘除與四則運算","u":"1","k":"math-1-3-muldiv-v1","tasks":[{"id":"a1","t":"先判斷符號","s":"s1","p":"負號小偷","fam":"負號與符號"},{"id":"a2","t":"熟練 1","s":"s1","p":"負號小偷","fam":"負號與符號"},{"id":"b1","t":"熟練 2","s":"s2","p":"負號小偷","fam":"負號與符號"},{"id":"c1","t":"先判斷符號","s":"s3","p":"負號小偷","fam":"負號與符號"},{"id":"c2","t":"熟練 3","s":"s3","p":"負號小偷","fam":"負號與符號"},{"id":"e1","t":"熟練 4-1 ～ 4-4","s":"s4","p":"運算順序守衛","fam":"運算順序"},{"id":"e2","t":"熟練 4-5・4-6","s":"s4","p":"運算順序守衛","fam":"運算順序"},{"id":"f1","t":"熟練 5-1・5-2・5-4","s":"s5","p":"運算順序守衛","fam":"運算順序"},{"id":"f2","t":"熟練 5-3","s":"s5","p":"括號變號官","fam":"絕對值與括號"},{"id":"f3","t":"熟練 5-5 ～ 5-8","s":"s5","p":"運算順序守衛","fam":"運算順序"},{"id":"g1","t":"熟練 6-1 ～ 6-3","s":"s6","p":"絕對值面具","fam":"絕對值與括號"},{"id":"g2","t":"熟練 6-4","s":"s6","p":"絕對值面具","fam":"絕對值與括號"},{"id":"g3","t":"熟練 6-5 ～ 6-8","s":"s6","p":"絕對值面具","fam":"絕對值與括號"},{"id":"h1","t":"熟練 7","s":"s7","p":"運算順序守衛","fam":"運算順序"},{"id":"i1","t":"選出最好拆的方式","s":"s8","p":"運算順序守衛","fam":"運算順序"},{"id":"i2","t":"熟練 8","s":"s8","p":"運算順序守衛","fam":"運算順序"},{"id":"j1","t":"熟練 9-1","s":"s9","p":"運算順序守衛","fam":"運算順序"},{"id":"j2","t":"熟練 9-2","s":"s9","p":"運算順序守衛","fam":"運算順序"}]},{"f":"04-exponent.html","n":"1-4 指數記法與科學記號","u":"1","k":"math-1-4-exponent-v1","tasks":[{"id":"a1","t":"先數個數","s":"s1","p":"指數點名怪","fam":"指數律與科學記號"},{"id":"a2","t":"熟練 1","s":"s1","p":"指數點名怪","fam":"指數律與科學記號"},{"id":"b1","t":"先判斷正負","s":"s2","p":"括號位置怪","fam":"絕對值與括號"},{"id":"b2","t":"熟練 2","s":"s2","p":"括號位置怪","fam":"絕對值與括號"},{"id":"b3","t":"熟練 3","s":"s2","p":"括號位置怪","fam":"絕對值與括號"},{"id":"c1","t":"熟練 4-1 ～ 4-4","s":"s3","p":"運算順序守衛","fam":"運算順序"},{"id":"c2","t":"熟練 4-5・4-6","s":"s3","p":"運算順序守衛","fam":"運算順序"},{"id":"d1","t":"熟練 5","s":"s4","p":"格式沒讀到","fam":"讀題與列式"},{"id":"e1","t":"哪一個才是合格的科學記號？","s":"s5","p":"格式沒讀到","fam":"讀題與列式"},{"id":"e2","t":"熟練 6","s":"s5","p":"格式沒讀到","fam":"讀題與列式"},{"id":"f1","t":"熟練 7","s":"s6","p":"格式沒讀到","fam":"讀題與列式"},{"id":"g1","t":"熟練 8","s":"s7","p":"格式沒讀到","fam":"讀題與列式"},{"id":"h0","t":"先校正方向","s":"s8","p":"鏡子不等號","fam":"大小與方向"},{"id":"h1","t":"先比指數","s":"s8","p":"鏡子不等號","fam":"大小與方向"},{"id":"h2","t":"熟練 9","s":"s8","p":"鏡子不等號","fam":"大小與方向"}]},{"f":"05-review.html","n":"第一單元總複習","u":"1","k":"math-unit1-review-v1","tasks":[{"id":"q1","t":"1相對量","s":"p1","p":"符號與負號","fam":"負號與符號"},{"id":"q2","t":"2絕對值反推","s":"p1","p":"絕對值","fam":"絕對值與括號"},{"id":"q3","t":"3比較大小","s":"p1","p":"比大小與不等號方向","fam":"大小與方向"},{"id":"q4","t":"4數線距離","s":"p1","p":"數線與距離","fam":"數線與刻度"},{"id":"q5","t":"5絕對值範圍","s":"p1","p":"絕對值","fam":"絕對值與括號"},{"id":"q6","t":"6異號相加","s":"p2","p":"符號與負號","fam":"負號與符號"},{"id":"q7","t":"7整數相減","s":"p2","p":"符號與負號","fam":"負號與符號"},{"id":"q8","t":"8多項加減","s":"p2","p":"運算順序與括號","fam":"運算順序"},{"id":"q9","t":"9含絕對值加減","s":"p2","p":"絕對值","fam":"絕對值與括號"},{"id":"q10","t":"10素養應用","s":"p2","p":"應用問題列式","fam":"讀題與列式"},{"id":"q11","t":"11基礎乘除","s":"p3","p":"符號與負號","fam":"負號與符號"},{"id":"q12","t":"12分配律拆數","s":"p3","p":"運算順序與括號","fam":"運算順序"},{"id":"q13","t":"13四則運算","s":"p3","p":"運算順序與括號","fam":"運算順序"},{"id":"q14","t":"14含括號四則","s":"p3","p":"運算順序與括號","fam":"運算順序"},{"id":"q15","t":"15素養應用","s":"p3","p":"應用問題列式","fam":"讀題與列式"},{"id":"q16","t":"16括號與乘方","s":"p4","p":"乘方與科學記號","fam":"指數律與科學記號"},{"id":"q17","t":"17同底數的乘除","s":"p4","p":"乘方與科學記號","fam":"指數律與科學記號"},{"id":"q18","t":"18寫成科學記號","s":"p4","p":"乘方與科學記號","fam":"指數律與科學記號"},{"id":"q19","t":"19乘開","s":"p4","p":"乘方與科學記號","fam":"指數律與科學記號"},{"id":"q20","t":"20科學記號比大小","s":"p4","p":"比大小與不等號方向","fam":"大小與方向"}]},{"f":"07-factors.html","n":"2-1 因數與倍數","u":"2","k":"math-2-1-factors-v1","tasks":[{"id":"k1","t":"先讀題：這一大題要你交出什麼？","s":"s1","p":"讀題漏看怪","fam":"讀題與列式"},{"id":"k2","t":"熟練 1","s":"s1","p":"配對漏抓怪","fam":"沒收尾"},{"id":"k3","t":"熟練 2-1","s":"s2","p":"頭尾配對怪","fam":"因倍數與分解"},{"id":"k4","t":"熟練 2-2","s":"s2","p":"頭尾配對怪","fam":"因倍數與分解"},{"id":"k5","t":"熟練 3","s":"s3","p":"個位數哨兵","fam":"因倍數與分解"},{"id":"k6","t":"熟練 4-1","s":"s4","p":"末兩位守衛","fam":"因倍數與分解"},{"id":"k7","t":"熟練 4-2","s":"s4","p":"末兩位守衛","fam":"因倍數與分解"},{"id":"k8","t":"熟練 5-1","s":"s5","p":"數字和魔王","fam":"因倍數與分解"},{"id":"k9","t":"熟練 6-1","s":"s5","p":"數字和魔王","fam":"因倍數與分解"},{"id":"k10","t":"熟練 5-2・6-2","s":"s5","p":"數字和魔王","fam":"因倍數與分解"},{"id":"k11","t":"熟練 7-1","s":"s6","p":"交錯和刺客","fam":"因倍數與分解"},{"id":"k12","t":"熟練 7-2・7-3","s":"s6","p":"交錯和刺客","fam":"因倍數與分解"},{"id":"k13","t":"熟練 8","s":"s7","p":"質數獵人","fam":"因倍數與分解"},{"id":"k14","t":"熟練 9","s":"s7","p":"配對漏抓怪","fam":"沒收尾"},{"id":"k15","t":"熟練 10","s":"s8","p":"分解漏指數怪","fam":"因倍數與分解"},{"id":"k16","t":"熟練 11","s":"s8","p":"分解漏指數怪","fam":"因倍數與分解"}]},{"f":"08-gcd-lcm.html","n":"2-2 最大公因數與最小公倍數","u":"2","k":"math-2-2-gcd-lcm-v1","tasks":[{"id":"g1","t":"熟練 1-1","s":"s1","p":"清單漏列怪","fam":"沒收尾"},{"id":"g2","t":"熟練 1-2","s":"s1","p":"清單漏列怪","fam":"沒收尾"},{"id":"g3","t":"熟練 2＋加碼","s":"s2","p":"互質判官","fam":"因倍數與分解"},{"id":"g4","t":"熟練 3","s":"s3","p":"短除法守衛","fam":"因倍數與分解"},{"id":"g5","t":"熟練 4-1","s":"s4","p":"指數比大小怪","fam":"大小與方向"},{"id":"g6","t":"熟練 4-2","s":"s4","p":"指數比大小怪","fam":"大小與方向"},{"id":"g7","t":"熟練 5","s":"s5","p":"指數比大小怪","fam":"大小與方向"},{"id":"g8","t":"熟練 6-1","s":"s6","p":"清單漏列怪","fam":"沒收尾"},{"id":"g9","t":"熟練 6-2","s":"s6","p":"清單漏列怪","fam":"沒收尾"},{"id":"g10","t":"驗算練習","s":"s6","p":"驗算漏做怪","fam":"沒收尾"},{"id":"g11","t":"熟練 7","s":"s7","p":"短除法守衛","fam":"因倍數與分解"},{"id":"g12","t":"熟練 8-1","s":"s8","p":"指數比大小怪","fam":"大小與方向"},{"id":"g13","t":"熟練 8-2","s":"s8","p":"指數比大小怪","fam":"大小與方向"},{"id":"g14","t":"熟練 9","s":"s9","p":"指數比大小怪","fam":"大小與方向"},{"id":"g15","t":"熟練 10","s":"s10","p":"最後一步怪","fam":"沒收尾"},{"id":"g16","t":"熟練 11-1","s":"s11","p":"應用題翻譯怪","fam":"讀題與列式"},{"id":"g17","t":"熟練 11-2","s":"s11","p":"應用題翻譯怪","fam":"讀題與列式"},{"id":"g18","t":"熟練 12-1","s":"s11","p":"應用題翻譯怪","fam":"讀題與列式"},{"id":"g19","t":"熟練 12-2","s":"s11","p":"應用題翻譯怪","fam":"讀題與列式"}]},{"f":"11-fractions.html","n":"2-3 分數的四則運算","u":"2","k":"math-2-3-fractions-v1","tasks":[{"id":"m1","t":"第一步：判斷","s":"s1","p":"最簡分數判官","fam":"分數運算"},{"id":"m2","t":"第二步：化簡","s":"s1","p":"讀題漏看怪","fam":"讀題與列式"},{"id":"m3","t":"熟練 2-1 ～ 2-3","s":"s2","p":"通分守衛","fam":"分數運算"},{"id":"m4","t":"熟練 2-4","s":"s2","p":"負分數鏡子怪","fam":"大小與方向"},{"id":"m5","t":"熟練 3-1・3-2・3-5・3-6","s":"s3","p":"負分數鏡子怪","fam":"大小與方向"},{"id":"m6","t":"熟練 3-3","s":"s3","p":"負分數鏡子怪","fam":"大小與方向"},{"id":"m7","t":"熟練 3-4","s":"s3","p":"負分數鏡子怪","fam":"大小與方向"},{"id":"m8","t":"熟練 4 同分母","s":"s4","p":"通分守衛","fam":"分數運算"},{"id":"m9","t":"熟練 5 異分母","s":"s4","p":"通分守衛","fam":"分數運算"},{"id":"m10","t":"熟練 7 帶分數","s":"s4","p":"通分守衛","fam":"分數運算"},{"id":"m11","t":"熟練 6-1・6-2","s":"s5","p":"括號變號官","fam":"絕對值與括號"},{"id":"m12","t":"熟練 6-3 ～ 6-6","s":"s5","p":"括號變號官","fam":"絕對值與括號"},{"id":"m13","t":"熟練 8","s":"s6","p":"約分漏約怪","fam":"沒收尾"},{"id":"m14","t":"熟練 9 連乘","s":"s6","p":"約分漏約怪","fam":"沒收尾"},{"id":"m15","t":"熟練 10","s":"s7","p":"倒數變身怪","fam":"分數運算"},{"id":"m16","t":"熟練 11","s":"s8","p":"約分漏約怪","fam":"沒收尾"},{"id":"m17","t":"熟練 12","s":"s9","p":"運算順序守衛","fam":"運算順序"},{"id":"m18","t":"熟練 13","s":"s10","p":"應用題翻譯怪","fam":"讀題與列式"}]},{"f":"09-exponent-laws.html","n":"2-4 指數律","u":"2","k":"math-2-4-exponent-laws-v1","tasks":[{"id":"e1","t":"熟練 1","s":"s1","p":"括號分配怪","fam":"絕對值與括號"},{"id":"e2","t":"熟練 2","s":"s2","p":"大小鏡子怪","fam":"大小與方向"},{"id":"e3","t":"熟練 5","s":"s3","p":"相加相乘混淆怪","fam":"指數律與科學記號"},{"id":"e4","t":"熟練 6","s":"s4","p":"相加相乘混淆怪","fam":"指數律與科學記號"},{"id":"e5","t":"熟練 7","s":"s5","p":"相加相乘混淆怪","fam":"指數律與科學記號"},{"id":"e6","t":"熟練 8","s":"s6","p":"括號分配怪","fam":"絕對值與括號"},{"id":"e7","t":"熟練 3-1 ～ 3-3","s":"s7","p":"先乘方後乘除守衛","fam":"運算順序"},{"id":"e8","t":"熟練 3-4 ～ 3-5","s":"s7","p":"先乘方後乘除守衛","fam":"運算順序"},{"id":"e9","t":"熟練 4-1・4-2","s":"s8","p":"先乘方後乘除守衛","fam":"運算順序"},{"id":"e10","t":"熟練 4-3・4-4","s":"s8","p":"負號包不住怪","fam":"負號與符號"},{"id":"e11","t":"熟練 9-1・9-2","s":"s9","p":"底數變身術師","fam":"指數律與科學記號"},{"id":"e12","t":"熟練 9-3・9-4","s":"s9","p":"底數變身術師","fam":"指數律與科學記號"}]},{"f":"10-unit2-review.html","n":"第二單元總複習","u":"2","k":"math-unit2-review-v1","tasks":[{"id":"u1","t":"1倍數判別","s":"p1","p":"倍數判別法","fam":"因倍數與分解"},{"id":"u2","t":"2質數判別","s":"p1","p":"質數與合數","fam":"因倍數與分解"},{"id":"u3","t":"3標準分解式求 GCD／LCM","s":"p1","p":"標準分解式求 GCD／LCM","fam":"因倍數與分解"},{"id":"u4","t":"4應用問題","s":"p1","p":"因倍數應用題","fam":"因倍數與分解"},{"id":"u5","t":"5分數加減與去括號","s":"p2","p":"分數加減與去括號","fam":"分數運算"},{"id":"u6","t":"6倒數與分數除法","s":"p2","p":"倒數與分數乘除","fam":"分數運算"},{"id":"u7","t":"7含絕對值的分數四則","s":"p2","p":"倒數與分數乘除","fam":"分數運算"},{"id":"u8","t":"8乘方的比大小","s":"p3","p":"乘方的比大小","fam":"大小與方向"},{"id":"u9","t":"9同底數的乘除","s":"p3","p":"指數律","fam":"指數律與科學記號"},{"id":"u10","t":"10底數變身","s":"p3","p":"指數律","fam":"指數律與科學記號"}]},{"f":"12-algebra.html","n":"3-1 代數式的化簡","u":"3","k":"math-3-1-algebra-v1","tasks":[{"id":"n1","t":"熟練 1","s":"s1","p":"列式翻譯怪","fam":"讀題與列式"},{"id":"n2","t":"熟練 2 簡記","s":"s1","p":"簡記規矩怪","fam":"代數與方程式"},{"id":"n3","t":"熟練 3 生活情境","s":"s1","p":"列式翻譯怪","fam":"讀題與列式"},{"id":"n4","t":"熟練 4 代入表","s":"s2","p":"代入負號怪","fam":"負號與符號"},{"id":"n5","t":"熟練 5 應用","s":"s2","p":"加成打折怪","fam":"讀題與列式"},{"id":"n6","t":"熟練 6","s":"s3","p":"係數計算怪","fam":"負號與符號"},{"id":"n7","t":"熟練 7","s":"s4","p":"同類項合併怪","fam":"代數與方程式"},{"id":"n8","t":"熟練 8","s":"s4","p":"同類項合併怪","fam":"代數與方程式"},{"id":"n9","t":"熟練 9","s":"s5","p":"括號變號官","fam":"絕對值與括號"},{"id":"n10","t":"熟練 10","s":"s6","p":"分配律漏乘怪","fam":"絕對值與括號"},{"id":"n11","t":"熟練 11","s":"s7","p":"括號變號官","fam":"絕對值與括號"},{"id":"n12","t":"熟練 12","s":"s8","p":"由內而外守衛","fam":"絕對值與括號"},{"id":"n13","t":"熟練 13","s":"s9","p":"列式翻譯怪","fam":"讀題與列式"}]},{"f":"13-equations.html","n":"3-2 一元一次方程式","u":"3","k":"math-3-2-equations-v1","tasks":[{"id":"p1","t":"熟練 1","s":"s1","p":"列式翻譯怪","fam":"讀題與列式"},{"id":"p2","t":"熟練 2","s":"s2","p":"驗算漏做怪","fam":"沒收尾"},{"id":"p3","t":"熟練 3 加法公理","s":"s3","p":"等量公理守衛","fam":"代數與方程式"},{"id":"p4","t":"熟練 4 減法公理","s":"s3","p":"等量公理守衛","fam":"代數與方程式"},{"id":"p5","t":"熟練 5 乘法公理","s":"s4","p":"等量公理守衛","fam":"代數與方程式"},{"id":"p6","t":"熟練 6 除法公理","s":"s4","p":"等量公理守衛","fam":"代數與方程式"},{"id":"p7","t":"熟練 7","s":"s5","p":"移項變號官","fam":"絕對值與括號"},{"id":"p8","t":"熟練 8-1 ～ 8-4","s":"s6","p":"括號變號官","fam":"絕對值與括號"},{"id":"p9","t":"熟練 8-5 ～ 8-8","s":"s6","p":"由內而外守衛","fam":"絕對值與括號"},{"id":"p10","t":"熟練 9","s":"s7","p":"去分母漏乘怪","fam":"沒收尾"},{"id":"p11","t":"關鍵判斷：可以同乘還是只能通分？","s":"s7","p":"通分同乘混淆怪","fam":"代數與方程式"}]},{"f":"14-word-problems.html","n":"3-3 應用問題","u":"3","k":"math-3-3-word-problems-v1","tasks":[{"id":"w1","t":"熟練 1","s":"s1","p":"列式翻譯怪","fam":"讀題與列式"},{"id":"w2","t":"熟練 2","s":"s2","p":"列式翻譯怪","fam":"讀題與列式"},{"id":"w3","t":"熟練 3","s":"s3","p":"總量不變守衛","fam":"讀題與列式"},{"id":"w4","t":"熟練 4","s":"s4","p":"加成打折怪","fam":"讀題與列式"},{"id":"w5","t":"熟練 5","s":"s5","p":"年齡同加怪","fam":"讀題與列式"},{"id":"w6","t":"熟練 6","s":"s6","p":"單位換算怪","fam":"讀題與列式"},{"id":"w7","t":"熟練 7 · 先算出 x","s":"s7","p":"合理性檢查官","fam":"讀題與列式"},{"id":"w8","t":"熟練 7 · 再判斷合不合理","s":"s7","p":"合理性檢查官","fam":"讀題與列式"}]},{"f":"16-unit3-review.html","n":"第三單元總複習","u":"3","k":"math-unit3-review-v1","tasks":[{"id":"u1","t":"1文字符號的簡記","s":"p1","p":"簡記、代入與同類項","fam":"代數與方程式"},{"id":"u2","t":"2求代數式的值","s":"p1","p":"簡記、代入與同類項","fam":"代數與方程式"},{"id":"u3","t":"3同類項的加減","s":"p1","p":"簡記、代入與同類項","fam":"代數與方程式"},{"id":"u4","t":"4去括號","s":"p1","p":"去括號與分配律","fam":"絕對值與括號"},{"id":"u5","t":"5分配律","s":"p1","p":"去括號與分配律","fam":"絕對值與括號"},{"id":"u6","t":"6四則運算","s":"p1","p":"去括號與分配律","fam":"絕對值與括號"},{"id":"u7","t":"7檢驗解","s":"p2","p":"解方程式","fam":"代數與方程式"},{"id":"u8","t":"8移項法則","s":"p2","p":"解方程式","fam":"代數與方程式"},{"id":"u9","t":"9分數方程式","s":"p2","p":"解方程式","fam":"代數與方程式"},{"id":"u10","t":"10分配問題","s":"p3","p":"應用問題","fam":"讀題與列式"}]},{"f":"15-final-review.html","n":"單元一～三 總測驗","u":"F","k":"math-final-review-v1","tasks":[{"id":"f1","t":"1大小比較","s":"p1","p":"整數與絕對值","fam":"分數運算"},{"id":"f2","t":"2科學記號格式","s":"p1","p":"科學記號與指數律","fam":"指數律與科學記號"},{"id":"f3","t":"3質數判別","s":"p1","p":"因數倍數與 GCD／LCM","fam":"因倍數與分解"},{"id":"f4","t":"4括號與乘方","s":"p1","p":"科學記號與指數律","fam":"指數律與科學記號"},{"id":"f5","t":"59 的倍數","s":"p1","p":"因數倍數與 GCD／LCM","fam":"因倍數與分解"},{"id":"f6","t":"6標準分解式","s":"p1","p":"因數倍數與 GCD／LCM","fam":"因倍數與分解"},{"id":"f7","t":"7什麼是一元一次方程式","s":"p1","p":"代數式化簡","fam":"代數與方程式"},{"id":"f8","t":"8分配律","s":"p1","p":"代數式化簡","fam":"代數與方程式"},{"id":"f9","t":"9代入求值","s":"p1","p":"代數式化簡","fam":"代數與方程式"},{"id":"f10","t":"10通分還是同乘","s":"p1","p":"解一元一次方程式","fam":"代數與方程式"},{"id":"f11","t":"11整數減法","s":"p2","p":"整數與絕對值","fam":"分數運算"},{"id":"f12","t":"12絕對值","s":"p2","p":"整數與絕對值","fam":"分數運算"},{"id":"f13","t":"13乘除順序","s":"p2","p":"整數與絕對值","fam":"分數運算"},{"id":"f14","t":"14絕對值範圍","s":"p2","p":"整數與絕對值","fam":"分數運算"},{"id":"f15","t":"15科學記號","s":"p2","p":"科學記號與指數律","fam":"指數律與科學記號"},{"id":"f16","t":"16最小公倍數","s":"p2","p":"因數倍數與 GCD／LCM","fam":"因倍數與分解"},{"id":"f17","t":"17最大公因數","s":"p2","p":"因數倍數與 GCD／LCM","fam":"因倍數與分解"},{"id":"f18","t":"18倒數","s":"p2","p":"分數運算","fam":"分數運算"},{"id":"f19","t":"19分數除法","s":"p2","p":"分數運算","fam":"分數運算"},{"id":"f20","t":"20指數律","s":"p2","p":"科學記號與指數律","fam":"指數律與科學記號"},{"id":"f21","t":"21乘方的乘方","s":"p2","p":"科學記號與指數律","fam":"指數律與科學記號"},{"id":"f22","t":"22一元一次式化簡","s":"p2","p":"代數式化簡","fam":"代數與方程式"},{"id":"f23","t":"23分數代數式（沒有等號）","s":"p2","p":"代數式化簡","fam":"代數與方程式"},{"id":"f24","t":"24解方程式","s":"p2","p":"解一元一次方程式","fam":"代數與方程式"},{"id":"f25","t":"25分數方程式","s":"p2","p":"解一元一次方程式","fam":"代數與方程式"},{"id":"f26","t":"26溫度變化","s":"p3","p":"整數與絕對值","fam":"分數運算"},{"id":"f27","t":"27最大公因數應用","s":"p3","p":"因數倍數與 GCD／LCM","fam":"因倍數與分解"},{"id":"f28","t":"28最小公倍數應用","s":"p3","p":"因數倍數與 GCD／LCM","fam":"因倍數與分解"},{"id":"f29","t":"29分配問題","s":"p3","p":"應用問題","fam":"讀題與列式"},{"id":"f30","t":"30折扣問題","s":"p3","p":"應用問題","fam":"讀題與列式"}]},{"f":"17-trail.html","n":"趣學步道 概念檢核","u":"F","k":"math-trail-v1","tasks":[{"id":"t01","t":"01正數與負數","s":"s1","p":"觀念定義","fam":"觀念定義"},{"id":"t02","t":"02相反數","s":"s1","p":"觀念定義","fam":"觀念定義"},{"id":"t03","t":"03絕對值","s":"s1","p":"觀念定義","fam":"觀念定義"},{"id":"t04","t":"04整數的加法","s":"s1","p":"觀念定義","fam":"觀念定義"},{"id":"t05","t":"05整數的減法","s":"s1","p":"觀念定義","fam":"觀念定義"},{"id":"t06","t":"06數線上兩點距離","s":"s1","p":"觀念定義","fam":"觀念定義"},{"id":"t07","t":"07負數相乘的正負","s":"s1","p":"觀念定義","fam":"觀念定義"},{"id":"t08","t":"08指數記法","s":"s1","p":"觀念定義","fam":"觀念定義"},{"id":"t09","t":"09科學記號","s":"s1","p":"觀念定義","fam":"觀念定義"},{"id":"t10","t":"10質數與合數","s":"s2","p":"觀念定義","fam":"觀念定義"},{"id":"t11","t":"11質因數","s":"s2","p":"觀念定義","fam":"觀念定義"},{"id":"t12","t":"12標準分解式","s":"s2","p":"觀念定義","fam":"觀念定義"},{"id":"t13","t":"13最大公因數的求法","s":"s2","p":"觀念定義","fam":"觀念定義"},{"id":"t14","t":"14最小公倍數的求法","s":"s2","p":"觀念定義","fam":"觀念定義"},{"id":"t15","t":"15異分母的加減","s":"s2","p":"觀念定義","fam":"觀念定義"},{"id":"t16","t":"16倒數","s":"s2","p":"觀念定義","fam":"觀念定義"},{"id":"t17","t":"17分數的乘方","s":"s2","p":"觀念定義","fam":"觀念定義"},{"id":"t18","t":"18指數律四條","s":"s2","p":"觀念定義","fam":"觀念定義"},{"id":"t19","t":"19一元一次式的化簡","s":"s3","p":"觀念定義","fam":"觀念定義"},{"id":"t20","t":"20方程式的解","s":"s3","p":"觀念定義","fam":"觀念定義"},{"id":"t21","t":"21解一元一次方程式","s":"s3","p":"觀念定義","fam":"觀念定義"}]}];
+
+var NKEY = "math-notebook-v1";
+var conf = {};
+try{ var raw = localStorage.getItem(NKEY); if(raw) conf = JSON.parse(raw) || {}; }catch(e){ conf = {}; }
+function saveConf(){ try{ localStorage.setItem(NKEY, JSON.stringify(conf)); }catch(e){} }
+
+var UNAME = { "1": "第一單元", "2": "第二單元", "3": "第三單元", "F": "總測驗・概念" };
+
+/* ---------- 讀取各工具的作答紀錄 ---------- */
+function collect(){
+  var rows = [];
+  CATALOG.forEach(function(tool){
+    var st = {};
+    try{ var r = localStorage.getItem(tool.k); if(r) st = JSON.parse(r) || {}; }catch(e){ st = {}; }
+    tool.tasks.forEach(function(t){
+      var rec = st[t.id];
+      var status = (rec === undefined) ? "blank" : (rec && rec.ok ? "done" : "todo");
+      var ckey = tool.k + "::" + t.id;
+      rows.push({
+        tool: tool, task: t, status: status,
+        ckey: ckey, conf: !!conf[ckey],
+        unit: tool.u, fam: t.fam, boss: t.p
+      });
+    });
+  });
+  return rows;
+}
+
+function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
+
+/* ---------- 戰情板 ---------- */
+function paintBoard(rows){
+  var d = 0, t = 0, b = 0, c = 0;
+  rows.forEach(function(r){
+    if(r.status === "done"){ d++; if(r.conf) c++; }
+    else if(r.status === "todo") t++;
+    else b++;
+  });
+  var n = rows.length;
+  document.getElementById("sDone").textContent = d;
+  document.getElementById("sTodo").textContent = t;
+  document.getElementById("sBlank").textContent = b;
+  document.getElementById("sClosed").textContent = c;
+  document.getElementById("barD").style.width = (d / n * 100) + "%";
+  document.getElementById("barT").style.width = (t / n * 100) + "%";
+  document.getElementById("pct").textContent = "完成度 " + Math.round(d / n * 100) + "%（" + d + " / " + n + " 關）";
+
+  var byU = {};
+  rows.forEach(function(r){
+    if(!byU[r.unit]) byU[r.unit] = { d: 0, n: 0 };
+    byU[r.unit].n++;
+    if(r.status === "done") byU[r.unit].d++;
+  });
+  document.getElementById("units").innerHTML = ["1","2","3","F"].map(function(u){
+    var o = byU[u] || { d: 0, n: 0 };
+    return '<div class="unit"><div class="h"><span>' + UNAME[u] + "</span><b>" + o.d + "/" + o.n + "</b></div>" +
+      '<div class="ub"><i style="width:' + (o.n ? o.d / o.n * 100 : 0) + '%"></i></div></div>';
+  }).join("");
+
+  var any = d + t;
+  document.getElementById("updated").textContent = any ? "已作答 " + any + " 關" : "尚未開始";
+  return { d: d, t: t, b: b, c: c, n: n, byU: byU };
+}
+
+/* ---------- 學習建議 ---------- */
+var LONGTERM = [
+  ["讀題沒讀到最後一句", "hot",
+   "1-4 熟練 6 該寫科學記號只寫小數、2-1 熟練 1 該列因數卻寫未知數、2-3 熟練 1 判斷完沒化簡——<b>同一隻怪在考卷上出手三次</b>。作答前把題目最後一句圈起來，寫完再回頭看那個圈。"],
+  ["算完沒回頭驗算", "hot",
+   "2-2 熟練 6 把 8 的倍數寫成「12、24」，接著 [4,6,8] 就跟著錯；2-2 熟練 10-2 公式列對了卻把 135 直接抄成答案。<b>回頭除一次只要三秒</b>，能擋掉一大半。"],
+  ["負號在轉彎處掉了", "warm",
+   "1-1 熟練 1、1-2 熟練 4-1、1-3 熟練 3-4 都是漏負號。<b>動筆前先決定符號，再寫數字</b>；除法時負號跑到除數位置最容易漏。"],
+  ["算到一半就當答案", "warm",
+   "1-2 熟練 9-2 把中間值當結果。<b>寫答案前數一次題目有幾項</b>，確認每一項都處理過了。"],
+  ["計算能力本身沒問題", "good",
+   "熟練 8 的減法六題、熟練 9 的連環約分、[14,77,121]=1694、(306,408,510)=102、八題質因數分解全對——<b>難題他都會</b>。失分幾乎全部集中在上面那四個習慣，不是能力。"]
+];
+
+function paintAdvice(rows, sum){
+  var box = document.getElementById("adviceBox");
+  var out = [];
+
+  if(sum.d + sum.t === 0){
+    out.push(tip("good", "還沒開始，先從這裡走", "起步",
+      "建議順序：<b>1-1 → 1-2 → 1-3 → 1-4 →（第一單元總複習）→ 2-1 → 2-2 → 2-3 → 2-4 →（第二單元總複習）→ 3-1 → 3-2 → 3-3 →（第三單元總複習）→ 總測驗</b>。" +
+      '每寫完一關按「檢查」，這一頁就會自動更新。 <a href="01-number-line.html">從 1-1 開始</a>'));
+  } else {
+    /* 1. 待訂正最多的家族 */
+    var famT = {};
+    rows.forEach(function(r){ if(r.status === "todo"){ famT[r.fam] = (famT[r.fam] || 0) + 1; } });
+    var top = Object.keys(famT).sort(function(a, b){ return famT[b] - famT[a]; })[0];
+    if(top){
+      out.push(tip("hot", "最該先回去的是「" + top + "」", "待訂正 " + famT[top] + " 關",
+        "這些題目你<b>已經寫過、但還沒對</b>——比沒寫過的更值得先處理，因為錯在哪裡已經很明確了。" +
+        '按下面清單的「按錯誤模式」就能只看這一類。'));
+    }
+
+    /* 2. 快收尾的工具 */
+    var near = [];
+    CATALOG.forEach(function(tool){
+      var rs = rows.filter(function(r){ return r.tool.f === tool.f; });
+      var d = rs.filter(function(r){ return r.status === "done"; }).length;
+      if(d > 0 && d < rs.length && d / rs.length >= 0.7) near.push({ n: tool.n, f: tool.f, left: rs.length - d });
+    });
+    if(near.length){
+      near.sort(function(a, b){ return a.left - b.left; });
+      var x = near[0];
+      out.push(tip("warm", "「" + x.n + "」剩 " + x.left + " 關就滿了", "快收尾",
+        '已經完成七成以上，<b>先把它收掉</b>再開新的一份，進度看起來會比較有感。 <a href="' + esc(x.f) + '">去補完</a>'));
+    }
+
+    /* 3. 下一份沒開過的 */
+    var fresh = null;
+    for(var i = 0; i < CATALOG.length; i++){
+      var rs2 = rows.filter(function(r){ return r.tool.f === CATALOG[i].f; });
+      if(rs2.every(function(r){ return r.status === "blank"; })){ fresh = CATALOG[i]; break; }
+    }
+    if(fresh){
+      out.push(tip("", "還沒開過：" + fresh.n, "下一份",
+        '依建議順序，這是下一份還沒動過的。 <a href="' + esc(fresh.f) + '">開始</a>'));
+    }
+
+    /* 4. 訂正了但還沒確認 */
+    var unconf = rows.filter(function(r){ return r.status === "done" && !r.conf; }).length;
+    if(unconf > 0 && sum.d >= 10){
+      out.push(tip("", "有 " + unconf + " 關寫對了，但還沒勾「確認」", "複習",
+        "寫對一次不等於學會。回頭看一下那幾題的解析，如果<b>說得出為什麼</b>就把「確認」勾起來——" +
+        "這一欄才是真正的複習紀錄。"));
+    }
+
+    /* 5. 全部完成 */
+    if(sum.d === sum.n){
+      out.push(tip("good", "263 關全部完成", "收工",
+        "可以回頭把三份診斷卷和總測驗<b>重寫一次</b>，這次計時，看看速度和穩定度。"));
+    }
+  }
+
+  out.push('<div style="margin-top:6px"></div>');
+  LONGTERM.forEach(function(x){ out.push(tip(x[1], x[0], "考卷長期模式", x[2])); });
+  box.innerHTML = out.join("");
+}
+function tip(cls, title, badge, body){
+  return '<div class="tip ' + cls + '"><h4>' + title + '<span class="badge">' + badge + "</span></h4>" +
+    "<p>" + body + "</p></div>";
+}
+
+/* ---------- 清單 ---------- */
+var filt = "open", grpBy = "unit";
+
+function paintList(rows){
+  var show = rows.filter(function(r){
+    if(filt === "all") return true;
+    if(filt === "open") return r.status !== "done";
+    if(filt === "todo") return r.status === "todo";
+    if(filt === "blank") return r.status === "blank";
+    if(filt === "done") return r.status === "done";
+    return true;
+  });
+
+  document.getElementById("counter").textContent =
+    "顯示 " + show.length + " 關" + (filt === "open" ? "（答錯或還沒寫）" : "") +
+    "　·　已勾確認 " + rows.filter(function(r){ return r.conf; }).length + " 關";
+
+  var box = document.getElementById("listBox");
+  if(!show.length){
+    box.innerHTML = '<div class="empty"><p>' +
+      (filt === "open" ? "沒有待處理的題目了。" : "這個條件下沒有題目。") + "</p>" +
+      '<p class="s">' + (filt === "open" ? "263 關全部寫對了，可以去重寫診斷卷驗收。" : "換一個篩選條件看看。") + "</p></div>";
+    return;
+  }
+
+  var groups = {};
+  show.forEach(function(r){
+    var k = grpBy === "unit" ? r.tool.n : r.fam;
+    if(!groups[k]) groups[k] = [];
+    groups[k].push(r);
+  });
+  var order = grpBy === "unit"
+    ? CATALOG.map(function(t){ return t.n; }).filter(function(n){ return groups[n]; })
+    : Object.keys(groups).sort(function(a, b){ return groups[b].length - groups[a].length; });
+
+  box.innerHTML = order.map(function(k){
+    var rs = groups[k];
+    var link = grpBy === "unit" ? rs[0].tool.f : "";
+    return '<div class="grp"><div class="grph"><h3>' + esc(k) + "</h3>" +
+      (link ? '<a class="go" href="' + esc(link) + '">打開這一份 →</a>' : "") +
+      '<span class="n">' + rs.length + " 關</span></div>" +
+      '<ul class="items">' + rs.map(item).join("") + "</ul></div>";
+  }).join("");
+}
+
+function item(r){
+  var st = r.status === "done" ? ["d", "已訂正"] : (r.status === "todo" ? ["t", "待訂正"] : ["b", "還沒寫"]);
+  var cls = "item" + (r.status === "todo" ? " todo" : "") +
+    (r.status === "done" && r.conf ? " closed conf" : "");
+  var href = r.tool.f + (r.task.s ? "#" + r.task.s : "");
+  return '<li class="' + cls + '" data-ck="' + esc(r.ckey) + '">' +
+    '<span class="st ' + st[0] + '">' + st[1] + "</span>" +
+    '<span class="txt">' + esc(r.task.t) +
+      '<span class="src">' + esc(r.tool.n) + '　<span class="boss">' + esc(r.boss) + "</span></span></span>" +
+    '<span class="act">' +
+      '<a href="' + esc(href) + '">去訂正</a>' +
+      "<label><input type=\"checkbox\"" + (r.conf ? " checked" : "") + "> 確認</label>" +
+    "</span></li>";
+}
+
+/* ---------- 綁定 ---------- */
+function refresh(){
+  var rows = collect();
+  var sum = paintBoard(rows);
+  paintAdvice(rows, sum);
+  paintList(rows);
+  window.__rows = rows;
+}
+
+document.addEventListener("click", function(ev){
+  var f = ev.target.closest(".bar2 button.f");
+  if(f){
+    filt = f.getAttribute("data-f");
+    Array.prototype.forEach.call(document.querySelectorAll(".bar2 button.f"), function(b){
+      b.setAttribute("aria-pressed", b === f ? "true" : "false");
+    });
+    paintList(window.__rows);
+    return;
+  }
+  var g = ev.target.closest(".bar2 button.g");
+  if(g){
+    grpBy = g.getAttribute("data-g");
+    Array.prototype.forEach.call(document.querySelectorAll(".bar2 button.g"), function(b){
+      b.setAttribute("aria-pressed", b === g ? "true" : "false");
+    });
+    paintList(window.__rows);
+    return;
+  }
+});
+
+document.getElementById("listBox").addEventListener("change", function(ev){
+  var cb = ev.target;
+  if(cb.type !== "checkbox") return;
+  var li = cb.closest("li.item");
+  var ck = li.getAttribute("data-ck");
+  if(cb.checked) conf[ck] = 1; else delete conf[ck];
+  saveConf();
+  refresh();
+});
+
+document.getElementById("copyBtn").addEventListener("click", function(){
+  var rows = window.__rows.filter(function(r){ return r.status !== "done"; });
+  var byTool = {};
+  rows.forEach(function(r){
+    if(!byTool[r.tool.n]) byTool[r.tool.n] = [];
+    byTool[r.tool.n].push("  ・" + r.task.t + "（" + r.boss + "）" +
+      (r.status === "todo" ? " ← 寫過但沒對" : ""));
+  });
+  var lines = ["【錯題清單】共 " + rows.length + " 關待處理", ""];
+  CATALOG.forEach(function(t){
+    if(byTool[t.n]){ lines.push(t.n + "（" + byTool[t.n].length + " 關）"); lines = lines.concat(byTool[t.n]); lines.push(""); }
+  });
+  var text = lines.join("\n");
+  var btn = this;
+  var done = function(){
+    btn.textContent = "已複製";
+    setTimeout(function(){ btn.textContent = "複製清單"; }, 1500);
+  };
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(done, function(){ fb(text, done); });
+  } else fb(text, done);
+});
+function fb(text, done){
+  try{
+    var ta = document.createElement("textarea");
+    ta.value = text; ta.style.position = "fixed"; ta.style.opacity = "0";
+    document.body.appendChild(ta); ta.select();
+    document.execCommand("copy"); document.body.removeChild(ta); done();
+  }catch(e){}
+}
+
+Array.prototype.forEach.call(document.querySelectorAll(".jump"), function(b){
+  b.addEventListener("click", function(){
+    var t = document.getElementById(b.getAttribute("data-target"));
+    if(t) t.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+});
+
+refresh();
+})();
+</script>
+</body>
+</html>
