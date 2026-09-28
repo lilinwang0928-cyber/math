@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>數學小撇步．判別法工具箱</title>
+<style>
+:root{
+  --paper:#E6F0F8;--card:#FFFFFF;--ink:#0F2A3D;--ink-soft:#55707F;
+  --neg:#2563A8;--pos:#C2761A;--zero:#15795B;--ok:#177A5A;--no:#B23C33;
+  --rule:#C2D6E5;--rule-soft:#DAE7F1;
+  --shadow:0 1px 0 #CBDDEB, 0 10px 26px -18px rgba(15,42,61,.45);
+  --serif:"Noto Serif TC","Songti TC","Source Han Serif TC","PMingLiU",serif;
+  --sans:"PingFang TC","Microsoft JhengHei","Noto Sans TC","Heiti TC",system-ui,sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,"Courier New",monospace;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{font-family:var(--sans);color:var(--ink);background-color:var(--paper);
+  background-image:linear-gradient(to right, rgba(37,99,168,.07) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(37,99,168,.07) 1px, transparent 1px);
+  background-size:26px 26px;line-height:1.7;-webkit-text-size-adjust:100%}
+.wrap{max-width:900px;margin:0 auto;padding:0 14px 80px}
+
+header.top{padding:34px 0 12px}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.18em;color:var(--ink-soft);margin:0 0 6px}
+h1{font-family:var(--serif);font-weight:700;font-size:clamp(28px,7vw,44px);line-height:1.22;margin:0 0 10px}
+h1 .neg{color:var(--neg)}
+.sub{margin:0;color:var(--ink-soft);font-size:15px}
+
+nav.stations{position:sticky;top:0;z-index:40;margin:16px -14px 0;padding:8px 14px;
+  background:rgba(230,240,248,.94);backdrop-filter:blur(6px);border-bottom:1px solid var(--rule);
+  overflow-x:auto;white-space:nowrap;-webkit-overflow-scrolling:touch}
+nav.stations a.home{display:inline-block;font-family:var(--sans);font-size:13px;font-weight:700;
+  color:#fff;background:var(--ink);border:1px solid var(--ink);border-radius:999px;
+  padding:6px 14px;margin-right:8px;text-decoration:none;white-space:nowrap}
+nav.stations a.home:hover{background:var(--neg);border-color:var(--neg)}
+nav.stations a.home:focus-visible{outline:2px solid var(--neg);outline-offset:2px}
+nav.stations button{font-family:var(--sans);font-size:13px;color:var(--ink);background:var(--card);
+  border:1px solid var(--rule);border-radius:999px;padding:6px 13px;margin-right:6px;cursor:pointer}
+nav.stations button:hover{border-color:var(--neg);color:var(--neg)}
+nav.stations button:focus-visible{outline:2px solid var(--neg);outline-offset:2px}
+
+section{margin:34px 0 0;scroll-margin-top:60px}
+.sechead{display:flex;align-items:baseline;gap:10px;border-bottom:2px solid var(--ink);padding-bottom:6px;flex-wrap:wrap}
+.sechead .no{font-family:var(--mono);font-size:13px;color:var(--neg);letter-spacing:.1em}
+.sechead h2{font-family:var(--serif);font-size:clamp(20px,4.4vw,26px);margin:0;font-weight:700}
+.sechead .from{margin-left:auto;font-size:11px;color:var(--ink-soft);font-family:var(--mono)}
+.lead{font-size:14px;color:var(--ink-soft);margin:10px 0 0}
+.lead b{color:var(--ink)}
+
+/* 通用工具盒 */
+.tool{background:linear-gradient(180deg,#FFFFFF 0%, #F6FAFD 100%);border:1px solid var(--rule);
+  border-radius:12px;padding:15px 13px 13px;margin-top:14px;box-shadow:var(--shadow)}
+.tool h3{font-family:var(--serif);font-size:18px;margin:0 0 3px}
+.tool p.hint{font-size:13px;color:var(--ink-soft);margin:0}
+.inrow{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:12px}
+.inrow input[type=number]{font-family:var(--mono);font-size:20px;width:132px;padding:7px 10px;text-align:center;
+  border:1px solid var(--rule);border-bottom:2px solid var(--neg);background:#F3F8FC;border-radius:8px}
+.inrow input[type=number]:focus{outline:2px solid var(--neg);outline-offset:1px}
+.chipbtn{font-family:var(--mono);font-size:13px;border:1px solid var(--rule);background:#F3F8FC;
+  border-radius:999px;padding:6px 11px;cursor:pointer;color:var(--ink)}
+.chipbtn:hover{border-color:var(--neg);color:var(--neg)}
+.chipbtn.warn{background:#FCF2EF;border-color:#E6BDB4;color:var(--no)}
+
+/* 判定結果 */
+.verdict{margin-top:12px;background:var(--card);border:1px solid var(--rule-soft);border-radius:10px;padding:12px}
+.verdict .big{font-family:var(--serif);font-size:clamp(18px,4.6vw,23px);font-weight:700;margin:0 0 6px}
+.verdict .big.yes{color:var(--ok)} .verdict .big.no{color:var(--no)} .verdict .big.mid{color:var(--ink-soft)}
+.verdict .why{font-size:14px;color:var(--ink-soft);margin:0}
+.verdict .why b{color:var(--ink)}
+.verdict .steps{font-family:var(--mono);font-size:13.5px;color:var(--ink-soft);margin:8px 0 0;line-height:1.85}
+.verdict .steps b{color:var(--neg)}
+
+/* 100 格篩法 */
+.sieve{display:grid;grid-template-columns:repeat(10,1fr);gap:3px;margin-top:12px}
+.sieve span{aspect-ratio:1;display:flex;align-items:center;justify-content:center;
+  font-family:var(--mono);font-size:clamp(9px,2.3vw,13px);border-radius:5px;
+  background:#F1F6FA;color:#9DB2C2;border:1px solid transparent}
+.sieve span.p{background:var(--ok);color:#fff;font-weight:700}
+.sieve span.trap{background:#FFF1EC;color:var(--no);font-weight:700;border-color:#E6BDB4}
+.sieve span.one{background:#EFEAF7;color:#6B4FA8;font-weight:700}
+.sieve span.on{outline:3px solid var(--pos);outline-offset:1px;z-index:2}
+.legend{display:flex;gap:12px;flex-wrap:wrap;margin-top:10px;font-size:12.5px;color:var(--ink-soft)}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:3px;vertical-align:-2px;margin-right:4px}
+
+/* 判別法卡片 */
+.rules{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
+@media (max-width:660px){ .rules{grid-template-columns:1fr} }
+.rule{background:var(--card);border:1px solid var(--rule);border-radius:11px;padding:12px;box-shadow:var(--shadow)}
+.rule.hot{border-color:var(--pos);border-left-width:4px}
+.rule h4{margin:0 0 7px;font-size:15px;display:flex;align-items:center;gap:9px}
+.rule h4 .n{font-family:var(--serif);font-size:26px;font-weight:700;color:var(--neg);line-height:1}
+.rule.hot h4 .n{color:var(--pos)}
+.rule h4 .tag{margin-left:auto;font-family:var(--mono);font-size:10.5px;background:var(--rule-soft);
+  color:var(--ink-soft);border-radius:4px;padding:2px 7px;font-weight:400}
+.rule.hot h4 .tag{background:#FDF2E6;color:var(--pos)}
+.rule p.r{margin:0 0 7px;font-size:14px}
+.rule p.eg{margin:0;font-size:13px;color:var(--ink-soft);border-top:1px dashed var(--rule-soft);padding-top:7px;font-family:var(--mono)}
+.rule p.eg b{color:var(--ink)}
+
+/* 綜合檢測表 */
+table.scan{width:100%;border-collapse:collapse;margin-top:12px;background:var(--card);font-size:13.5px}
+table.scan th,table.scan td{border:1px solid var(--rule-soft);padding:7px 8px;text-align:left}
+table.scan th{background:#EEF5FA;color:var(--ink-soft);font-size:12px;font-weight:700;letter-spacing:.04em}
+table.scan td.k{font-family:var(--serif);font-size:18px;font-weight:700;color:var(--neg);text-align:center;width:46px}
+table.scan td.v{font-family:var(--mono);text-align:center;width:52px;font-weight:700}
+table.scan td.v.y{color:var(--ok)} table.scan td.v.n{color:#A9BECC}
+table.scan td.r{font-family:var(--mono);font-size:12.5px;color:var(--ink-soft)}
+table.scan tr.y td{background:#F4FBF8}
+
+/* 因數表 */
+table.dv{width:100%;border-collapse:collapse;margin-top:12px;background:var(--card);font-family:var(--mono);font-size:13.5px}
+table.dv th,table.dv td{border:1px solid var(--rule-soft);padding:6px 8px;text-align:center}
+table.dv th{background:#EEF5FA;color:var(--ink-soft);font-size:12px;font-weight:400}
+table.dv td.res{color:var(--neg);font-weight:700}
+.divout{margin-top:12px;background:var(--card);border:1px solid var(--rule-soft);border-radius:10px;padding:11px 12px}
+.divout .lab{font-size:11.5px;color:var(--ink-soft);letter-spacing:.08em;display:block}
+.divout .vals{font-family:var(--mono);font-size:15px;word-break:break-word;margin-top:2px}
+.divout .formula{font-family:var(--mono);font-size:15px;color:var(--zero);font-weight:700;margin-top:9px}
+
+/* 兩欄對照 */
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
+@media (max-width:640px){ .duo{grid-template-columns:1fr} }
+.pane{background:var(--card);border:1px solid var(--rule);border-radius:11px;padding:13px;box-shadow:var(--shadow)}
+.pane.a{border-top:4px solid var(--neg)}
+.pane.b{border-top:4px solid var(--pos)}
+.pane h4{margin:0 0 8px;font-size:15px}
+.pane .eqline{font-family:var(--mono);font-size:clamp(14px,3.6vw,17px);font-weight:700;background:#F3F8FC;
+  border-radius:8px;padding:9px 10px;text-align:center;margin:0 0 9px}
+.pane.a .eqline{color:var(--neg)} .pane.b .eqline{color:var(--pos)}
+.pane p{margin:0 0 7px;font-size:13.5px;color:var(--ink-soft)}
+.pane p:last-child{margin-bottom:0}
+.pane p b{color:var(--ink)}
+.pane .mark{font-weight:700}
+.pane .mark.x{color:var(--no)} .pane .mark.o{color:var(--ok)}
+.keyline{background:#F1F7FC;border-left:3px solid var(--neg);padding:9px 12px;margin-top:14px;font-size:14px;color:var(--ink-soft)}
+.keyline b{color:var(--ink)}
+
+/* 是非小測 */
+.tf{background:var(--card);border:1px solid var(--rule);border-radius:11px;padding:13px;margin-top:14px;box-shadow:var(--shadow)}
+.tf h4{margin:0 0 4px;font-size:15px}
+.tf .q{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:11px 0;padding-bottom:9px;border-bottom:1px dashed var(--rule-soft)}
+.tf .q:last-of-type{border-bottom:none}
+.tf .q .t{flex:1;min-width:200px;font-size:14px}
+.tf .q button{font-family:var(--sans);font-size:14px;min-width:46px;height:36px;border:1px solid var(--rule);
+  background:#F3F8FC;border-radius:8px;cursor:pointer;margin-right:4px}
+.tf .q button[aria-pressed="true"]{background:var(--neg);border-color:var(--neg);color:#fff}
+.tf .q.ok .t{color:var(--ok)} .tf .q.bad .t{color:var(--no)}
+.tf .ex{font-size:13px;color:var(--ink-soft);margin:6px 0 0;display:none}
+.tf .q.ok .ex,.tf .q.bad .ex{display:block}
+button.act{font-family:var(--sans);font-size:14px;font-weight:700;background:var(--ink);color:#fff;
+  border:none;border-radius:8px;padding:8px 16px;cursor:pointer;margin:6px 6px 0 0}
+button.act:focus-visible{outline:2px solid var(--neg);outline-offset:2px}
+.fb{font-size:14px;margin:9px 0 0;min-height:21px;font-weight:700}
+.fb.ok{color:var(--ok)} .fb.no{color:var(--no)}
+
+.mono{font-family:var(--mono)}
+sup{font-size:.72em}
+.golink{display:inline-block;margin-top:10px;font-size:13.5px;font-weight:700;color:var(--neg);text-decoration:none}
+.golink::after{content:" \2192"}
+.golink:hover{text-decoration:underline}
+footer{margin-top:44px;border-top:1px solid var(--rule);padding-top:14px;font-size:12px;color:var(--ink-soft)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="top">
+  <p class="eyebrow">國中數學 1 上 · 隨身工具箱</p>
+  <h1>數學<span class="neg">小撇步</span><br>判別法工具箱</h1>
+  <p class="sub">這一頁不用寫、不計分。它是放在旁邊隨時查的工具——每一條規則都可以<b>丟數字進去試</b>，機器會把判斷過程一步一步攤開給你看。</p>
+</header>
+
+<nav class="stations" aria-label="導覽">
+  <a class="home" href="index.html">← 總覽</a>
+  <button class="jump" data-target="s1">① 質數大全</button>
+  <button class="jump" data-target="s2">② 倍數判別法 2–11</button>
+  <button class="jump" data-target="s3">③ 因數全列表機</button>
+  <button class="jump" data-target="s4">④ 0 的特殊角色</button>
+  <button class="jump" data-target="s5">⑤ 交換律為什麼重要</button>
+</nav>
+
+<!-- ① 質數 -->
+<section id="s1">
+  <div class="sechead"><span class="no">01</span><h2>1–100 質數大全</h2><span class="from">2-1</span></div>
+  <p class="lead">100 以內的質數<b>剛好 25 個</b>。下面橘框的六個數是最會騙人的——它們看起來像質數，其實都是合數。
+    <b>91 = 7×13</b> 就是原卷考過的那一題。</p>
+
+  <div class="tool">
+    <h3>質數偵測器</h3>
+    <p class="hint">輸入 2 到 9999 之間的整數，機器會照「除到平方根為止」的標準做法判斷，並把試除過程寫給你看。</p>
+    <div class="inrow">
+      <input id="pIn" type="number" min="2" max="9999" value="91" aria-label="輸入一個整數">
+      <button type="button" class="chipbtn warn" data-p="91">91</button>
+      <button type="button" class="chipbtn warn" data-p="51">51</button>
+      <button type="button" class="chipbtn warn" data-p="57">57</button>
+      <button type="button" class="chipbtn" data-p="97">97</button>
+      <button type="button" class="chipbtn" data-p="2">2</button>
+      <button type="button" class="chipbtn" data-p="1">1</button>
+      <button type="button" class="chipbtn" data-p="221">221</button>
+    </div>
+    <div class="verdict">
+      <p class="big" id="pBig">—</p>
+      <p class="why" id="pWhy"></p>
+      <p class="steps" id="pSteps"></p>
+    </div>
+  </div>
+
+  <div class="tool">
+    <h3>1–100 全圖</h3>
+    <p class="hint">綠色是質數（25 個），橘框是看起來像質數的合數，紫色的 1 既不是質數也不是合數。</p>
+    <div class="sieve" id="sieve"></div>
+    <div class="legend">
+      <span><i style="background:var(--ok)"></i>質數 25 個</span>
+      <span><i style="background:#FFF1EC;border:1px solid #E6BDB4"></i>騙人的合數</span>
+      <span><i style="background:#EFEAF7"></i>1（非質非合）</span>
+      <span><i style="background:#F1F6FA"></i>其他合數</span>
+    </div>
+  </div>
+
+  <div class="keyline"><b>為什麼只要除到平方根就夠？</b>如果 n = a×b 且 a ≤ b，那麼 a 一定 ≤ √n。
+    所以只要 √n 以內都找不到因數，就不可能有因數了。判斷 97 時，11² = 121 已經超過 97，<b>試到 7 就可以收工</b>。</div>
+</section>
+
+<!-- ② 倍數判別法 -->
+<section id="s2">
+  <div class="sechead"><span class="no">02</span><h2>倍數判別法 2–11</h2><span class="from">2-1</span></div>
+  <p class="lead">課本只教了 2、5、4、9、3、11 六條。這裡補齊 <b>6、7、8、10</b>，其中
+    <b>7 的判別法</b>是段考不考、但遇到大數字時最省時間的一招。</p>
+
+  <div class="tool">
+    <h3>綜合掃描器</h3>
+    <p class="hint">丟一個數進去，2 到 11 一次全部判完，每一條都附上判斷的理由。</p>
+    <div class="inrow">
+      <input id="mIn" type="number" min="1" max="99999999" value="203" aria-label="輸入一個整數">
+      <button type="button" class="chipbtn" data-m="203">203</button>
+      <button type="button" class="chipbtn" data-m="3128">3128</button>
+      <button type="button" class="chipbtn" data-m="2008">2008</button>
+      <button type="button" class="chipbtn" data-m="506">506</button>
+      <button type="button" class="chipbtn" data-m="468732">468732</button>
+      <button type="button" class="chipbtn" data-m="55440">55440</button>
+    </div>
+    <table class="scan" id="scan"></table>
+  </div>
+
+  <div class="rules">
+    <div class="rule"><h4><span class="n">2</span>個位是 0、2、4、6、8<span class="tag">看個位</span></h4>
+      <p class="r">只看最後一位是不是偶數，前面幾萬幾億都不用管。</p>
+      <p class="eg"><b>24</b>、<b>68</b>、<b>102</b> 都是。</p></div>
+
+    <div class="rule"><h4><span class="n">3</span>各位數字和是 3 的倍數<span class="tag">看數字和</span></h4>
+      <p class="r">把每一位數字加起來，再看這個和是不是 3 的倍數。</p>
+      <p class="eg"><b>123</b> → 1+2+3 = 6，6 是 3 的倍數 ✓</p></div>
+
+    <div class="rule"><h4><span class="n">4</span>末兩位是 4 的倍數<span class="tag">看末兩位</span></h4>
+      <p class="r">因為 100 本身就是 4 的倍數，所以百位以上全部可以無視。</p>
+      <p class="eg"><b>3128</b> → 末兩位 28 是 4 的倍數 ✓</p></div>
+
+    <div class="rule"><h4><span class="n">5</span>個位是 0 或 5<span class="tag">看個位</span></h4>
+      <p class="r">只有這兩種結尾。</p>
+      <p class="eg"><b>35</b>、<b>120</b> 都是。</p></div>
+
+    <div class="rule"><h4><span class="n">6</span>同時是 2 和 3 的倍數<span class="tag">兩條一起</span></h4>
+      <p class="r">6 = 2×3，而且 2 和 3 互質，所以兩條都過才算。</p>
+      <p class="eg"><b>42</b> → 個位 2 是偶數 ✓、4+2 = 6 是 3 的倍數 ✓</p></div>
+
+    <div class="rule hot"><h4><span class="n">7</span>去尾、尾數×2、前數相減<span class="tag">課本沒教</span></h4>
+      <p class="r">把個位切掉，剩下的數減去（個位×2）。數字還是太大就再做一次，直到看得出來為止。</p>
+      <p class="eg"><b>203</b> → 20 − 3×2 = <b>14</b>，14 是 7 的倍數 ✓</p></div>
+
+    <div class="rule"><h4><span class="n">8</span>末三位是 8 的倍數<span class="tag">看末三位</span></h4>
+      <p class="r">因為 1000 是 8 的倍數，千位以上可以無視。</p>
+      <p class="eg"><b>2008</b> → 末三位 008 = 8 ✓</p></div>
+
+    <div class="rule"><h4><span class="n">9</span>各位數字和是 9 的倍數<span class="tag">看數字和</span></h4>
+      <p class="r">跟 3 同一招，只是門檻換成 9。</p>
+      <p class="eg"><b>729</b> → 7+2+9 = 18 ✓</p></div>
+
+    <div class="rule"><h4><span class="n">10</span>個位是 0<span class="tag">看個位</span></h4>
+      <p class="r">10 = 2×5，所以要同時滿足 2 和 5 → 個位只能是 0。</p>
+      <p class="eg"><b>50</b>、<b>230</b> 都是。</p></div>
+
+    <div class="rule hot"><h4><span class="n">11</span>交錯和是 0 或 11 的倍數<span class="tag">最會錯</span></h4>
+      <p class="r"><b>從個位開始</b>一加一減交替算（個位＋、十位−、百位＋…）。也可以說成「奇數位和 − 偶數位和」，兩種講法是同一件事。</p>
+      <p class="eg"><b>506</b> → 6 − 0 + 5 = <b>11</b> ✓</p></div>
+  </div>
+
+  <div class="keyline"><b>7 的判別法為什麼成立？</b>設這個數是 10a + b（a 是去尾後的數、b 是個位）。
+    因為 20a + 2b 是 7 的倍數時 10a + b 也是，而 (20a + 2b) − 21a = <b>2b − a</b>，
+    所以 <b>a − 2b</b> 是不是 7 的倍數，就決定了原數是不是。</div>
+</section>
+
+<!-- ③ 因數全列表 -->
+<section id="s3">
+  <div class="sechead"><span class="no">03</span><h2>因數全列表機</h2><span class="from">2-1・2-2</span></div>
+  <p class="lead">2-1 的配對機是用來「<b>找</b>」因數的；這一台是用來確保「<b>不漏</b>」。
+    先做質因數分解，再把每個質因數的指數<b>系統性地組合</b>，一個都跑不掉——順便得到因數個數公式。</p>
+
+  <div class="tool">
+    <h3>指數組合法</h3>
+    <p class="hint">輸入 1 到 99999 的整數。機器會列出標準分解式、指數組合表、所有因數，以及因數個數的算法。</p>
+    <div class="inrow">
+      <input id="dIn" type="number" min="1" max="99999" value="60" aria-label="輸入一個整數">
+      <button type="button" class="chipbtn" data-d="60">60</button>
+      <button type="button" class="chipbtn" data-d="36">36</button>
+      <button type="button" class="chipbtn" data-d="1080">1080</button>
+      <button type="button" class="chipbtn" data-d="2268">2268</button>
+      <button type="button" class="chipbtn" data-d="97">97</button>
+      <button type="button" class="chipbtn" data-d="256">256</button>
+    </div>
+    <div id="dBox"></div>
+  </div>
+
+  <div class="keyline"><b>因數個數公式：</b>若 n = p<sup>a</sup>×q<sup>b</sup>×r<sup>c</sup>，
+    則因數共有 <b>(a+1)(b+1)(c+1)</b> 個。因為每個質因數的指數都可以從 0 挑到最大，各自有「最大指數 + 1」種選法。<br>
+    <b>順帶一提：</b>因數個數是奇數的，一定是<b>完全平方數</b>（因為只有它會有一個因數自己配自己）。
+    <a class="golink" href="07-factors.html">回 2-1 用配對機對照</a></div>
+</section>
+
+<!-- ④ 0 的角色 -->
+<section id="s4">
+  <div class="sechead"><span class="no">04</span><h2>0 的特殊角色</h2><span class="from">2-1・總習題</span></div>
+  <p class="lead">「0 到底是不是因數？是不是倍數？」——答案是<b>一邊是、一邊不是</b>，而且理由來自同一件事：
+    <b>整除的定義</b>。</p>
+
+  <div class="duo">
+    <div class="pane a">
+      <h4>為什麼 0 不是任何整數的因數？</h4>
+      <p class="eqline">倍數 ÷ 因數 = 整數</p>
+      <p>因數要站在<b>除數</b>的位置。但除數不能是 0——<b>除以 0 沒有意義</b>，連算都算不出來。</p>
+      <p><span class="mark x">✗</span> 0 當因數 → 除以 0 無意義</p>
+      <p><b>結論：0 不是任何整數的因數。</b></p>
+    </div>
+    <div class="pane b">
+      <h4>為什麼 0 是所有非 0 整數的倍數？</h4>
+      <p class="eqline">0 ÷ 非 0 整數 = 0（整數）</p>
+      <p>倍數站在<b>被除數</b>的位置，這裡完全合法：0 除以任何非 0 整數都等於 0，而 0 是整數。</p>
+      <p><span class="mark o">✓</span> 0 = 任何非 0 整數 × 0</p>
+      <p><b>結論：0 是所有非 0 整數的倍數。</b></p>
+    </div>
+  </div>
+
+  <div class="keyline"><b>關鍵只有一句：</b>整除要求被除數、除數、商都是整數，而且<b>除數 ≠ 0</b>。
+    0 可以當被除數，不能當除數——所以它能當倍數，不能當因數。</div>
+
+  <div class="tf" id="tf">
+    <h4>三十秒驗收</h4>
+    <div class="q" data-ans="X"><span class="t">0 是 5 的因數。</span>
+      <span class="ops"><button type="button" data-op="O">○</button><button type="button" data-op="X">✗</button></span>
+      <p class="ex">0 不能當除數，所以不是任何數的因數。</p></div>
+    <div class="q" data-ans="O"><span class="t">0 是 5 的倍數。</span>
+      <span class="ops"><button type="button" data-op="O">○</button><button type="button" data-op="X">✗</button></span>
+      <p class="ex">5 × 0 = 0，成立。</p></div>
+    <div class="q" data-ans="X"><span class="t">5 是 0 的倍數。</span>
+      <span class="ops"><button type="button" data-op="O">○</button><button type="button" data-op="X">✗</button></span>
+      <p class="ex">要成立就得有 0 × 某整數 = 5，但 0 乘任何數都是 0，做不到。</p></div>
+    <div class="q" data-ans="O"><span class="t">1 是每一個整數的因數。</span>
+      <span class="ops"><button type="button" data-op="O">○</button><button type="button" data-op="X">✗</button></span>
+      <p class="ex">任何數 ÷ 1 都等於自己，是整數。</p></div>
+    <div class="q" data-ans="X"><span class="t">1 是質數。</span>
+      <span class="ops"><button type="button" data-op="O">○</button><button type="button" data-op="X">✗</button></span>
+      <p class="ex">質數要<b>恰好兩個</b>因數，1 只有一個 → 非質非合。</p></div>
+    <button class="act" id="tfCheck">對答案</button>
+    <p class="fb" id="tfFb"></p>
+  </div>
+</section>
+
+<!-- ⑤ 交換律 -->
+<section id="s5">
+  <div class="sechead"><span class="no">05</span><h2>交換律為什麼重要</h2><span class="from">1-3・3-1</span></div>
+  <p class="lead">「2×3 = 3×2」看起來是小學的東西，但它其實是<b>同類項合併</b>的底層原理——
+    沒有它，3-1 的化簡整套都不成立。</p>
+
+  <div class="duo">
+    <div class="pane a">
+      <h4>在代數裡也一樣</h4>
+      <p class="eqline">a × b = b × a</p>
+      <p>不管是數字還是英文字母，都可以交換位置。所以 <span class="mono">xy</span> 和 <span class="mono">yx</span>
+        <b>是同一個東西</b>。</p>
+      <p class="eqline" style="font-size:14px">12yx − 10xy = 12xy − 10xy = 2xy</p>
+      <p>這裡重要的不是答案是 <span class="mono">2xy</span>，而是<b>你知道 yx 可以先寫成 xy</b>——
+        這一步就是在判斷「它們是不是同類項」。</p>
+    </div>
+    <div class="pane b">
+      <h4>分配律也是靠它推出來的</h4>
+      <p class="eqline">a(b + c) = ab + ac</p>
+      <p>長方形的面積怎麼切都一樣大：切成 <span class="mono">ab</span> 和 <span class="mono">ac</span> 兩塊，
+        跟整塊 <span class="mono">a(b+c)</span> 相等。</p>
+      <p><b>再往後一步</b>，乘法公式也是同一件事：<br>
+        <span class="mono">(a+b)² = a² + ab + ba + b²</span><br>
+        因為 <span class="mono">ab = ba</span>，才能合併成 <span class="mono">a² + 2ab + b²</span>。</p>
+      <p>國二的乘法公式、因式分解，全部站在這條規則上。</p>
+    </div>
+  </div>
+
+  <div class="keyline"><b>為什麼這一條值得單獨講：</b>很多「不會」，追究起來只是某個基礎概念當年被跳過了。
+    交換律現在看只是一條小規則，但它決定了你之後能不能<b>自由地重排一個長式子</b>——
+    而重排，正是 3-1 化簡和 3-2 移項在做的事。
+    <a class="golink" href="12-algebra.html">去 3-1 用驗算器試一次</a></div>
+</section>
+
+<footer>數學小撇步 · 判別法工具箱 · 這一頁不計分，隨時可以回來查。</footer>
+</div>
+
+<script>
+(function(){
+"use strict";
+
+/* ---------------- ① 質數偵測器 ---------------- */
+var TRAPS = [49, 51, 57, 77, 87, 91];
+
+function primeInfo(n){
+  if(!isFinite(n) || n < 1 || n !== Math.floor(n)) return { kind: "bad" };
+  if(n === 1) return { kind: "one" };
+  var tried = [];
+  var lim = Math.floor(Math.sqrt(n));
+  for(var d = 2; d <= lim; d++){
+    tried.push(d);
+    if(n % d === 0) return { kind: "composite", d: d, q: n / d, tried: tried, lim: lim };
+  }
+  return { kind: "prime", tried: tried, lim: lim };
+}
+
+(function primeTool(){
+  var input = document.getElementById("pIn");
+  if(!input) return;
+  var big = document.getElementById("pBig"), why = document.getElementById("pWhy"), steps = document.getElementById("pSteps");
+
+  function render(){
+    var n = Math.floor(Number(input.value));
+    var info = primeInfo(n);
+    paintSieve(n);
+    if(info.kind === "bad"){
+      big.textContent = "請輸入 1 到 9999 的整數"; big.className = "big mid";
+      why.textContent = ""; steps.textContent = "";
+      return;
+    }
+    if(info.kind === "one"){
+      big.textContent = "1 既不是質數，也不是合數"; big.className = "big mid";
+      why.innerHTML = "質數的定義是<b>恰好有兩個因數</b>（1 和自己）。1 只有一個因數，所以兩邊都不算。";
+      steps.textContent = "";
+      return;
+    }
+    var primes = info.tried.filter(function(d){ return primeInfo(d).kind === "prime"; });
+    if(info.kind === "prime"){
+      big.textContent = n + " 是質數"; big.className = "big yes";
+      why.innerHTML = "從 2 試到 <b>√" + n + " ≈ " + info.lim + "</b> 都沒有找到因數，所以它只有 1 和自己兩個因數。";
+      steps.innerHTML = primes.length
+        ? "試除：" + primes.map(function(d){ return d + " ✗"; }).join("　") + "　→ 全部除不盡"
+        : "2 是最小的質數，不用試除。";
+    } else {
+      big.textContent = n + " 是合數"; big.className = "big no";
+      why.innerHTML = "找到因數了：<b>" + n + " = " + info.d + " × " + info.q + "</b>，所以它不只有兩個因數。";
+      var seq = info.tried.map(function(d){
+        return d === info.d ? "<b>" + d + " ✓</b>" : (primeInfo(d).kind === "prime" ? d + " ✗" : null);
+      }).filter(Boolean);
+      steps.innerHTML = "試除：" + seq.join("　");
+      if(TRAPS.indexOf(n) >= 0) steps.innerHTML += "　← 這是最會騙人的那幾個之一";
+    }
+  }
+
+  Array.prototype.forEach.call(document.querySelectorAll("[data-p]"), function(b){
+    b.addEventListener("click", function(){ input.value = b.getAttribute("data-p"); render(); });
+  });
+  input.addEventListener("input", render);
+
+  /* 100 格 */
+  var host = document.getElementById("sieve");
+  function paintSieve(cur){
+    var html = [];
+    for(var i = 1; i <= 100; i++){
+      var k = primeInfo(i), cls;
+      if(i === 1) cls = "one";
+      else if(k.kind === "prime") cls = "p";
+      else cls = TRAPS.indexOf(i) >= 0 ? "trap" : "";
+      if(i === cur) cls += " on";
+      html.push('<span class="' + cls + '">' + i + "</span>");
+    }
+    host.innerHTML = html.join("");
+  }
+  render();
+})();
+
+/* ---------------- ② 倍數判別法 ---------------- */
+function digits(n){ return String(n).split("").map(Number); }
+
+var RULES = [
+  { k: 2, name: "個位是偶數", run: function(n){
+      var d = n % 10;
+      return { ok: d % 2 === 0, why: "個位是 " + d };
+  }},
+  { k: 3, name: "數字和是 3 的倍數", run: function(n){
+      var s = digits(n).reduce(function(a, b){ return a + b; }, 0);
+      return { ok: s % 3 === 0, why: "數字和 = " + s + "，" + s + " ÷ 3 " + (s % 3 === 0 ? "整除" : "餘 " + (s % 3)) };
+  }},
+  { k: 4, name: "末兩位是 4 的倍數", run: function(n){
+      var t = n % 100;
+      return { ok: t % 4 === 0, why: "末兩位 = " + t + (t % 4 === 0 ? "，是 4 的倍數" : "，不是 4 的倍數") };
+  }},
+  { k: 5, name: "個位是 0 或 5", run: function(n){
+      var d = n % 10;
+      return { ok: d === 0 || d === 5, why: "個位是 " + d };
+  }},
+  { k: 6, name: "同時是 2 和 3 的倍數", run: function(n){
+      var a = n % 2 === 0, b = digits(n).reduce(function(x, y){ return x + y; }, 0) % 3 === 0;
+      return { ok: a && b, why: "2 的倍數：" + (a ? "✓" : "✗") + "　3 的倍數：" + (b ? "✓" : "✗") };
+  }},
+  { k: 7, name: "去尾、尾數×2、前數相減", run: function(n){
+      var v = n, line = [], guard = 0;
+      while(v > 99 && guard++ < 8){
+        var b = v % 10, a = Math.floor(v / 10);
+        var nx = a - 2 * b;
+        line.push(a + " − " + b + "×2 = " + nx);
+        v = Math.abs(nx);
+      }
+      return { ok: v % 7 === 0, why: (line.length ? line.join("　→　") + "　→ " : "") + v + (v % 7 === 0 ? " 是 7 的倍數" : " 不是 7 的倍數") };
+  }},
+  { k: 8, name: "末三位是 8 的倍數", run: function(n){
+      var t = n % 1000;
+      return { ok: t % 8 === 0, why: "末三位 = " + t + (t % 8 === 0 ? "，是 8 的倍數" : "，不是 8 的倍數") };
+  }},
+  { k: 9, name: "數字和是 9 的倍數", run: function(n){
+      var s = digits(n).reduce(function(a, b){ return a + b; }, 0);
+      return { ok: s % 9 === 0, why: "數字和 = " + s + "，" + s + " ÷ 9 " + (s % 9 === 0 ? "整除" : "餘 " + (s % 9)) };
+  }},
+  { k: 10, name: "個位是 0", run: function(n){
+      return { ok: n % 10 === 0, why: "個位是 " + (n % 10) };
+  }},
+  { k: 11, name: "交錯和是 0 或 11 的倍數", run: function(n){
+      var ds = digits(n).reverse(), sum = 0, parts = [];
+      ds.forEach(function(d, i){
+        var sign = i % 2 === 0 ? 1 : -1;
+        sum += sign * d;
+        parts.push((i === 0 ? "" : (sign > 0 ? " + " : " − ")) + d);
+      });
+      return { ok: sum % 11 === 0, why: "從個位交錯相加：" + parts.join("") + " = " + sum };
+  }}
+];
+
+(function multipleScanner(){
+  var input = document.getElementById("mIn");
+  if(!input) return;
+  var table = document.getElementById("scan");
+
+  function render(){
+    var n = Math.floor(Number(input.value));
+    if(!isFinite(n) || n < 1 || n > 99999999){
+      table.innerHTML = '<tr><td class="r">請輸入 1 到 99999999 的整數。</td></tr>';
+      return;
+    }
+    var rows = ['<tr><th style="text-align:center">除數</th><th style="text-align:center">是嗎</th><th>判斷過程</th></tr>'];
+    RULES.forEach(function(r){
+      var res = r.run(n);
+      var mark = res.ok ? "✓" : "✗";
+      rows.push('<tr class="' + (res.ok ? "y" : "") + '">' +
+        '<td class="k">' + r.k + "</td>" +
+        '<td class="v ' + (res.ok ? "y" : "n") + '">' + mark + "</td>" +
+        '<td class="r">' + res.why + "</td></tr>");
+    });
+    table.innerHTML = rows.join("");
+  }
+  Array.prototype.forEach.call(document.querySelectorAll("[data-m]"), function(b){
+    b.addEventListener("click", function(){ input.value = b.getAttribute("data-m"); render(); });
+  });
+  input.addEventListener("input", render);
+  render();
+})();
+
+/* ---------------- ③ 因數全列表 ---------------- */
+function factorize(n){
+  var out = [];
+  for(var p = 2; p * p <= n; p++){
+    if(n % p === 0){
+      var e = 0;
+      while(n % p === 0){ e++; n /= p; }
+      out.push([p, e]);
+    }
+  }
+  if(n > 1) out.push([n, 1]);
+  return out;
+}
+function sup(p, e){ return e > 1 ? p + "<sup>" + e + "</sup>" : String(p); }
+
+(function divisorTool(){
+  var input = document.getElementById("dIn");
+  if(!input) return;
+  var box = document.getElementById("dBox");
+
+  function render(){
+    var n = Math.floor(Number(input.value));
+    if(!isFinite(n) || n < 1 || n > 99999){
+      box.innerHTML = '<p class="hint" style="margin-top:12px">請輸入 1 到 99999 的整數。</p>';
+      return;
+    }
+    if(n === 1){
+      box.innerHTML = '<div class="divout"><span class="lab">1 沒有質因數</span>' +
+        '<span class="vals">1 的因數只有 1 本身，共 1 個。</span></div>';
+      return;
+    }
+    var f = factorize(n);
+    var std = f.map(function(x){ return sup(x[0], x[1]); }).join(" × ");
+
+    /* 指數組合表（質因數最多取前三種，避免表格爆炸） */
+    var show = f.slice(0, 3);
+    var head = "<tr>" + show.map(function(x){ return "<th>" + x[0] + " 的次方</th>"; }).join("") +
+      (f.length > 3 ? "<th>其餘</th>" : "") + "<th>組合出來的因數</th></tr>";
+    var rows = [], cap = 0;
+    (function walk(i, acc, cells){
+      if(cap > 24) return;
+      if(i >= show.length){
+        if(f.length > 3){
+          rows.push("<tr>" + cells.map(function(c){ return "<td>" + c + "</td>"; }).join("") +
+            '<td>…</td><td class="res">' + acc + " × …</td></tr>");
+        } else {
+          rows.push("<tr>" + cells.map(function(c){ return "<td>" + c + "</td>"; }).join("") +
+            '<td class="res">' + acc + "</td></tr>");
+        }
+        cap++;
+        return;
+      }
+      for(var e = 0; e <= show[i][1]; e++){
+        walk(i + 1, acc * Math.pow(show[i][0], e), cells.concat([show[i][0] + "<sup>" + e + "</sup>"]));
+      }
+    })(0, 1, []);
+
+    var divs = [];
+    for(var d = 1; d * d <= n; d++){
+      if(n % d === 0){ divs.push(d); if(d !== n / d) divs.push(n / d); }
+    }
+    divs.sort(function(a, b){ return a - b; });
+
+    var formula = f.map(function(x){ return "(" + x[1] + "+1)"; }).join(" × ") + " = " + divs.length;
+    var isSq = Math.abs(Math.sqrt(n) - Math.round(Math.sqrt(n))) < 1e-9;
+
+    box.innerHTML =
+      '<div class="divout"><span class="lab">標準分解式</span>' +
+        '<span class="vals">' + n + " = " + std + "</span></div>" +
+      "<table class='dv'>" + head + rows.join("") + "</table>" +
+      (cap > 24 ? '<p class="hint" style="margin-top:6px">（組合太多，表格只顯示前 24 列，下面仍是完整清單）</p>' : "") +
+      '<div class="divout"><span class="lab">' + n + " 的所有因數（由小到大）</span>" +
+        '<span class="vals">' + divs.join("、") + "</span>" +
+        '<p class="formula">因數個數 = ' + formula + " 個" +
+          (isSq ? "　← 奇數個，因為 " + n + " 是完全平方數" : "") + "</p></div>";
+  }
+  Array.prototype.forEach.call(document.querySelectorAll("[data-d]"), function(b){
+    b.addEventListener("click", function(){ input.value = b.getAttribute("data-d"); render(); });
+  });
+  input.addEventListener("input", render);
+  render();
+})();
+
+/* ---------------- ④ 是非小測 ---------------- */
+(function trueFalse(){
+  var box = document.getElementById("tf");
+  if(!box) return;
+  box.addEventListener("click", function(ev){
+    var b = ev.target.closest(".ops button");
+    if(!b) return;
+    var row = b.closest(".q");
+    row.setAttribute("data-picked", b.getAttribute("data-op"));
+    row.classList.remove("ok", "bad");
+    Array.prototype.forEach.call(row.querySelectorAll(".ops button"), function(x){
+      x.setAttribute("aria-pressed", x === b ? "true" : "false");
+    });
+  });
+  document.getElementById("tfCheck").addEventListener("click", function(){
+    var rows = box.querySelectorAll(".q");
+    var right = 0, blank = 0;
+    Array.prototype.forEach.call(rows, function(row){
+      var got = row.getAttribute("data-picked");
+      row.classList.remove("ok", "bad");
+      if(!got){ blank++; return; }
+      if(got === row.getAttribute("data-ans")){ row.classList.add("ok"); right++; }
+      else row.classList.add("bad");
+    });
+    var fb = document.getElementById("tfFb");
+    if(blank && !right){ fb.textContent = "還有 " + blank + " 題沒選。"; fb.className = "fb no"; return; }
+    fb.textContent = "答對 " + right + " / " + rows.length + (right === rows.length ? "，五題全中。" : "，打紅的看一下底下的說明。");
+    fb.className = "fb " + (right === rows.length ? "ok" : "no");
+  });
+})();
+
+Array.prototype.forEach.call(document.querySelectorAll(".jump"), function(b){
+  b.addEventListener("click", function(){
+    var t = document.getElementById(b.getAttribute("data-target"));
+    if(t) t.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+});
+})();
+</script>
+</body>
+</html>
