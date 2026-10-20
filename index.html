@@ -204,7 +204,7 @@ footer{border-top-color:var(--rule)}
 <header class="top">
   <p class="eyebrow">國中數學 1 上 · 計算熟練</p>
   <h1>國一數學<br><span class="neg">互動學習單</span>總覽</h1>
-  <p class="sub">單元一到單元三，共 14 份學習單＋概念檢核步道＋判別法工具箱＋麥斯道館與 108 句語錄。每一份都是單一 HTML 檔，離線可用，作答紀錄存在這台裝置的瀏覽器裡。</p>
+  <p class="sub">單元一到單元三，共 14 份學習單＋<b>第一次段考真題演練</b>＋概念檢核步道＋判別法工具箱＋麥斯道館與 108 句語錄。每一份都是單一 HTML 檔，離線可用，作答紀錄存在這台裝置的瀏覽器裡。</p>
 </header>
 
 <nav class="toc" aria-label="目錄">
@@ -214,6 +214,7 @@ footer{border-top-color:var(--rule)}
   <button class="jump" data-target="u2">第二單元</button>
   <button class="jump" data-target="u3">第三單元</button>
   <button class="jump" data-target="trail">概念檢核・工具箱</button>
+  <button class="jump" data-target="exam">段考真題</button>
   <button class="jump" data-target="uf">總測驗</button>
   <button class="jump" data-target="maxx">麥斯道館・語錄</button>
   <button class="jump" data-target="howto">使用方式</button>
@@ -222,7 +223,7 @@ footer{border-top-color:var(--rule)}
 <div class="overall">
   <div class="row">
     <span class="lab">整體完成度</span>
-    <span class="big" id="allCount">0<small> / 263</small></span>
+    <span class="big" id="allCount">0<small> / 291</small></span>
   </div>
   <span class="bar"><i id="allBar"></i></span>
   <p class="tiny" id="allNote">還沒開始。點任一張卡片就可以進去作答。</p>
@@ -234,10 +235,19 @@ footer{border-top-color:var(--rule)}
     <a class="deck wide static" href="20-notebook.html">
       <span class="code">NOTEBOOK</span>
       <h3>錯題本　複習與確認</h3>
-      <p class="desc">自動讀取全部 16 份工具的作答紀錄，把<b>答錯的</b>和<b>還沒寫的</b>整理成一張清單，可依單元或錯誤模式分組，並依目前狀況給下一步建議。寫對之後還能自己勾「確認」——代表不只寫對，還說得出為什麼。清單可一鍵複製成文字。</p>
+      <p class="desc">自動讀取全部 17 份工具的作答紀錄，把<b>答錯的</b>和<b>還沒寫的</b>整理成一張清單，可依單元或錯誤模式分組，並依目前狀況給下一步建議。寫對之後還能自己勾「確認」——代表不只寫對，還說得出為什麼。清單可一鍵複製成文字。</p>
       <div class="tags"><span class="tag">自動彙整</span><span class="tag new-tag">學習建議</span><span class="tag">複習確認</span></div>
       <div class="meter"><span class="cnt" id="nbCnt">讀取中…</span></div>
       <span class="go">打開錯題本</span>
+    </a>
+
+    <a class="deck wide static" href="22-crosscheck.html">
+      <span class="code">CROSS-CHECK</span>
+      <h3>弱點對照　平時練習 vs 段考</h3>
+      <p class="desc">回答一個問題：<b>段考掉的分，跟平時練習錯的地方是不是同一批？</b>自動把第一單元五份學習單和段考真題卷的紀錄按錯誤類型兩邊對照，分成四象限——<b>兩邊都錯</b>（真弱點，最優先）、<b>平時會考試掉</b>（題型換包裝就認不出來）、<b>已經補起來</b>、<b>穩</b>。下面還有段考逐題對照，一眼看出每一題在平時練過沒有、練得如何。</p>
+      <div class="tags"><span class="tag">四象限診斷</span><span class="tag new-tag">逐題對照</span><span class="tag">不計分</span></div>
+      <div class="meter"><span class="cnt">練習 ↔ 段考　同類型比對</span></div>
+      <span class="go">打開對照表</span>
     </a>
   </div>
 </section>
@@ -416,6 +426,21 @@ footer{border-top-color:var(--rule)}
   </div>
 </section>
 
+<section id="exam">
+  <div class="sechead"><span class="no">EXAM</span><h2>段考真題演練</h2><span class="cnt" id="ce">—</span></div>
+  <span class="unitbar"><i id="be"></i></span>
+  <div class="decks">
+    <a class="deck wide" href="21-exam1.html" data-key="math-exam1-v1" data-total="28" data-unit="e">
+      <span class="code">115-1 第一次段考</span>
+      <h3>第一次段考　真題演練（整卷 100 分）</h3>
+      <p class="desc">學校真正考過的那張卷子，<b>整張搬進來可以重寫一次</b>：選擇 15 題 60 分、填充與計算 6 題 40 分，範圍 1-1～1-4。按「整卷計分」會直接算出<b>分數</b>，再依五大考點告訴你該回去補哪一節。另外多加了 4 格不計分的<b>步驟鷹架</b>——第 1、12、20 題都先問「一格／一單位是多少」，第 21 題先分清楚 -4² 和 (-2)²，這幾步正是原卷最容易整題陪葬的地方。</p>
+      <div class="tags"><span class="tag">21 題 100 分</span><span class="tag new-tag">真題重製</span><span class="tag">含步驟鷹架</span><span class="tag">五大考點診斷</span></div>
+      <div class="meter"><span class="cnt">—</span><span class="bar"><i></i></span></div>
+      <span class="go">開始作答</span>
+    </a>
+  </div>
+</section>
+
 <section id="uf">
   <div class="sechead"><span class="no">FINAL</span><h2>第一至三單元總測驗</h2><span class="cnt" id="cf">—</span></div>
   <span class="unitbar"><i id="bf"></i></span>
@@ -531,7 +556,7 @@ decks.forEach(function(deck){
   fill.style.width = total ? (done / total * 100) + "%" : "0%";
 });
 
-["1", "2", "3", "f", "t"].forEach(function(u){
+["1", "2", "3", "e", "f", "t"].forEach(function(u){
   var el = document.getElementById("c" + u), barEl = document.getElementById("b" + u);
   if(!el) return;
   var d = unitDone[u] || 0, t = unitTotal[u] || 0;

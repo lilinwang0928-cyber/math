@@ -1,0 +1,1111 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>第一次段考．真題演練</title>
+<style>
+:root{
+  --paper:#E6F0F8;--card:#FFFFFF;--ink:#0F2A3D;--ink-soft:#55707F;
+  --neg:#2563A8;--pos:#C2761A;--zero:#15795B;--ok:#177A5A;--no:#B23C33;
+  --rule:#C2D6E5;--rule-soft:#DAE7F1;
+  --shadow:0 1px 0 #CBDDEB, 0 10px 26px -18px rgba(15,42,61,.45);
+  --serif:"Noto Serif TC","Songti TC","Source Han Serif TC","PMingLiU",serif;
+  --sans:"PingFang TC","Microsoft JhengHei","Noto Sans TC","Heiti TC",system-ui,sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,"Courier New",monospace;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{font-family:var(--sans);color:var(--ink);background-color:var(--paper);
+  background-image:linear-gradient(to right, rgba(37,99,168,.07) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(37,99,168,.07) 1px, transparent 1px);
+  background-size:26px 26px;line-height:1.7;-webkit-text-size-adjust:100%}
+.wrap{max-width:880px;margin:0 auto;padding:0 14px 90px}
+header.top{padding:30px 0 16px}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.16em;color:var(--ink-soft);margin:0 0 6px}
+h1{font-family:var(--serif);font-weight:700;font-size:clamp(27px,6.6vw,42px);line-height:1.25;margin:0 0 10px}
+h1 .neg{color:var(--neg)}
+.sub{margin:0;color:var(--ink-soft);font-size:15px}
+.examhead{display:flex;flex-wrap:wrap;gap:6px 14px;margin:12px 0 0;font-family:var(--mono);font-size:12px;color:var(--ink-soft)}
+.examhead span{background:var(--card);border:1px solid var(--rule);border-radius:999px;padding:3px 11px}
+nav.stations{position:sticky;top:0;z-index:40;margin:16px -14px 0;padding:8px 14px;
+  background:rgba(230,240,248,.94);backdrop-filter:blur(6px);border-bottom:1px solid var(--rule);
+  overflow-x:auto;white-space:nowrap;-webkit-overflow-scrolling:touch}
+nav.stations button{font-family:var(--sans);font-size:13px;color:var(--ink);background:var(--card);
+  border:1px solid var(--rule);border-radius:999px;padding:6px 13px;margin-right:6px;cursor:pointer}
+nav.stations button:hover{border-color:var(--neg);color:var(--neg)}
+nav.stations a.home{display:inline-block;font-family:var(--sans);font-size:13px;font-weight:700;
+  color:#fff;background:var(--ink);border:1px solid var(--ink);border-radius:999px;
+  padding:6px 13px;margin-right:10px;text-decoration:none}
+nav.stations a.home:hover{background:var(--neg);border-color:var(--neg)}
+.progress{display:flex;align-items:center;gap:10px;margin:14px 0 0;font-family:var(--mono);font-size:12px;color:var(--ink-soft)}
+.bar{flex:1;height:6px;background:var(--rule-soft);border-radius:99px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--zero);transition:width .35s ease}
+section{margin:30px 0 0;scroll-margin-top:62px}
+.sechead{display:flex;align-items:baseline;gap:10px;border-bottom:2px solid var(--ink);padding-bottom:6px}
+.sechead .no{font-family:var(--mono);font-size:13px;color:var(--neg);letter-spacing:.1em}
+.sechead h2{font-family:var(--serif);font-size:clamp(19px,4.2vw,25px);margin:0;font-weight:700}
+.sechead .from{margin-left:auto;font-size:11px;color:var(--ink-soft);font-family:var(--mono)}
+.card{background:var(--card);border:1px solid var(--rule);border-radius:10px;padding:13px 14px;margin:12px 0 0;box-shadow:var(--shadow)}
+.card h3{font-family:var(--sans);font-size:14.5px;margin:0 0 8px;font-weight:700;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.qno{font-family:var(--mono);background:var(--ink);color:#fff;border-radius:6px;padding:1px 8px;font-size:13px}
+.tag{font-family:var(--mono);font-size:11px;background:var(--rule-soft);color:var(--ink-soft);border-radius:4px;padding:2px 7px;font-weight:400}
+.tag.pt{background:#FDF2E3;color:var(--pos)}
+.mark{margin-left:auto;font-size:19px;font-weight:700}
+.mark.ok{color:var(--ok)} .mark.no{color:var(--no)}
+.q{margin:0 0 8px;font-size:15px}
+.q.mono{font-family:var(--mono);font-size:15.5px}
+.hintline{font-size:12px;color:var(--ink-soft);margin:0 0 6px}
+.opts{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.opts button{font-family:var(--mono);font-size:14px;border:1px solid var(--rule);background:#F3F8FC;
+  border-radius:8px;padding:8px 13px;cursor:pointer;text-align:left}
+.opts button[aria-pressed="true"]{background:var(--neg);border-color:var(--neg);color:#fff}
+.opts button.ok{background:#EEF7F3;border-color:var(--ok);color:var(--ok)}
+.opts button.no{background:#FBEFEE;border-color:var(--no);color:var(--no)}
+.opts.wide button{flex:1 1 46%;min-width:150px}
+.opts.col button{flex:1 1 100%}
+input.blank{font-family:var(--mono);font-size:16px;color:var(--ink);width:120px;padding:5px 8px;text-align:center;
+  border:none;border-bottom:2px solid var(--neg);background:#F3F8FC;border-radius:4px 4px 0 0}
+input.blank:focus{outline:2px solid var(--neg);outline-offset:1px}
+input.blank.ok{border-bottom-color:var(--ok);background:#EEF7F3;color:var(--ok)}
+input.blank.no{border-bottom-color:var(--no);background:#FBEFEE;color:var(--no)}
+input.blank.sm{width:74px} input.blank.lg{width:170px}
+.fillrow{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;margin-top:4px}
+.fillrow .item{display:flex;align-items:center;gap:7px;font-family:var(--mono);font-size:15px}
+.fillrow .item .lab{color:var(--ink-soft);font-size:13px}
+button.act{font-family:var(--sans);font-size:14px;font-weight:700;background:var(--ink);color:#fff;border:none;border-radius:8px;padding:8px 16px;cursor:pointer;margin:10px 6px 0 0}
+button.act.ghost{background:transparent;color:var(--ink-soft);border:1px solid var(--rule);font-weight:400}
+button.act.big{display:block;width:100%;font-size:16px;padding:14px;margin-top:18px;background:var(--neg)}
+.fb{font-size:14px;margin:10px 0 0;min-height:22px;font-weight:700}
+.fb.ok{color:var(--ok)} .fb.no{color:var(--no)}
+details.sol{margin-top:9px;border-top:1px dashed var(--rule);padding-top:7px}
+details.sol summary{font-size:13px;color:var(--neg);cursor:pointer;list-style:none}
+details.sol summary::-webkit-details-marker{display:none}
+details.sol summary::before{content:"\25B8 ";font-family:var(--mono)}
+details.sol[open] summary::before{content:"\25BE "}
+details.sol .body{font-size:13.5px;color:var(--ink-soft);margin-top:7px}
+details.sol .body b{color:var(--ink)}
+details.sol .body .step{font-family:var(--mono);color:var(--ink);display:block;margin:3px 0}
+.mono{font-family:var(--mono)}
+sup{font-size:.72em}
+.step-box{background:#F1F7FC;border-left:3px solid var(--neg);border-radius:0 8px 8px 0;padding:9px 12px;margin:0 0 10px}
+.step-box .why{font-size:12.5px;color:var(--ink-soft);margin:0 0 7px}
+.step-box .why b{color:var(--neg)}
+svg.nl{display:block;width:100%;height:auto;max-width:720px;margin:4px auto 8px}
+svg.nl .ax{stroke:var(--ink);stroke-width:1.6;fill:none}
+svg.nl .tick{stroke:var(--ink);stroke-width:1.4}
+svg.nl .tickf{stroke:var(--rule);stroke-width:1}
+svg.nl .lbl{font-family:var(--mono);font-size:13px;fill:var(--ink);text-anchor:middle}
+svg.nl .pt{fill:var(--neg)}
+svg.nl .ptl{font-family:var(--serif);font-style:italic;font-size:16px;fill:var(--ink);text-anchor:middle}
+table.tbl{width:100%;border-collapse:collapse;font-size:13px;margin:4px 0 8px;font-family:var(--mono)}
+table.tbl th,table.tbl td{border:1px solid var(--rule);padding:4px 7px;text-align:center}
+table.tbl th{background:#EEF5FA;font-weight:700;font-family:var(--sans);font-size:12.5px}
+table.tbl td:first-child{font-family:var(--sans)}
+.report{background:var(--card);border:1px solid var(--rule);border-radius:12px;padding:16px 14px;margin-top:16px;box-shadow:var(--shadow)}
+.score{font-family:var(--mono);font-size:clamp(30px,9vw,50px);font-weight:700;text-align:center;margin:4px 0 2px}
+.score small{font-size:17px;color:var(--ink-soft);font-weight:400}
+.scorenote{text-align:center;color:var(--ink-soft);font-size:14px;margin:0 0 6px}
+.splits{display:flex;justify-content:center;gap:18px;font-family:var(--mono);font-size:13px;color:var(--ink-soft);margin:0 0 14px;flex-wrap:wrap}
+.splits b{color:var(--ink)}
+.grp{border-top:1px solid var(--rule-soft);padding:10px 0}
+.grp:first-of-type{border-top:none}
+.grp .row{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.grp .name{font-weight:700;font-size:14.5px}
+.grp .cnt{font-family:var(--mono);font-size:13px;margin-left:auto}
+.grp .cnt.full{color:var(--ok)} .grp .cnt.part{color:var(--no)}
+.grp p{margin:4px 0 0;font-size:13.5px;color:var(--ink-soft)}
+.grp a{color:var(--neg)}
+.notes{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px}
+@media (max-width:600px){ .notes{grid-template-columns:1fr} }
+.note{background:var(--card);border:1px solid var(--rule);border-radius:10px;padding:12px 14px;box-shadow:var(--shadow)}
+.note h4{margin:0 0 6px;font-size:14px}
+.note h4 span{font-family:var(--mono);color:var(--neg);margin-right:6px}
+.note ul{margin:0;padding-left:18px;font-size:13.5px;color:var(--ink-soft)}
+.note li{margin-bottom:5px}
+.note b{color:var(--ink)}
+footer{margin-top:44px;border-top:1px solid var(--rule);padding-top:14px;font-size:12px;color:var(--ink-soft)}
+
+/* ===== Math 麥斯 回饋層 ===== */
+#maxxBar{
+  position:fixed;left:50%;transform:translateX(-50%) translateY(140%);bottom:16px;z-index:90;
+  width:min(560px,calc(100vw - 24px));display:flex;gap:10px;align-items:flex-start;
+  background:#0E2230;color:#EAF2F6;border:1px solid #1E4357;border-radius:14px;
+  padding:11px 13px;box-shadow:0 18px 40px -22px rgba(0,0,0,.8);
+  transition:transform .42s cubic-bezier(.2,.9,.3,1.2);
+}
+#maxxBar.on{transform:translateX(-50%) translateY(0)}
+#maxxBar .mx-av{width:40px;height:40px;flex:none;object-fit:contain;align-self:center}
+#maxxBar .mx-txt{font-size:13.5px;line-height:1.6;flex:1}
+#maxxBar .mx-hype{display:block;font-weight:700;color:#3FE0B0}
+#maxxBar .mx-hype.bad{color:#FF9B6A}
+#maxxBar .mx-sub{color:#9FB6C2;font-size:12.5px}
+#maxxBar .mx-combo{font-family:var(--mono);color:#FFC94A;font-size:12px;margin-left:6px}
+#maxxBar .mx-x{background:none;border:none;color:#9FB6C2;font-size:20px;line-height:1;cursor:pointer;padding:0 2px;flex:none}
+#maxxBar .mx-x:hover{color:#EAF2F6}
+@media (prefers-reduced-motion:reduce){#maxxBar{transition:none}}
+</style>
+</head>
+<body>
+<nav class="stations">
+  <a class="home" href="index.html">&larr; 總覽</a>
+  <button class="jump" data-target="secA">選擇題</button>
+  <button class="jump" data-target="secB">填充與計算</button>
+  <button class="jump" data-target="report">成績單</button>
+</nav>
+
+<div class="wrap">
+<header class="top">
+  <p class="eyebrow">EXAM 01 &middot; 115-1 FIRST MIDTERM</p>
+  <h1>第一次段考<span class="neg">．</span>真題演練</h1>
+  <p class="sub">這份是你們學校真正考過的卷子，整張搬進來，可以一題一題按「檢查」。
+     有幾題我多加了一格<b>步驟</b>——不是原卷有的，是因為那一步你以前栽過。</p>
+  <div class="examhead">
+    <span>基隆市輔大聖心高級中學</span><span>115 學年度第 1 學期</span>
+    <span>範圍 第一冊 1-1～1-4</span><span>命題 王志遠老師</span><span>滿分 100</span>
+  </div>
+  <div class="progress"><span>完成度</span><span class="bar"><i id="pbar"></i></span><span id="pcount">0 / 0</span></div>
+</header>
+
+<section id="secA">
+  <div class="sechead"><span class="no">PART I</span><h2>選擇題</h2><span class="from">15 題．每題 4 分．共 60 分</span></div>
+
+  <div class="card task" data-id="e1s" data-type="fill" data-group="g1" data-pts="0" data-step="1">
+    <h3><span class="qno">1 步驟</span><span class="tag">先讀刻度</span><span class="tag pt">不計分</span><span class="mark"></span></h3>
+    <div class="step-box">
+      <p class="why"><b>為什麼多這一格：</b>這題全部的答案都藏在「一格是多少」。先把四個數讀出來，後面選項用看的就會了。</p>
+      <div id="svg1"></div>
+      <div class="fillrow">
+        <span class="item"><span class="lab">a =</span><input class="blank sm" data-ans="-12" data-kind="num" inputmode="text"></span>
+        <span class="item"><span class="lab">b =</span><input class="blank sm" data-ans="-5" data-kind="num" inputmode="text"></span>
+        <span class="item"><span class="lab">c =</span><input class="blank sm" data-ans="5" data-kind="num" inputmode="text"></span>
+        <span class="item"><span class="lab">d =</span><input class="blank sm" data-ans="8" data-kind="num" inputmode="text"></span>
+      </div>
+    </div>
+    <button class="act check" type="button">檢查</button>
+    <p class="fb"></p>
+    <details class="sol"><summary>解析</summary><div class="body">
+      <span class="step">0 的那一格往右數一格就是 1 → <b>一格 = 1</b></span>
+      <span class="step">P 在 0 左邊 12 格 → a = -12　　Q 在 0 左邊 5 格 → b = -5</span>
+      <span class="step">R 在 0 右邊 5 格 → c = 5　　S 在 0 右邊 8 格 → d = 8</span>
+      數線題沒有捷徑，<b>先數格子再比大小</b>，比憑感覺快。
+    </div></details>
+  </div>
+
+  <div class="card task" data-id="e1" data-type="choice" data-group="g1" data-pts="4">
+    <h3><span class="qno">1</span><span class="tag">數線．絕對值</span><span class="tag pt">4 分</span><span class="mark"></span></h3>
+    <p class="q">數線上 O 為原點，P、Q、R、S 所表示的數分別為 a、b、c、d，則下列哪一個大小關係是正確的？</p>
+    <div class="opts wide" data-ans="B">
+      <button type="button" data-op="A">(A) |c| &gt; |b|</button>
+      <button type="button" data-op="B">(B) |a| &gt; |c|</button>
+      <button type="button" data-op="C">(C) |c| &gt; |d|</button>
+      <button type="button" data-op="D">(D) |b| &gt; |a|</button>
+    </div>
+    <button class="act check" type="button">檢查</button>
+    <p class="fb"></p>
+    <details class="sol"><summary>解析</summary><div class="body">
+      a = -12、b = -5、c = 5、d = 8，取絕對值 → <b>12、5、5、8</b>
+      <span class="step">(A) 5 &gt; 5 ✗　(B) 12 &gt; 5 ✓　(C) 5 &gt; 8 ✗　(D) 5 &gt; 12 ✗</span>
+      <b>(A) 是陷阱</b>：b 和 c 一左一右，絕對值<b>一樣大</b>，不是大於。看到一正一負、離 0 一樣遠，先想到「相等」。
+    </div></details>
+  </div>
+
+  <div class="card task" data-id="e2" data-type="choice" data-group="g4" data-pts="4">
+    <h3><span class="qno">2</span><span class="tag">四則．負號</span><span class="tag pt">4 分</span><span class="mark"></span></h3>
+    <p class="q mono">(-12) + (-3) &times; (-4) - (-5) = ?</p>
+    <div class="opts" data-ans="B">
+      <button type="button" data-op="A">(A) 1</button><button type="button" data-op="B">(B) 5</button>
+      <button type="button" data-op="C">(C) 7</button><button type="button" data-op="D">(D) 9</button>
+    </div>
+    <button class="act check" type="button">檢查</button>
+    <p class="fb"></p>
+    <details class="sol"><summary>解析</summary><div class="body">
+      <span class="step">先乘除：(-3)&times;(-4) = <b>+12</b>（負負得正）</span>
+      <span class="step">(-12) + 12 - (-5) = (-12) + 12 + 5 = <b>5</b></span>
+      兩個要同時顧：乘出來是<b>正</b> 12，減負數變<b>加</b> 5。只漏一個就會得到 -7 或 -5。
+    </div></details>
+  </div>
+
+  <div class="card task" data-id="e3" data-type="choice" data-group="g5" data-pts="4">
+    <h3><span class="qno">3</span><span class="tag">指數</span><span class="tag pt">4 分</span><span class="mark"></span></h3>
+    <p class="q mono">設 2<sup>a</sup> = 32，b<sup>5</sup> = 243，則 a<sup>b</sup> = ?</p>
+    <div class="opts" data-ans="C">
+      <button type="button" data-op="A">(A) 9</button><button type="button" data-op="B">(B) 25</button>
+      <button type="button" data-op="C">(C) 125</button><button type="button" data-op="D">(D) 243</button>
+    </div>
+    <button class="act check" type="button">檢查</button>
+    <p class="fb"></p>
+    <details class="sol"><summary>解析</summary><div class="body">
+      <span class="step">32 = 2<sup>5</sup> → <b>a = 5</b>（底數已知，求指數）</span>
+      <span class="step">243 = 3<sup>5</sup> → <b>b = 3</b>（指數已知，求底數）</span>
+      <span class="step">a<sup>b</sup> = 5<sup>3</sup> = <b>125</b></span>
+      最後一步最容易做反成 3<sup>5</sup> = 243，那就是選 (D)。<b>a 在下面、b 在上面</b>，寫出來再算。
+    </div></details>
+  </div>
+
+  <div class="card task" data-id="e4" data-type="choice" data-group="g5" data-pts="4">
+    <h3><span class="qno">4</span><span class="tag">科學記號</span><span class="tag pt">4 分</span><span class="mark"></span></h3>
+    <p class="q">2024 年花蓮強震的捐款總金額約為新臺幣 <b>7 億 8912 萬 3107</b> 元，此金額的科學記號表示為何？</p>
+    <div class="opts wide" data-ans="B">
+      <button type="button" data-op="A">(A) 7.89123107&times;10<sup>7</sup></button>
+      <button type="button" data-op="B">(B) 7.89123107&times;10<sup>8</sup></button>
+      <button type="button" data-op="C">(C) 7.89123107&times;10<sup>9</sup></button>
+      <button type="button" data-op="D">(D) 7.89123107&times;10<sup>10</sup></button>
+    </div>
+    <button class="act check" type="button">檢查</button>
+    <p class="fb"></p>
+    <details class="sol"><summary>解析</summary><div class="body">
+      <span class="step">7 億 8912 萬 3107 = <b>789123107</b>（9 位數）</span>
+      <span class="step">小數點從最後面搬到 7 的後面，搬了 <b>8</b> 格 → &times;10<sup>8</sup></span>
+      口訣：<b>整數的位數減 1 就是次方</b>。9 位數 → 10<sup>8</sup>。不用真的去數小數點。
+    </div></details>
+  </div>
+
+  <div class="card task" data-id="e5" data-type="choice" data-group="g3" data-pts="4">
+    <h3><span class="qno">5</span><span class="tag">應用．連續變化</span><span class="tag pt">4 分</span><span class="mark"></span></h3>
+    <p class="q">冷凍庫最初溫度是 -2&deg;C，設定成<b>每 5 分鐘下降 3&deg;C</b>，則<b>一個小時</b>之後溫度是多少 &deg;C？</p>
+    <div class="opts" data-ans="D">
+      <button type="button" data-op="A">(A) -5</button><button type="button" data-op="B">(B) -17</button>
+      <button type="button" data-op="C">(C) -34</button><button type="button" data-op="D">(D) -38</button>
+    </div>
+    <button class="act check" type="button">檢查</button>
+    <p class="fb"></p>
+    <details class="sol"><summary>解析</summary><div class="body">
+      <span class="step">一小時 = 60 分，60 &divide; 5 = <b>12 次</b>（先換單位！）</span>
+      <span class="step">共下降 12 &times; 3 = 36 度</span>
+      <span class="step">-2 + (-36) = <b>-38</b></span>
+      (C) -34 是把起點 -2 當成「降了 2 度」加進去；(B) -17 是忘了換成分鐘。
+      <b>一小時要先變成 60 分鐘</b>，這是這題唯一的坑。
+    </div></details>
+  </div>
+
+  <div class="card task" data-id="e6" data-type="choice" data-group="g5" data-pts="4">
+    <h3><span class="qno">6</span><span class="tag">次方的正負</span><span class="tag pt">4 分</span><span class="mark"></span></h3>
+    <p class="q">下列哪一個選項，其值為<b>正數</b>？</p>
+    <div class="opts wide" data-ans="C">
+      <button type="button" data-op="A">(A) (-4)<sup>75</sup></button>
+      <button type="button" data-op="B">(B) -4<sup>76</sup></button>
+      <button type="button" data-op="C">(C) -(-4)<sup>77</sup></button>
+      <button type="button" data-op="D">(D) -(-4)<sup>78</sup></button>
+    </div>
+    <button class="act check" type="button">檢查</button>
+    <p class="fb"></p>
+    <details class="sol"><summary>解析</summary><div class="body">
+      只看正負，不用算大小。規則兩條：<b>括號有沒有包住負號</b>、<b>次方是奇數還是偶數</b>。
+      <span class="step">(A) (-4)<sup>75</sup>：負的，奇次方 → <b>負</b></span>
+      <span class="step">(B) -4<sup>76</sup>：負號在外面沒被包 → 先算 4<sup>76</sup> 再加負號 → <b>負</b></span>
+      <span class="step">(C) -(-4)<sup>77</sup>：(-4)<sup>77</sup> 是負，前面再加負號 → <b>正</b> ✓</span>
+      <span class="step">(D) -(-4)<sup>78</sup>：(-4)<sup>78</sup> 是正，前面再加負號 → <b>負</b></span>
+      (B) 最常錯：<b>-4<sup>76</sup> 不等於 (-4)<sup>76</sup></b>，沒括號就輪不到負號先上。
+    </div></details>
+  </div>
+
+  <div class="card task" data-id="e7" data-type="choice" data-group="g1" data-pts="4">
+    <h3><span class="qno">7</span><span class="tag">數線．邊界</span><span class="tag pt">4 分</span><span class="mark"></span></h3>
+    <p class="q">在數線上比 3.5 小且比 -4.25 大的<b>整數</b>共有幾個？</p>
+    <div class="opts" data-ans="C">
+      <button type="button" data-op="A">(A) 6</button><button type="button" data-op="B">(B) 7</button>
+      <button type="button" data-op="C">(C) 8</button><button type="button" data-op="D">(D) 9</button>
+    </div>
+    <button class="act check" type="button">檢查</button>
+    <p class="fb"></p>
+    <details class="sol"><summary>解析</summary><div class="body">
+      <span class="step">-4.25 &lt; 整數 &lt; 3.5</span>
+      <span class="step">-4、-3、-2、-1、<b>0</b>、1、2、3 → <b>8 個</b></span>
+      兩個常漏的：<b>0 也是整數</b>，還有負的那一端 -4 有被包進去（-4 比 -4.25 大）。
+      寫出來數，不要心算個數。
+    </div></details>
+  </div>
+
+  <div class="card task" data-id="e8" data-type="choice" data-group="g2" data-pts="4">
+    <h3><span class="qno">8</span><span class="tag">絕對值．等距</span><span class="tag pt">4 分</span><span class="mark"></span></h3>
+    <p class="q">數線上 O、A、B、C 四點如圖。若點 D 所表示的數為 d，且 <span class="mono">|d-5| = |d-c|</span>，則關於 D 點的位置，下列敘述何者正確？</p>
+    <div id="svg8"></div>
+    <div class="opts wide" data-ans="D">
+      <button type="button" data-op="A">(A) 在 A 的左邊</button>
+      <button type="button" data-op="B">(B) 介於 A、C 之間</button>
+      <button type="button" data-op="C">(C) 介於 C、O 之間</button>
+      <button type="button" data-op="D">(D) 介於 O、B 之間</button>
+    </div>
+    <button class="act check" type="button">檢查</button>
+    <p class="fb"></p>
+    <details class="sol"><summary>解析</summary><div class="body">
+      <b>|d-5| 的意思是「d 到 5 的距離」</b>，|d-c| 是「d 到 c 的距離」。兩個距離相等 → D 是 5 和 c 的<b>中點</b>。
+      <span class="step">d = (5 + c) &divide; 2，而 c 落在 -5 和 0 之間</span>
+      <span class="step">c 最小接近 -5 → d 接近 0；c 最大接近 0 → d 接近 2.5</span>
+      <span class="step">所以 d 一定在 <b>0 和 2.5 之間</b> → 介於 O、B 之間</span>
+      不必知道 c 到底是多少。<b>絕對值 = 距離</b>，看到就先翻成距離，題目立刻變簡單。
+    </div></details>
+  </div>
+
+  <div class="card task" data-id="e9" data-type="choice" data-group="g4" data-pts="4">
+    <h3><span class="qno">9</span><span class="tag">分配律</span><span class="tag pt">4 分</span><span class="mark"></span></h3>
+    <p class="q mono">957 &times; (-319) 的計算結果與下列哪一算式相同？</p>
+    <div class="opts col" data-ans="D">
+      <button type="button" data-op="A">(A) 1000&times;(-319) - 43&times;319</button>
+      <button type="button" data-op="B">(B) 950&times;(-319) - 7&times;(-319)</button>
+      <button type="button" data-op="C">(C) 1000&times;(-319) - 53&times;319</button>
+      <button type="button" data-op="D">(D) 950&times;(-319) - 7&times;319</button>
+    </div>
+    <button class="act check" type="button">檢查</button>
+    <p class="fb"></p>
+    <details class="sol"><summary>解析</summary><div class="body">
+      <span class="step">957 = 950 + 7</span>
+      <span class="step">957&times;(-319) = (950+7)&times;(-319) = 950&times;(-319) + 7&times;(-319)</span>
+      <span class="step">而 7&times;(-319) = <b>-7&times;319</b>，所以可以寫成 950&times;(-319) <b>-</b> 7&times;319 ✓</span>
+      (B) 看起來很像，但它是 <b>減</b> 7&times;(-319)，等於多加了一次 → 變成 943&times;(-319)。
+      拆完之後<b>把負號跟著搬</b>，這題就只剩看符號。
+    </div></details>
+  </div>
+
+  <div class="card task" data-id="e10" data-type="choice" data-group="g3" data-pts="4">
+    <h3><span class="qno">10</span><span class="tag">應用．移動距離</span><span class="tag pt">4 分</span><span class="mark"></span></h3>
+    <p class="q">海平面上 100 公尺以「+1」表示，海平面下 100 公尺以「-1」表示。一隻海鳥在 +5 的位置垂直俯衝到 -3 捉魚，再垂直衝出海面到 +8，則這隻海鳥<b>共移動了</b>多少公尺？</p>
+    <div class="opts" data-ans="D">
+      <button type="button" data-op="A">(A) 1000</button><button type="button" data-op="B">(B) 1300</button>
+      <button type="button" data-op="C">(C) 1600</button><button type="button" data-op="D">(D) 1900</button>
+    </div>
+    <button class="act check" type="button">檢查</button>
+    <p class="fb"></p>
+    <details class="sol"><summary>解析</summary><div class="body">
+      <span class="step">第一段：|5 - (-3)| = <b>8</b> 單位</span>
+      <span class="step">第二段：|8 - (-3)| = <b>11</b> 單位</span>
+      <span class="step">共 19 單位，<b>一單位 = 100 公尺</b> → 19 &times; 100 = <b>1900</b></span>
+      兩個坑一起踩才會錯：一是「共移動」要<b>兩段相加</b>（不是從 +5 直接到 +8 的 3 格），
+      二是最後要<b>乘回 100</b>。(A) 1000 就是只算頭尾；題目問「共移動」就是走過的全部路。
+    </div></details>
+  </div>
+
+  <div class="card task" data-id="e11" data-type="choice" data-group="g2" data-pts="4">
+    <h3><span class="qno">11</span><span class="tag">絕對值．四則</span><span class="tag pt">4 分</span><span class="mark"></span></h3>
+    <p class="q mono">14 + |(-1) - 5| - |6 + (-3)| = ?</p>
+    <div class="opts" data-ans="B">
+      <button type="button" data-op="A">(A) 16</button><button type="button" data-op="B">(B) 17</button>
+      <button type="button" data-op="C">(C) 18</button><button type="button" data-op="D">(D) 19</button>
+    </div>
+    <button class="act check" type="button">檢查</button>
+    <p class="fb"></p>
+    <details class="sol"><summary>解析</summary><div class="body">
+      絕對值的兩條線就是括號，<b>先把裡面算完再脫殼</b>。
+      <span class="step">|(-1) - 5| = |-6| = <b>6</b></span>
+      <span class="step">|6 + (-3)| = |3| = <b>3</b></span>
+      <span class="step">14 + 6 - 3 = <b>17</b></span>
+      常見錯法是把 |(-1)-5| 看成 1-5 或 -1-5 就直接寫 -6，忘了脫殼要變正。
+    </div></details>
+  </div>
+
+  <div class="card task" data-id="e12s" data-type="fill" data-group="g1" data-pts="0" data-step="1">
+    <h3><span class="qno">12 步驟</span><span class="tag">先算一小格</span><span class="tag pt">不計分</span><span class="mark"></span></h3>
+    <div class="step-box">
+      <p class="why"><b>為什麼多這一格：</b>細分的數線一定先問「一小格多少」。沒先算這個，就只能用猜的。</p>
+      <div id="svg12"></div>
+      <div class="fillrow">
+        <span class="item"><span class="lab">一小格 =</span><input class="blank sm" data-ans="0.125" data-kind="num" inputmode="text" placeholder="1/8"></span>
+        <span class="item"><span class="lab">A 在 -2 右邊第幾格 =</span><input class="blank sm" data-ans="6" data-kind="num" inputmode="numeric"></span>
+      </div>
+    </div>
+    <button class="act check" type="button">檢查</button>
+    <p class="fb"></p>
+    <details class="sol"><summary>解析</summary><div class="body">
+      <span class="step">-2 到 -1 是 <b>1</b> 格大格，分成 8 等分 → 一小格 = <b>1/8</b> = 0.125</span>
+      <span class="step">從 -2 往右數到 A，數到第 <b>6</b> 條線</span>
+      兩格都可以填分數或小數，我都算對。
+    </div></details>
+  </div>
+
+  <div class="card task" data-id="e12" data-type="choice" data-group="g1" data-pts="4">
+    <h3><span class="qno">12</span><span class="tag">數線．細分刻度</span><span class="tag pt">4 分</span><span class="mark"></span></h3>
+    <p class="q">將數線上 -2 和 -1 之間的長度以小隔線分成<b>八等分</b>，A 點在其中一條隔線上，則 A 點表示的數為何？</p>
+    <div class="opts wide" data-ans="A">
+      <button type="button" data-op="A">(A) -1&frac14;</button><button type="button" data-op="B">(B) -1&frac34;</button>
+      <button type="button" data-op="C">(C) -2&frac14;</button><button type="button" data-op="D">(D) -2&frac34;</button>
+    </div>
+    <button class="act check" type="button">檢查</button>
+    <p class="fb"></p>
+    <details class="sol"><summary>解析</summary><div class="body">
+      <span class="step">A = -2 + 6&times;(1/8) = -2 + 6/8 = -2 + <b>0.75</b> = <b>-1.25</b> = -1&frac14;</span>
+      (C)(D) 可以直接刪掉：<b>A 在 -2 和 -1 之間</b>，不可能比 -2 還小。
+      剩下 (A) -1.25 和 (B) -1.75，差別就在你是從 -2 往右數還是從 -1 往左數。
+      <b>負數往右是變大</b>：-2 加上 0.75 要往 0 靠，所以是 -1.25。
+    </div></details>
+  </div>
+
+  <div class="card task" data-id="e13" data-type="choice" data-group="g5" data-pts="4">
+    <h3><span class="qno">13</span><span class="tag">科學記號．負次方</span><span class="tag pt">4 分</span><span class="mark"></span></h3>
+    <p class="q">樂透彩頭彩中獎機率約為<b>五百萬分之一</b>，表示成科學記號應為下列哪一個？</p>
+    <div class="opts wide" data-ans="C">
+      <button type="button" data-op="A">(A) 5&times;10<sup>-6</sup></button><button type="button" data-op="B">(B) 5&times;10<sup>-7</sup></button>
+      <button type="button" data-op="C">(C) 2&times;10<sup>-7</sup></button><button type="button" data-op="D">(D) 2&times;10<sup>-8</sup></button>
+    </div>
+    <button class="act check" type="button">檢查</button>
+    <p class="fb"></p>
+    <details class="sol"><summary>解析</summary><div class="body">
+      <span class="step">五百萬分之一 = 1 &divide; 5000000 = <b>0.0000002</b></span>
+      <span class="step">小數點往右搬 7 格才到 2 的後面 → <b>2&times;10<sup>-7</sup></b></span>
+      (A)(B) 是看到「五百萬」就把 5 抄下來——但 <b>5 在分母</b>，倒過來是 0.2，不是 5。
+      遇到「幾分之一」先<b>實際除出來</b>，不要直接搬數字。
+    </div></details>
+  </div>
+
+  <div class="card task" data-id="e14" data-type="choice" data-group="g1" data-pts="4">
+    <h3><span class="qno">14</span><span class="tag">數線．平移</span><span class="tag pt">4 分</span><span class="mark"></span></h3>
+    <p class="q">數線上，若點 A(-15) <b>向右</b>移動 25 個單位到達點 B(b)，則 b 是下列哪一個數？</p>
+    <div class="opts" data-ans="C">
+      <button type="button" data-op="A">(A) -10</button><button type="button" data-op="B">(B) 40</button>
+      <button type="button" data-op="C">(C) 10</button><button type="button" data-op="D">(D) -40</button>
+    </div>
+    <button class="act check" type="button">檢查</button>
+    <p class="fb"></p>
+    <details class="sol"><summary>解析</summary><div class="body">
+      <span class="step"><b>向右 = 加</b>　-15 + 25 = <b>10</b></span>
+      (A) -10 是算成 25-15 再亂加負號；(D) -40 是向左（減）。
+      一句話記起來：<b>右加左減</b>，先決定加還是減，再算數字。
+    </div></details>
+  </div>
+
+  <div class="card task" data-id="e15" data-type="choice" data-group="g2" data-pts="4">
+    <h3><span class="qno">15</span><span class="tag">絕對值．不等式</span><span class="tag pt">4 分</span><span class="mark"></span></h3>
+    <p class="q mono">|a| &lt; 3&frac12;，且 a 為整數，則滿足此條件的 a 共有幾個？</p>
+    <div class="opts" data-ans="B">
+      <button type="button" data-op="A">(A) 5</button><button type="button" data-op="B">(B) 7</button>
+      <button type="button" data-op="C">(C) 9</button><button type="button" data-op="D">(D) 11</button>
+    </div>
+    <button class="act check" type="button">檢查</button>
+    <p class="fb"></p>
+    <details class="sol"><summary>解析</summary><div class="body">
+      <span class="step">|a| &lt; 3.5 的意思是「a 到 0 的距離小於 3.5」 → <b>-3.5 &lt; a &lt; 3.5</b></span>
+      <span class="step">整數：-3、-2、-1、<b>0</b>、1、2、3 → <b>7 個</b></span>
+      (A) 5 是忘了 0 和漏掉一邊；(C) 9 是把 ±3.5 兩端也算進去。
+      絕對值不等式<b>一定要展開成兩邊</b>，只想正的那半就會少一半。
+    </div></details>
+  </div>
+
+  <button class="act sectioncheck" data-sec="secA" type="button">批改整個選擇題</button>
+  <p class="fb" data-sec="secA"></p>
+</section>
+
+<section id="secB">
+  <div class="sechead"><span class="no">PART II</span><h2>填充與計算</h2><span class="from">16～21 題．共 40 分</span></div>
+
+  <div class="card task" data-id="f16" data-type="fill" data-group="g3" data-pts="12">
+    <h3><span class="qno">16</span><span class="tag">整數四則</span><span class="tag pt">每格 2 分．共 12 分</span><span class="mark"></span></h3>
+    <p class="q">計算下列各式的值：</p>
+    <div class="fillrow">
+      <span class="item"><span class="lab">(1)</span><span>(-13) - 5 + 16 =</span><input class="blank sm" data-ans="-2" data-kind="num"></span>
+      <span class="item"><span class="lab">(2)</span><span>|(-15) - 3| + 2 =</span><input class="blank sm" data-ans="20" data-kind="num"></span>
+    </div>
+    <div class="fillrow">
+      <span class="item"><span class="lab">(3)</span><span>(235 - 333) - (35 - 333) =</span><input class="blank sm" data-ans="200" data-kind="num"></span>
+      <span class="item"><span class="lab">(4)</span><span>(-36) &divide; 4 &times; (-32) =</span><input class="blank sm" data-ans="288" data-kind="num"></span>
+    </div>
+    <div class="fillrow">
+      <span class="item"><span class="lab">(5)</span><span>35 + 25 &divide; (-7 + 2) =</span><input class="blank sm" data-ans="30" data-kind="num"></span>
+      <span class="item"><span class="lab">(6)</span><span>(-25)&times;13 + (-25)&times;27 + 25&times;(-10) =</span><input class="blank" data-ans="-1250" data-kind="num"></span>
+    </div>
+    <button class="act check" type="button">檢查</button>
+    <p class="fb"></p>
+    <details class="sol"><summary>解析</summary><div class="body">
+      <span class="step">(1) -13 - 5 = -18，-18 + 16 = <b>-2</b></span>
+      <span class="step">(2) |-18| + 2 = 18 + 2 = <b>20</b>（先算殼裡面，脫殼變正）</span>
+      <span class="step">(3) (-98) - (-298) = -98 + 298 = <b>200</b>（減負變加，不要急著算 333）</span>
+      <span class="step">(4) 同階由左往右：(-36)&divide;4 = -9，-9&times;(-32) = <b>288</b></span>
+      <span class="step">(5) 先括號：-7+2 = -5；25&divide;(-5) = -5；35 + (-5) = <b>30</b></span>
+      <span class="step">(6) 三項都有 25：-25&times;13 - 25&times;27 - 25&times;10 = -25&times;(13+27+10) = -25&times;50 = <b>-1250</b></span>
+      (6) 的關鍵是看出 25&times;(-10) 也是 <b>-25&times;10</b>，三項才能合併。
+    </div></details>
+  </div>
+
+  <div class="card task" data-id="f17" data-type="fill" data-group="g5" data-pts="8">
+    <h3><span class="qno">17</span><span class="tag">科學記號</span><span class="tag pt">每格 2 分．共 8 分</span><span class="mark"></span></h3>
+    <p class="q">以科學記號表示法記錄下列各數：<span class="hintline" style="display:inline">（打法：<span class="mono">3.2x10^4</span> 或 <span class="mono">3.2&times;10^-5</span> 都可以）</span></p>
+    <div class="fillrow">
+      <span class="item"><span class="lab">(1)</span><span>32000 =</span><input class="blank lg" data-ans="3.2e4" data-kind="sci"></span>
+      <span class="item"><span class="lab">(2)</span><span>1/50000 =</span><input class="blank lg" data-ans="2e-5" data-kind="sci"></span>
+    </div>
+    <div class="fillrow">
+      <span class="item"><span class="lab">(3)</span><span>0.000008 =</span><input class="blank lg" data-ans="8e-6" data-kind="sci"></span>
+      <span class="item"><span class="lab">(4)</span><span>5/1000000 =</span><input class="blank lg" data-ans="5e-6" data-kind="sci"></span>
+    </div>
+    <button class="act check" type="button">檢查</button>
+    <p class="fb"></p>
+    <details class="sol"><summary>解析</summary><div class="body">
+      <span class="step">(1) 32000 → 小數點往左搬 4 格 → <b>3.2&times;10<sup>4</sup></b></span>
+      <span class="step">(2) 1&divide;50000 = 0.00002 → 往右搬 5 格 → <b>2&times;10<sup>-5</sup></b></span>
+      <span class="step">(3) 0.000008 → 往右搬 6 格 → <b>8&times;10<sup>-6</sup></b></span>
+      <span class="step">(4) 5&divide;1000000 = 0.000005 → 往右搬 6 格 → <b>5&times;10<sup>-6</sup></b></span>
+      (2) 和 (4) 要先<b>真的除出來</b>再搬。看到 50000 就寫 10<sup>-5</sup>、看到 1000000 就寫 10<sup>-6</sup>，
+      剛好 (4) 對 (2) 錯——這種「蒙對一半」最危險。
+    </div></details>
+  </div>
+
+  <div class="card task" data-id="f18a" data-type="choice" data-group="g5" data-pts="2">
+    <h3><span class="qno">18 (1)</span><span class="tag">素養．比大小</span><span class="tag pt">2 分</span><span class="mark"></span></h3>
+    <p class="q">小傑在雜誌上看到下表。太陽系的八大行星中，<b>最大與最小</b>的星球分別為何？</p>
+    <table class="tbl">
+      <tr><th>八大行星</th><th>赤道半徑（公尺）</th><th>與太陽距離（百萬公里）</th></tr>
+      <tr><td>水星</td><td>2.439&times;10<sup>6</sup></td><td>57.909</td></tr>
+      <tr><td>金星</td><td>6.051&times;10<sup>6</sup></td><td>108.209</td></tr>
+      <tr><td>地球</td><td>6.378&times;10<sup>6</sup></td><td>149.598</td></tr>
+      <tr><td>火星</td><td>3.397&times;10<sup>6</sup></td><td>227.937</td></tr>
+      <tr><td>木星</td><td>7.149&times;10<sup>7</sup></td><td>778.412</td></tr>
+      <tr><td>土星</td><td>6.027&times;10<sup>7</sup></td><td>1426.725</td></tr>
+      <tr><td>天王星</td><td>2.556&times;10<sup>7</sup></td><td>2870.972</td></tr>
+      <tr><td>海王星</td><td>2.476&times;10<sup>7</sup></td><td>4498.253</td></tr>
+    </table>
+    <div class="opts wide" data-ans="A">
+      <button type="button" data-op="A">(A) 木星；水星</button><button type="button" data-op="B">(B) 土星；地球</button>
+      <button type="button" data-op="C">(C) 木星；火星</button><button type="button" data-op="D">(D) 水星；海王星</button>
+    </div>
+    <button class="act check" type="button">檢查</button>
+    <p class="fb"></p>
+    <details class="sol"><summary>解析</summary><div class="body">
+      比大小要看<b>赤道半徑</b>那一欄（「大小」指星球本身，不是離太陽多遠）。
+      <span class="step">先看次方：10<sup>7</sup> 的四顆（木、土、天王、海王）<b>通通大於</b> 10<sup>6</sup> 的四顆</span>
+      <span class="step">10<sup>7</sup> 裡最大：7.149 → <b>木星</b></span>
+      <span class="step">10<sup>6</sup> 裡最小：2.439 → <b>水星</b></span>
+      科學記號比大小：<b>先比次方，次方一樣才比前面的數</b>。不要被 2.556 這種看起來小的數騙到——它是 10<sup>7</sup>。
+    </div></details>
+  </div>
+
+  <div class="card task" data-id="f18b" data-type="choice" data-group="g5" data-pts="3">
+    <h3><span class="qno">18 (2)</span><span class="tag">單位換算</span><span class="tag pt">3 分</span><span class="mark"></span></h3>
+    <p class="q">地球與太陽的距離如果以科學記號表示是多少<b>公尺</b>？</p>
+    <div class="opts wide" data-ans="A">
+      <button type="button" data-op="A">(A) 1.49598&times;10<sup>11</sup></button><button type="button" data-op="B">(B) 1.49598&times;10<sup>10</sup></button>
+      <button type="button" data-op="C">(C) 1.49598&times;10<sup>9</sup></button><button type="button" data-op="D">(D) 1.49598&times;10<sup>8</sup></button>
+    </div>
+    <button class="act check" type="button">檢查</button>
+    <p class="fb"></p>
+    <details class="sol"><summary>解析</summary><div class="body">
+      表上地球是 <b>149.598 百萬公里</b>，要走三步：
+      <span class="step">① 百萬 → 149.598 &times; 10<sup>6</sup> 公里</span>
+      <span class="step">② 整理成科學記號 → 1.49598 &times; 10<sup>8</sup> 公里</span>
+      <span class="step">③ <b>公里 → 公尺要 &times;1000</b> → 1.49598 &times; 10<sup>11</sup> 公尺</span>
+      (D) 就是<b>停在第 ② 步</b>——算對了但沒看到題目最後兩個字「公尺」。
+      這一類題，算完先回去把題目的<b>最後一句再讀一次</b>。
+    </div></details>
+  </div>
+
+  <div class="card task" data-id="f19a" data-type="fill" data-group="g4" data-pts="3">
+    <h3><span class="qno">19 (1)</span><span class="tag">巢狀括號</span><span class="tag pt">3 分</span><span class="mark"></span></h3>
+    <p class="q mono">10 - { [ (-4) - 3 ] - (-2) } - { 8 - [ (-5) - (-30) ] } =
+      <input class="blank sm" data-ans="32" data-kind="num"></p>
+    <button class="act check" type="button">檢查</button>
+    <p class="fb"></p>
+    <details class="sol"><summary>解析</summary><div class="body">
+      從<b>最裡面的括號</b>往外拆，一層算完再寫下一行。
+      <span class="step">[(-4) - 3] = <b>-7</b>　　[(-5) - (-30)] = -5 + 30 = <b>25</b></span>
+      <span class="step">{ -7 - (-2) } = -7 + 2 = <b>-5</b>　　{ 8 - 25 } = <b>-17</b></span>
+      <span class="step">10 - (-5) - (-17) = 10 + 5 + 17 = <b>32</b></span>
+      最後一行有<b>兩個「減負數」</b>，兩個都要翻成加。少翻一個就會得到 -2 或 22。
+    </div></details>
+  </div>
+
+  <div class="card task" data-id="f19b" data-type="fill2" data-group="g2" data-pts="2">
+    <h3><span class="qno">19 (2)</span><span class="tag">絕對值方程式．雙解</span><span class="tag pt">2 分</span><span class="mark"></span></h3>
+    <p class="q mono">設 |x + 2| = 3，則 x =
+      <input class="blank sm" data-set="-5,1" data-kind="num"> 或
+      <input class="blank sm" data-set="-5,1" data-kind="num"></p>
+    <p class="hintline">兩格都要填，順序沒關係。<b>原卷只有一個【　】，但正確答案是兩個</b>——這題就是故意只留一格。</p>
+    <button class="act check" type="button">檢查</button>
+    <p class="fb"></p>
+    <details class="sol"><summary>解析</summary><div class="body">
+      <b>|某數| = 3，那個某數可以是 3，也可以是 -3。</b>所以要拆成兩條：
+      <span class="step">x + 2 = 3 → <b>x = 1</b></span>
+      <span class="step">x + 2 = -3 → <b>x = -5</b></span>
+      驗算：|1+2| = |3| = 3 ✓　|(-5)+2| = |-3| = 3 ✓
+      <br><br>這是你 1-1 熟練 10、熟練 13 掉過分的同一招。
+      看到<b>絕對值等於一個正數</b>，手先在旁邊寫「＝＋　／　＝－」兩行，再開始算。
+    </div></details>
+  </div>
+
+  <div class="card task" data-id="f20s" data-type="fill" data-group="g1" data-pts="0" data-step="1">
+    <h3><span class="qno">20 步驟</span><span class="tag">先算一單位</span><span class="tag pt">不計分</span><span class="mark"></span></h3>
+    <div class="step-box">
+      <p class="why"><b>為什麼多這一格：</b>這題的「記為 +153」<u>不是</u>公尺數。題目用真笠山偷偷告訴你刻度多大——這一步算錯，下面兩格一定一起錯。</p>
+      <p class="q">白賓山 810 公尺訂為 <b>0</b>，真笠山 <b>1116</b> 公尺記為 <b>+153</b>。</p>
+      <div class="fillrow">
+        <span class="item"><span class="lab">真笠山比白賓山高幾公尺 =</span><input class="blank sm" data-ans="306" data-kind="num"></span>
+        <span class="item"><span class="lab">所以 1 單位 =</span><input class="blank sm" data-ans="2" data-kind="num"><span class="lab">公尺</span></span>
+      </div>
+    </div>
+    <button class="act check" type="button">檢查</button>
+    <p class="fb"></p>
+    <details class="sol"><summary>解析</summary><div class="body">
+      <span class="step">1116 - 810 = <b>306</b> 公尺，可是它只記成 <b>153</b></span>
+      <span class="step">306 &divide; 153 = <b>2</b> → <b>1 單位 = 2 公尺</b></span>
+      如果直接假設 1 單位 = 1 公尺，(1) 會寫成 -492、(2) 會寫成 1088，兩格全滅。
+      <b>題目給你一組對照數字，就是在告訴你刻度</b>，不是在廢話。
+    </div></details>
+  </div>
+
+  <div class="card task" data-id="f20" data-type="fill" data-group="g1" data-pts="5">
+    <h3><span class="qno">20</span><span class="tag">三角點．基準與刻度</span><span class="tag pt">2+3 分．共 5 分</span><span class="mark"></span></h3>
+    <p class="q">部分山頂會設置劃記十字符號的小水泥柱，即為該座山的「<b>三角點</b>」。
+      若以白賓山三角點高度 810 公尺為基準（訂為 0），真笠山三角點高度 1116 公尺記為 +153 公尺，試回答：</p>
+    <div class="fillrow">
+      <span class="item"><span class="lab">(1)</span><span>旗尾山三角點高度 318 公尺應記為</span><input class="blank sm" data-ans="-246" data-kind="num"></span>
+    </div>
+    <div class="fillrow">
+      <span class="item"><span class="lab">(2)</span><span>某山頂高度記為 +278，則真實高度為</span><input class="blank" data-ans="1366" data-kind="num"><span class="lab">公尺</span></span>
+    </div>
+    <button class="act check" type="button">檢查</button>
+    <p class="fb"></p>
+    <details class="sol"><summary>解析</summary><div class="body">
+      已知 <b>1 單位 = 2 公尺</b>、基準 810 公尺。
+      <span class="step">(1) 318 - 810 = -492 公尺；-492 &divide; 2 = <b>-246</b></span>
+      <span class="step">(2) 278 &times; 2 = 556 公尺；810 + 556 = <b>1366</b> 公尺</span>
+      注意兩邊方向相反：(1) 是「公尺 → 記號」要<b>除以 2</b>，(2) 是「記號 → 公尺」要<b>乘以 2</b>。
+      算完各自代回去檢查一次：(-246)&times;2 + 810 = 318 ✓
+    </div></details>
+  </div>
+
+  <div class="card task" data-id="f21s" data-type="fill" data-group="g4" data-pts="0" data-step="1">
+    <h3><span class="qno">21 步驟</span><span class="tag">負號在不在括號裡</span><span class="tag pt">不計分</span><span class="mark"></span></h3>
+    <div class="step-box">
+      <p class="why"><b>為什麼多這一格：</b>下一題同時出現 <span class="mono">-4<sup>2</sup></span> 和 <span class="mono">(-2)<sup>2</sup></span>。這兩個長得像、答案差很多，先分清楚再算。</p>
+      <div class="fillrow">
+        <span class="item"><span class="lab">-4<sup>2</sup> =</span><input class="blank sm" data-ans="-16" data-kind="num"></span>
+        <span class="item"><span class="lab">(-2)<sup>2</sup> =</span><input class="blank sm" data-ans="4" data-kind="num"></span>
+      </div>
+    </div>
+    <button class="act check" type="button">檢查</button>
+    <p class="fb"></p>
+    <details class="sol"><summary>解析</summary><div class="body">
+      <span class="step">-4<sup>2</sup>：<b>沒有括號</b> → 只有 4 被平方 → -(4&times;4) = <b>-16</b></span>
+      <span class="step">(-2)<sup>2</sup>：<b>括號包住負號</b> → (-2)&times;(-2) = <b>+4</b></span>
+      一句話：<b>括號包得到才算得到。</b>
+    </div></details>
+  </div>
+
+  <div class="card task" data-id="f21a" data-type="fill" data-group="g4" data-pts="3">
+    <h3><span class="qno">21 (1)</span><span class="tag">四則．絕對值．次方</span><span class="tag pt">3 分</span><span class="mark"></span></h3>
+    <p class="q mono">( -4<sup>2</sup> - |(-4) &times; 3| ) &divide; 7 &times; (-2)<sup>2</sup> =
+      <input class="blank sm" data-ans="-16" data-kind="num"></p>
+    <button class="act check" type="button">檢查</button>
+    <p class="fb"></p>
+    <details class="sol"><summary>解析</summary><div class="body">
+      <span class="step">① -4<sup>2</sup> = <b>-16</b>（沒括號，負號不參加平方）</span>
+      <span class="step">② |(-4)&times;3| = |-12| = <b>12</b></span>
+      <span class="step">③ 括號內：-16 - 12 = <b>-28</b></span>
+      <span class="step">④ (-2)<sup>2</sup> = <b>4</b></span>
+      <span class="step">⑤ 同階由左往右：-28 &divide; 7 = -4，-4 &times; 4 = <b>-16</b></span>
+      第 ⑤ 步是最後一個坑：<b>÷ 和 × 同階，一定從左邊開始</b>。
+      先算 7&times;4 = 28 再去除，會得到 -1，整題就毀在這裡。
+    </div></details>
+  </div>
+
+  <div class="card task" data-id="f21b" data-type="fill" data-group="g5" data-pts="2">
+    <h3><span class="qno">21 (2)</span><span class="tag">科學記號．位值</span><span class="tag pt">2 分</span><span class="mark"></span></h3>
+    <p class="q mono">5&times;10<sup>6</sup> + 4&times;10<sup>5</sup> + 3&times;10<sup>3</sup> + 2&times;10<sup>2</sup> + 1&times;10 =
+      <input class="blank lg" data-ans="5.40321e6" data-kind="sci"></p>
+    <p class="hintline">先加起來變成一個整數，再寫成科學記號。</p>
+    <button class="act check" type="button">檢查</button>
+    <p class="fb"></p>
+    <details class="sol"><summary>解析</summary><div class="body">
+      把它當成位值表來填，<b>缺的位數要補 0</b>：
+      <span class="step">5000000 + 400000 + 3000 + 200 + 10 = <b>5403210</b></span>
+      <span class="step">注意 10<sup>4</sup> 那一位<b>沒有</b> → 百萬位 5、十萬位 4、<b>萬位 0</b>、千位 3、百位 2、十位 1、個位 0</span>
+      <span class="step">5403210 是 7 位數 → <b>5.40321&times;10<sup>6</sup></b></span>
+      漏掉那個 0 就會寫成 543210，變 5.4321&times;10<sup>5</sup>。<b>由大到小逐位檢查，空的補 0</b>。
+    </div></details>
+  </div>
+
+  <button class="act sectioncheck" data-sec="secB" type="button">批改填充與計算</button>
+  <p class="fb" data-sec="secB"></p>
+</section>
+
+<section id="report">
+  <div class="sechead"><span class="no">RESULT</span><h2>成績單與診斷</h2><span class="from">滿分 100</span></div>
+  <button class="act big" id="submit" type="button">整卷計分</button>
+  <div class="report" id="reportBox"><p style="text-align:center;color:var(--ink-soft);font-size:14px;margin:8px 0">寫完按上面的按鈕，會算出分數並告訴你要補哪一節。</p></div>
+
+  <div class="notes">
+    <div class="note"><h4><span>!</span>這張卷子的四個主坑</h4><ul>
+      <li><b>刻度沒先算</b>：第 1、12、20 題。三題都先問「一格／一單位是多少」。</li>
+      <li><b>絕對值只想一半</b>：第 8、15、19(2) 題。絕對值＝距離，距離有<b>左右兩邊</b>。</li>
+      <li><b>停在半路</b>：第 5、10、18(2) 題。算出中間值就交卷，忘了換單位或加總。</li>
+      <li><b>負號跟括號</b>：第 2、6、9、21(1) 題。<b>括號包得到才算得到。</b></li>
+    </ul></div>
+    <div class="note"><h4><span>&#10003;</span>考前五分鐘複習這五句</h4><ul>
+      <li>看到數線 → 先數出<b>一格是多少</b>。</li>
+      <li>看到 | | → 翻成<b>距離</b>，再想有沒有兩個答案。</li>
+      <li>看到 -a<sup>n</sup> → 問自己<b>括號在哪</b>。</li>
+      <li>&times; 和 &divide; 同一階 → <b>從左邊開始</b>，不准跳。</li>
+      <li>寫完答案 → 回頭讀<b>題目最後一句</b>（單位、問的是誰）。</li>
+    </ul></div>
+  </div>
+
+  <button class="act ghost" id="reset" type="button">清除本卷紀錄</button>
+</section>
+
+<footer>
+  試題來源：基隆市輔大聖心高級中學 115 學年度第 1 學期第一次段考（國七 A／國七 B），命題 王志遠老師。
+  本頁為練習用重製，答案與解析由我重新演算核對過。
+  18、19 兩題的小題配分依原卷標示（2+3、3+2）。
+  帶「步驟」字樣的格子是我額外加的鷹架，不計分。
+</footer>
+</div>
+
+<script>
+/* ===== Math 麥斯：熱血回饋層 ===== */
+window.MAXX = (function(){
+"use strict";
+var BOSS = {"e1s":"刻度陷阱","e1":"刻度陷阱","e2":"負號小偷","e3":"次方順序怪","e4":"科學記號移位怪","e5":"停在半路","e6":"括號外的負號","e7":"邊界沒數清","e8":"絕對值＝距離","e9":"分配律搬運工","e10":"停在半路","e11":"絕對值外殼怪","e12s":"刻度陷阱","e12":"刻度陷阱","e13":"科學記號移位怪","e14":"右加左減","e15":"雙解雙胞胎","f16":"運算順序怪","f17":"科學記號移位怪","f18a":"科學記號比大小","f18b":"停在半路","f19a":"減負變加","f19b":"雙解雙胞胎","f20s":"刻度陷阱","f20":"刻度陷阱","f21s":"括號外的負號","f21a":"運算順序怪","f21b":"位值補零"};
+var OK = ["破防！這一刀切得漂亮！","火力全開 Max！觀眾席都站起來了！","乾淨俐落，這關連渣都沒剩！","看到沒？這就是練過的手感！","命中要害！大腦火力全開！","穩！這題被你直接秒了！"];
+var COMBO = ["COMBO ×{n}！停不下來了啦！","{n} 連擊！這節奏太猛！","連續 {n} 關不失手，教練我想打職業！"];
+var BAD = ["警報！「{boss}」就是在這一關出手的——","被偷襲了！「{boss}」剛剛從這裡溜過去：","血條沒掉沒關係，情報到手了！「{boss}」的招式是：","喔喔，「{boss}」這招很陰！我們看它動了哪裡："];
+var AV = '<img class="mx-av" src="data:image/webp;base64,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" alt="">';
+var combo = 0, box = null, txt = null;
+function ensure(){
+  if(box) return;
+  box = document.createElement("div");
+  box.id = "maxxBar"; box.setAttribute("role","status");
+  box.innerHTML = AV + '<span class="mx-txt"></span><button class="mx-x" type="button" aria-label="關閉麥斯">×</button>';
+  document.body.appendChild(box);
+  txt = box.querySelector(".mx-txt");
+  box.querySelector(".mx-x").addEventListener("click", function(){ box.classList.remove("on"); });
+}
+function pick(a){ return a[Math.floor(Math.random()*a.length)]; }
+function show(kind, hype, sub){
+  ensure();
+  txt.innerHTML = '<span class="mx-hype'+(kind==="bad"?" bad":"")+'">'+hype+
+    (kind==="ok"&&combo>=2?'<span class="mx-combo">COMBO ×'+combo+'</span>':"")+'</span>'+
+    (sub?'<span class="mx-sub">'+sub+'</span>':"");
+  box.classList.add("on");
+}
+return {
+  say: function(ok, task){
+    var id = (task&&task.getAttribute)?task.getAttribute("data-id"):"";
+    var boss = BOSS[id] || "粗心小怪";
+    if(ok){ combo++; show("ok", combo>=3?pick(COMBO).replace("{n}",combo):pick(OK), "破關數 +1，下一題走起。"); }
+    else { combo = 0; show("bad", pick(BAD).replace("{boss}",boss), "紅色那格就是它的位置，看一下解析再補一刀。"); }
+  },
+  sayScore: function(right, total, final){
+    combo = 0;
+    if(right === total) show("ok", final?"全數擊倒！這張段考卷被你打穿了！":"這一節清空！漂亮！", "");
+    else if(right >= total-2) show("ok", "差一點就全清了！剩 "+(total-right)+" 題", "把打叉的那幾題再看一次，很快就收工。");
+    else show("bad", "情報收集完成：答對 "+right+" / "+total, "下面的診斷會告訴你先補哪一類，一次補一類就好。");
+  }
+};
+})();
+</script>
+
+<script>
+(function(){
+"use strict";
+var KEY = "math-exam1-v1";
+
+/* ---------- 數線圖（位置用算的，保證對得準） ---------- */
+function nl(spec){
+  var W = 760, H = spec.h || 92, AXIS = spec.axis || 54;
+  var L = spec.padL || 26, R = W - (spec.padR || 46);
+  function X(v){ return L + (v - spec.min) * (R - L) / (spec.max - spec.min); }
+  var s = ['<svg class="nl" viewBox="0 0 '+W+' '+H+'" role="img" aria-label="'+(spec.alt||"數線")+'">'];
+  (spec.fine || []).forEach(function(v){ s.push('<line class="tickf" x1="'+X(v).toFixed(4)+'" y1="'+(AXIS-6)+'" x2="'+X(v).toFixed(4)+'" y2="'+(AXIS+6)+'"/>'); });
+  (spec.ticks || []).forEach(function(v){ s.push('<line class="tick" x1="'+X(v).toFixed(4)+'" y1="'+(AXIS-9)+'" x2="'+X(v).toFixed(4)+'" y2="'+(AXIS+9)+'"/>'); });
+  s.push('<path class="ax" d="M'+(L-14)+' '+AXIS+' H'+(R+22)+' m-9 -5 l9 5 l-9 5"/>');
+  (spec.pts || []).forEach(function(p){
+    var x = X(p.v).toFixed(4);
+    s.push('<circle class="pt" cx="'+x+'" cy="'+AXIS+'" r="3.6"/>');
+    if(p.up) s.push('<text class="ptl" x="'+x+'" y="'+(AXIS-17)+'">'+p.up+'</text>');
+    if(p.dn) s.push('<text class="ptl" x="'+x+'" y="'+(AXIS+30)+'">'+p.dn+'</text>');
+  });
+  (spec.labels || []).forEach(function(p){
+    s.push('<text class="lbl" x="'+X(p.v).toFixed(4)+'" y="'+(AXIS+(p.above?-15:28))+'">'+p.t+'</text>');
+  });
+  s.push('</svg>');
+  return s.join("");
+}
+function seq(a, b, st){ var o = [], i = Math.ceil(a/st - 1e-9), last = Math.floor(b/st + 1e-9); for(; i <= last; i++) o.push(Math.round(i*st*1000)/1000); return o; }
+
+/* 第1題：整數刻度 -15..9，O 在原點，1 單位 = 1 格 */
+var el1 = document.getElementById("svg1");
+if(el1) el1.innerHTML = nl({ min:-15.6, max:9.6, h:96, axis:56, padL:26, padR:48,
+  ticks: seq(-15, 9, 1),
+  pts: [{v:-12,up:"P",dn:"a"},{v:-5,up:"Q",dn:"b"},{v:0,up:"O"},{v:5,up:"R",dn:"c"},{v:8,up:"S",dn:"d"}],
+  labels: [{v:0,t:"0"},{v:1,t:"1"}],
+  alt:"數線上 P、Q、O、R、S 五個點，每一小格為 1" });
+
+/* 第8題：A(-5)、C(c)、O(0)、B(5) */
+var el8 = document.getElementById("svg8");
+if(el8) el8.innerHTML = nl({ min:-6.4, max:6.4, h:88, axis:50, padL:30, padR:52,
+  ticks: [],
+  pts: [{v:-5,up:"A",dn:"-5"},{v:-1.7,up:"C",dn:"c"},{v:0,up:"O",dn:"0"},{v:5,up:"B",dn:"5"}],
+  alt:"數線上 A 在 -5，C 在 -5 與 0 之間，O 在 0，B 在 5" });
+
+/* 第12題：-3..0 整數刻度，-2 到 -1 之間八等分，A 在第 6 格 */
+var el12 = document.getElementById("svg12");
+if(el12) el12.innerHTML = nl({ min:-3.35, max:0.55, h:92, axis:52, padL:34, padR:50,
+  ticks: seq(-3, 0, 1),
+  fine: seq(-2, -1, 0.125).filter(function(v){ return Math.abs(v - Math.round(v)) > 1e-6; }),
+  pts: [{v:-1.25,up:"A"}],
+  labels: [{v:-3,t:"-3"},{v:-2,t:"-2"},{v:-1,t:"-1"},{v:0,t:"0"}],
+  alt:"數線 -3 到 0，-2 與 -1 之間分成八等分，A 在其中一條隔線上" });
+
+/* ---------- 答案比對 ---------- */
+var SUP = {"⁰":"0","¹":"1","²":"2","³":"3","⁴":"4","⁵":"5","⁶":"6","⁷":"7","⁸":"8","⁹":"9","⁺":"+","⁻":"-"};
+var VUL = {"¼":[1,4],"½":[1,2],"¾":[3,4],"⅓":[1,3],"⅔":[2,3],"⅛":[1,8],"⅜":[3,8],"⅝":[5,8],"⅞":[7,8],"⅕":[1,5],"⅖":[2,5],"⅗":[3,5],"⅘":[4,5],"⅙":[1,6],"⅚":[5,6]};
+function fw(s){
+  return String(s)
+    .replace(/[！-～]/g, function(c){ return String.fromCharCode(c.charCodeAt(0) - 0xFEE0); })
+    .replace(/　/g, " ")
+    .replace(/[−–—‒－]/g, "-")
+    .replace(/[×✕✖ｘXx*]/g, "x");
+}
+function desup(s){
+  return s.replace(/[⁰¹²³⁴-⁹⁺⁻]+/g, function(run){
+    return "^" + run.split("").map(function(c){ return SUP[c]; }).join("");
+  });
+}
+function clean(raw){
+  var s = desup(fw(raw));
+  s = s.replace(/[¼½¾⅓⅔⅕-⅞]/g, function(c){ var v = VUL[c]; return "+" + v[0] + "/" + v[1]; });
+  return s.replace(/[\s,，]/g, "").replace(/公尺|公分|公里|個|元|度|℃/g, "");
+}
+function toNum(raw){
+  var s = clean(raw);
+  if(!s) return null;
+  var sign = 1, m = s.match(/^([+-])([\s\S]*)$/);
+  if(m){ if(m[1] === "-") sign = -1; s = m[2]; }
+  if(!s) return null;
+  var mm;
+  if((mm = s.match(/^(\d+(?:\.\d+)?)\+(\d+)\/(\d+)$/)))      return sign * (+mm[1] + (+mm[2]) / (+mm[3]));
+  if((mm = s.match(/^(\d+)\s*(\d+)\/(\d+)$/)))               return sign * (+mm[1] + (+mm[2]) / (+mm[3]));
+  if((mm = s.match(/^(\d+(?:\.\d+)?)\/(\d+(?:\.\d+)?)$/)))   return (+mm[2]) === 0 ? null : sign * (+mm[1]) / (+mm[2]);
+  if((mm = s.match(/^(\d+(?:\.\d+)?)x?10\^?([+-]?\d+)$/)))   return sign * (+mm[1]) * Math.pow(10, +mm[2]);
+  if(/^\d+(?:\.\d+)?$/.test(s))                              return sign * (+s);
+  return null;
+}
+function toSci(raw){
+  var s = clean(raw);
+  var m = s.match(/^([+-]?\d+(?:\.\d+)?)x?10\^?([+-]?\d+)$/) || s.match(/^([+-]?\d+(?:\.\d+)?)[eE]([+-]?\d+)$/);
+  if(!m) return null;
+  return { m: parseFloat(m[1]), e: parseInt(m[2], 10) };
+}
+function near(a, b){ return Math.abs(a - b) <= 1e-9 * Math.max(1, Math.abs(a), Math.abs(b)); }
+
+/* ---------- 批改 ---------- */
+var state = {};
+try { state = JSON.parse(localStorage.getItem(KEY) || "{}") || {}; } catch(e){ state = {}; }
+function save(){ try { localStorage.setItem(KEY, JSON.stringify(state)); } catch(e){} }
+
+function gradeOne(inp){
+  var kind = inp.getAttribute("data-kind") || "num";
+  var raw = inp.value.trim();
+  if(raw === "") return { blank: true };
+  if(kind === "sci"){
+    var want = toSci(inp.getAttribute("data-ans")), got = toSci(raw);
+    if(!got){
+      var asNum = toNum(raw);
+      if(asNum !== null && want && near(asNum, want.m * Math.pow(10, want.e)))
+        return { ok: false, why: "數值對了，但題目要的是<b>科學記號</b>，請寫成 a×10^n 的形式。" };
+      return { ok: false, why: "格式看不懂，請寫成像 <span class=\"mono\">3.2x10^4</span> 這樣。" };
+    }
+    if(Math.abs(got.m) < 1 || Math.abs(got.m) >= 10)
+      return { ok: false, why: "科學記號前面那個數要<b>大於等於 1、小於 10</b>（你寫的是 " + got.m + "）。" };
+    return { ok: near(got.m, want.m) && got.e === want.e };
+  }
+  var w = toNum(inp.getAttribute("data-ans")), g = toNum(raw);
+  if(g === null) return { ok: false, why: "看不懂這個寫法，整數、小數、分數（像 -5/4 或 -1 1/4）都可以。" };
+  return { ok: near(g, w) };
+}
+function paint(inp, res){
+  inp.classList.remove("ok", "no");
+  if(res.blank) return;
+  inp.classList.add(res.ok ? "ok" : "no");
+}
+function gradeFill(task){
+  var ins = Array.prototype.slice.call(task.querySelectorAll("input.blank"));
+  var blank = 0, bad = 0, why = "";
+  ins.forEach(function(inp){
+    var r = gradeOne(inp);
+    paint(inp, r);
+    if(r.blank){ blank++; return; }
+    if(!r.ok){ bad++; if(!why && r.why) why = r.why; }
+  });
+  return { ok: bad === 0 && blank === 0, blank: blank, bad: bad, why: why, n: ins.length };
+}
+/* 兩格一組、順序不拘（第19(2)題雙解） */
+function gradeFill2(task){
+  var ins = Array.prototype.slice.call(task.querySelectorAll("input.blank"));
+  var want = (ins[0].getAttribute("data-set") || "").split(",").map(toNum);
+  var got = ins.map(function(i){ return i.value.trim() === "" ? null : toNum(i.value); });
+  var blank = got.filter(function(v, i){ return ins[i].value.trim() === ""; }).length;
+  if(blank){ ins.forEach(function(i){ i.classList.remove("ok", "no"); }); return { ok: false, blank: blank, bad: 0, n: ins.length }; }
+  var why = "";
+  /* 先抓「兩格填同一個數」——那正是只找到一個解的徵兆，訊息要講這件事 */
+  var dup = got[0] !== null && got[1] !== null && near(got[0], got[1]);
+  if(dup) why = "兩格填了同一個數。絕對值等於 3，裡面那串<b>可以是 +3 也可以是 -3</b>，所以有<b>兩個不同的答案</b>。";
+  var pool = want.slice(), bad = 0;
+  ins.forEach(function(inp, i){
+    var hit = -1;
+    for(var k = 0; k < pool.length; k++){ if(pool[k] !== null && got[i] !== null && near(pool[k], got[i])){ hit = k; break; } }
+    inp.classList.remove("ok", "no");
+    if(hit >= 0 && !dup){ pool[hit] = null; inp.classList.add("ok"); }
+    else { inp.classList.add("no"); bad++; }
+  });
+  if(!why && bad) why = "有 " + bad + " 格不對。驗算一下：把你的答案代回 |x+2| 看是不是 3。";
+  return { ok: bad === 0, blank: 0, bad: bad, why: why, n: ins.length };
+}
+function gradeChoice(task){
+  var box = task.querySelector(".opts");
+  var picked = box.getAttribute("data-picked");
+  var ans = box.getAttribute("data-ans");
+  Array.prototype.forEach.call(box.querySelectorAll("button"), function(b){
+    b.classList.remove("ok", "no");
+    var op = b.getAttribute("data-op");
+    if(picked && op === picked) b.classList.add(op === ans ? "ok" : "no");
+    if(picked && op === ans) b.classList.add("ok");
+  });
+  if(!picked) return { ok: false, blank: 1, bad: 0, n: 1 };
+  return { ok: picked === ans, blank: 0, bad: picked === ans ? 0 : 1, n: 1 };
+}
+function grade(task){
+  var t = task.getAttribute("data-type");
+  if(t === "choice") return gradeChoice(task);
+  if(t === "fill2")  return gradeFill2(task);
+  return gradeFill(task);
+}
+function markTask(task, res){
+  var mark = task.querySelector(".mark");
+  if(!mark) return;
+  if(res.blank && !res.bad){ mark.textContent = ""; mark.className = "mark"; return; }
+  mark.textContent = res.ok ? "✓" : "✗";
+  mark.className = "mark " + (res.ok ? "ok" : "no");
+}
+
+var tasks = Array.prototype.slice.call(document.querySelectorAll(".task"));
+tasks.forEach(function(task){
+  if(task.getAttribute("data-type") === "choice"){
+    task.addEventListener("click", function(ev){
+      var b = ev.target.closest(".opts button");
+      if(!b || !task.contains(b)) return;
+      var box = b.closest(".opts");
+      box.setAttribute("data-picked", b.getAttribute("data-op"));
+      Array.prototype.forEach.call(box.querySelectorAll("button"), function(x){
+        x.setAttribute("aria-pressed", x === b ? "true" : "false");
+        x.classList.remove("ok", "no");
+      });
+      var mk = task.querySelector(".mark");
+      if(mk){ mk.textContent = ""; mk.className = "mark"; }
+    });
+  }
+  var btn = task.querySelector("button.check");
+  if(btn) btn.addEventListener("click", function(){
+    var res = grade(task);
+    markTask(task, res);
+    var fb = task.querySelector(".fb");
+    if(res.blank && !res.bad) fb.textContent = res.n > 1 ? "還有 " + res.blank + " 格沒填。" : "還沒選答案。";
+    else if(res.ok) fb.textContent = "對了。";
+    else fb.innerHTML = res.why || (res.n > 1 ? "有 " + res.bad + " 格不對，打紅框的再看一次。" : "再想一次，看下面的解析。");
+    fb.className = "fb " + (res.ok ? "ok" : (res.blank && !res.bad ? "" : "no"));
+    if(!(res.blank && !res.bad)){
+      state[task.getAttribute("data-id")] = { ok: res.ok };
+      save(); updateProgress();
+      if(window.MAXX) MAXX.say(res.ok, task);
+    }
+  });
+});
+
+function gradeList(list){
+  var out = [];
+  list.forEach(function(task){
+    var res = grade(task);
+    markTask(task, res);
+    if(!(res.blank && !res.bad)) state[task.getAttribute("data-id")] = { ok: res.ok };
+    out.push({ task: task, res: res });
+  });
+  save(); updateProgress();
+  return out;
+}
+Array.prototype.forEach.call(document.querySelectorAll(".sectioncheck"), function(btn){
+  btn.addEventListener("click", function(){
+    var sec = document.getElementById(btn.getAttribute("data-sec"));
+    var out = gradeList(Array.prototype.slice.call(sec.querySelectorAll(".task")));
+    var right = out.filter(function(r){ return r.res.ok; }).length;
+    var blanks = out.filter(function(r){ return r.res.blank && !r.res.bad; }).length;
+    var fb = document.querySelector('.fb[data-sec="' + btn.getAttribute("data-sec") + '"]');
+    if(blanks) fb.textContent = "這一節還有 " + blanks + " 題沒寫完。目前答對 " + right + " / " + out.length + "。";
+    else fb.textContent = "答對 " + right + " / " + out.length + (right === out.length ? "，全對。" : "，打叉的可以先看解析。");
+    fb.className = "fb " + (right === out.length ? "ok" : "no");
+    if(window.MAXX) MAXX.sayScore(right, out.length, false);
+  });
+});
+
+var GROUPS = {
+  g1: { name: "數線與刻度", label: "1-1 正數與負數", go: "01-number-line.html",
+        tip: "三題都卡在「一格是多少」。先把刻度算出來再讀座標。" },
+  g2: { name: "絕對值", label: "1-1 正數與負數", go: "01-number-line.html",
+        tip: "絕對值就是距離，距離有左右兩邊——先問自己「會不會有兩個答案」。" },
+  g3: { name: "加減與應用", label: "1-2 整數的加減", go: "02-add-subtract.html",
+        tip: "應用題算到中間值就停了。寫完回頭讀題目最後一句（單位、問的是誰）。" },
+  g4: { name: "乘除與四則運算", label: "1-3 整數的乘除與四則", go: "03-multiply-divide.html",
+        tip: "先乘除後加減、同階由左往右、減負變加——三條規則各自檢查一次。" },
+  g5: { name: "指數與科學記號", label: "1-4 指數記法與科學記號", go: "04-exponent.html",
+        tip: "括號有沒有包住負號、小數點搬幾格、單位換完沒有——三個關卡。" }
+};
+document.getElementById("submit").addEventListener("click", function(){
+  var out = gradeList(tasks);
+  var got = 0, full = 0, gotA = 0, fullA = 0, gotB = 0, fullB = 0;
+  var byGroup = {};
+  out.forEach(function(r){
+    var pts = parseInt(r.task.getAttribute("data-pts") || "0", 10);
+    var inA = !!r.task.closest("#secA");
+    if(pts > 0){
+      full += pts; if(inA) fullA += pts; else fullB += pts;
+      if(r.res.ok){ got += pts; if(inA) gotA += pts; else gotB += pts; }
+    }
+    var g = r.task.getAttribute("data-group");
+    if(!byGroup[g]) byGroup[g] = { right: 0, total: 0, wrong: [] };
+    byGroup[g].total++;
+    if(r.res.ok) byGroup[g].right++;
+    else byGroup[g].wrong.push(r.task.querySelector(".qno").textContent.replace(" 步驟", "步驟"));
+  });
+  var html = [];
+  html.push('<p class="score">' + got + '<small> / ' + full + '</small></p>');
+  var note;
+  if(got === full) note = "滿分。這張段考卷你已經打穿了。";
+  else if(got >= 90) note = "這個分數進考場很穩，把下面紅的那一類補掉就好。";
+  else if(got >= 80) note = "底子有了，失分集中在下面幾類，一次補一類。";
+  else if(got >= 60) note = "會的題目都拿到了，先補最上面那一類，分數會跳很快。";
+  else note = "先別急著整張重寫，挑下面第一類去練，練完再回來考一次。";
+  html.push('<p class="scorenote">' + note + '</p>');
+  html.push('<p class="splits"><span>選擇題 <b>' + gotA + '</b> / ' + fullA + '</span>' +
+            '<span>填充計算 <b>' + gotB + '</b> / ' + fullB + '</span></p>');
+  ["g1","g2","g3","g4","g5"].forEach(function(g){
+    var d = byGroup[g]; if(!d) return;
+    var ful = d.right === d.total;
+    html.push('<div class="grp"><div class="row"><span class="name">' + GROUPS[g].name + '</span>' +
+      '<span class="cnt ' + (ful ? "full" : "part") + '">' + d.right + " / " + d.total + (ful ? " ✓" : "") + '</span></div>');
+    if(!ful) html.push("<p>第 " + d.wrong.join("、") + " 題還沒對。" + GROUPS[g].tip +
+      '　<a href="' + GROUPS[g].go + '">→ 回去練 ' + GROUPS[g].label + "</a></p>");
+    html.push("</div>");
+  });
+  document.getElementById("reportBox").innerHTML = html.join("");
+  if(window.MAXX) MAXX.sayScore(out.filter(function(r){ return r.res.ok; }).length, out.length, true);
+  document.getElementById("report").scrollIntoView({ behavior: "smooth", block: "start" });
+});
+
+function updateProgress(){
+  var total = tasks.length, done = 0;
+  tasks.forEach(function(t){ var id = t.getAttribute("data-id"); if(state[id] && state[id].ok) done++; });
+  document.getElementById("pcount").textContent = done + " / " + total;
+  document.getElementById("pbar").style.width = total ? (done / total * 100) + "%" : "0%";
+}
+updateProgress();
+document.getElementById("reset").addEventListener("click", function(){
+  state = {}; save();
+  try { localStorage.removeItem(KEY); } catch(e){}
+  window.location.reload();
+});
+Array.prototype.forEach.call(document.querySelectorAll(".jump"), function(b){
+  b.addEventListener("click", function(){
+    var t = document.getElementById(b.getAttribute("data-target"));
+    if(t) t.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+});
+})();
+</script>
+</body>
+</html>
